@@ -8,7 +8,7 @@ type TicketShowInput struct {
 	ID string
 }
 
-func (c *Client) ShowTicket(i *TicketShowInput) ([]*Version, error) {
+func (c *Client) TicketShow(i *TicketShowInput) (interface{}, error) {
 	if i.ID == "" {
 		return nil, ErrMissingID
 	}
@@ -20,8 +20,8 @@ func (c *Client) ShowTicket(i *TicketShowInput) ([]*Version, error) {
 	}
 
 	var e interface{}
-	//if err := decodeJSON(&e, resp.Body); err != nil {
-    if err := json.Unmarshal(b, &f); err != nil {
+
+	if err := decodeJSON(&e, resp.Body); err != nil {
 		return nil, err
 	}
 

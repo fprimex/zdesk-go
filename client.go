@@ -2,7 +2,6 @@ package zdesk
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -10,10 +9,11 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"encoding/json"
 
 	"github.com/ajg/form"
-	"github.com/hashicorp/go-cleanhttp"
 	"github.com/mitchellh/mapstructure"
+	"github.com/hashicorp/go-cleanhttp"
 )
 
 const APIUsernameEnvVar = "ZDESK_USERNAME"
@@ -79,7 +79,7 @@ func NewClient(user string, key string) (*Client, error) {
 // function will not error if the API token is not supplied. Attempts to make a
 // request that requires an API key will return a 403 response.
 func NewClientForEndpoint(user string, key string, endpoint string) (*Client, error) {
-	client := &Client{apiUser: user, apiKey: key, Address: endpoint}
+	client := &Client{apiUsername: user, apiKey: key, Address: endpoint}
 	return client.init()
 }
 
