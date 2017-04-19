@@ -2,13 +2,15 @@ package zdesk
 
 import (
 	"fmt"
+    "io/ioutil"
 )
 
 type TicketShowInput struct {
 	ID string
 }
 
-func (c *Client) TicketShow(i *TicketShowInput) (interface{}, error) {
+//func (c *Client) TicketShow(i *TicketShowInput) (interface{}, error) {
+func (c *Client) TicketShow(i *TicketShowInput) ([]byte, error) {
 	if i.ID == "" {
 		return nil, ErrMissingID
 	}
@@ -19,12 +21,20 @@ func (c *Client) TicketShow(i *TicketShowInput) (interface{}, error) {
 		return nil, err
 	}
 
-	var e interface{}
+    defer resp.Body.Close()
 
-	if err := decodeJSON(&e, resp.Body); err != nil {
-		return nil, err
-	}
+    body, err := ioutil.ReadAll(resp.Body)
+    if err != nil {
+        return nil, err
+    }
 
-	return e, nil
+    return body, nil
+//	var e interface{}
+//
+//	if err := decodeJSON(&e, resp.Body); err != nil {
+//		return nil, err
+//	}
+//
+//	return e, nil
 }
 
