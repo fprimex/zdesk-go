@@ -1,9 +1,9 @@
 package zdesk
 
 import (
-	"fmt"
 	"errors"
-    "io/ioutil"
+	"fmt"
+	"io/ioutil"
 )
 
 type TicketShowInput struct {
@@ -21,13 +21,12 @@ func (c *Client) TicketShow(i *TicketShowInput) ([]byte, error) {
 		return nil, err
 	}
 
-    defer resp.Body.Close()
+	defer resp.Body.Close()
 
-    body, err := ioutil.ReadAll(resp.Body)
-    if err != nil {
-        return nil, err
-    }
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
 
-    return body, nil
+	return body, nil
 }
-
