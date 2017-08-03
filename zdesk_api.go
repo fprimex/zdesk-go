@@ -4,14 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 )
 
-type AccountListInput struct {
-}
-
-func (c *Client) AccountList(i *AccountListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/account")
-	resp, err := c.Request("GET", path, nil)
+func handle(resp *http.Response, err error) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
@@ -26,1499 +22,655 @@ func (c *Client) AccountList(i *AccountListInput) ([]byte, error) {
 	return body, nil
 }
 
-type AccountSettingsListInput struct {
+func (c *Client) AccountList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/account"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) AccountSettingsList(i *AccountSettingsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/account/settings.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) AccountSettingsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/account/settings.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type AccountSettingsUpdateInput struct {
+func (c *Client) AccountSettingsUpdate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/account/settings.json"
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) AccountSettingsUpdate(i *AccountSettingsUpdateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/account/settings.json")
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) AccountUpdate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/account"
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type AccountUpdateInput struct {
-}
-
-func (c *Client) AccountUpdate(i *AccountUpdateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/account")
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type ActivitiesListInput struct {
-}
-
-func (c *Client) ActivitiesList(i *ActivitiesListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/activities.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) ActivitiesList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/activities.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type ActivityShowInput struct {
 	ActivityID string
 }
 
-func (c *Client) ActivityShow(i *ActivityShowInput) ([]byte, error) {
+func (c *Client) ActivityShow(i *ActivityShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ActivityID == "" {
 		return nil, errors.New("Missing required field 'ActivityID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/activities/%s.json", i.ActivityID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/activities/%s.json"
+	path := fmt.Sprintf(api_path, i.ActivityID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type AgentCreateInput struct {
-}
-
-func (c *Client) AgentCreate(i *AgentCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/agents")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) AgentCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/agents"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type AgentDeleteInput struct {
 	AgentID string
 }
 
-func (c *Client) AgentDelete(i *AgentDeleteInput) ([]byte, error) {
+func (c *Client) AgentDelete(i *AgentDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.AgentID == "" {
 		return nil, errors.New("Missing required field 'AgentID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/agents/%s", i.AgentID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/agents/%s"
+	path := fmt.Sprintf(api_path, i.AgentID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type AgentShowInput struct {
 	AgentID string
 }
 
-func (c *Client) AgentShow(i *AgentShowInput) ([]byte, error) {
+func (c *Client) AgentShow(i *AgentShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.AgentID == "" {
 		return nil, errors.New("Missing required field 'AgentID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/agents/%s", i.AgentID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/agents/%s"
+	path := fmt.Sprintf(api_path, i.AgentID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type AgentUpdateInput struct {
 	AgentID string
 }
 
-func (c *Client) AgentUpdate(i *AgentUpdateInput) ([]byte, error) {
+func (c *Client) AgentUpdate(i *AgentUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.AgentID == "" {
 		return nil, errors.New("Missing required field 'AgentID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/agents/%s", i.AgentID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/agents/%s"
+	path := fmt.Sprintf(api_path, i.AgentID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type AgentsEmailShowInput struct {
 	EmailID string
 }
 
-func (c *Client) AgentsEmailShow(i *AgentsEmailShowInput) ([]byte, error) {
+func (c *Client) AgentsEmailShow(i *AgentsEmailShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.EmailID == "" {
 		return nil, errors.New("Missing required field 'EmailID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/agents/email/%s", i.EmailID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/agents/email/%s"
+	path := fmt.Sprintf(api_path, i.EmailID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type AgentsListInput struct {
+func (c *Client) AgentsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/agents"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) AgentsList(i *AgentsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/agents")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) AgentsMe(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/agents/me"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type AgentsMeInput struct {
+func (c *Client) AgentsMeUpdate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/agents/me"
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) AgentsMe(i *AgentsMeInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/agents/me")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) AnyChannelPushCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/any_channel/push"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
-
-type AgentsMeUpdateInput struct {
-}
-
-func (c *Client) AgentsMeUpdate(i *AgentsMeUpdateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/agents/me")
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type AnyChannelPushCreateInput struct {
-}
-
-func (c *Client) AnyChannelPushCreate(i *AnyChannelPushCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/any_channel/push")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type AppCreateInput struct {
-}
-
-func (c *Client) AppCreate(i *AppCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/apps.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) AppCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/apps.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type AppDeleteInput struct {
 	ID string
 }
 
-func (c *Client) AppDelete(i *AppDeleteInput) ([]byte, error) {
+func (c *Client) AppDelete(i *AppDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/apps/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/apps/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type AppPublicKeyInput struct {
 	ID string
 }
 
-func (c *Client) AppPublicKey(i *AppPublicKeyInput) ([]byte, error) {
+func (c *Client) AppPublicKey(i *AppPublicKeyInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/apps/%s/public_key.pem", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/apps/%s/public_key.pem"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type AppShowInput struct {
 	ID string
 }
 
-func (c *Client) AppShow(i *AppShowInput) ([]byte, error) {
+func (c *Client) AppShow(i *AppShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/apps/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/apps/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type AppUpdateInput struct {
 	ID string
 }
 
-func (c *Client) AppUpdate(i *AppUpdateInput) ([]byte, error) {
+func (c *Client) AppUpdate(i *AppUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/apps/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/apps/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type AppsInstallationCreateInput struct {
-}
-
-func (c *Client) AppsInstallationCreate(i *AppsInstallationCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/apps/installations.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) AppsInstallationCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/apps/installations.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type AppsInstallationDeleteInput struct {
 	ID string
 }
 
-func (c *Client) AppsInstallationDelete(i *AppsInstallationDeleteInput) ([]byte, error) {
+func (c *Client) AppsInstallationDelete(i *AppsInstallationDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/apps/installations/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/apps/installations/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type AppsInstallationRequirementsInput struct {
 	ID string
 }
 
-func (c *Client) AppsInstallationRequirements(i *AppsInstallationRequirementsInput) ([]byte, error) {
+func (c *Client) AppsInstallationRequirements(i *AppsInstallationRequirementsInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/apps/installations/%s/requirements.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/apps/installations/%s/requirements.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type AppsInstallationShowInput struct {
 	ID string
 }
 
-func (c *Client) AppsInstallationShow(i *AppsInstallationShowInput) ([]byte, error) {
+func (c *Client) AppsInstallationShow(i *AppsInstallationShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/apps/installations/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/apps/installations/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type AppsInstallationUpdateInput struct {
 	ID string
 }
 
-func (c *Client) AppsInstallationUpdate(i *AppsInstallationUpdateInput) ([]byte, error) {
+func (c *Client) AppsInstallationUpdate(i *AppsInstallationUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/apps/installations/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/apps/installations/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type AppsInstallationsJobStatusShowInput struct {
 	ID string
 }
 
-func (c *Client) AppsInstallationsJobStatusShow(i *AppsInstallationsJobStatusShowInput) ([]byte, error) {
+func (c *Client) AppsInstallationsJobStatusShow(i *AppsInstallationsJobStatusShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/apps/installations/job_statuses/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/apps/installations/job_statuses/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type AppsInstallationsListInput struct {
-}
-
-func (c *Client) AppsInstallationsList(i *AppsInstallationsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/apps/installations.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) AppsInstallationsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/apps/installations.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type AppsJobStatusShowInput struct {
 	ID string
 }
 
-func (c *Client) AppsJobStatusShow(i *AppsJobStatusShowInput) ([]byte, error) {
+func (c *Client) AppsJobStatusShow(i *AppsJobStatusShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/apps/job_statuses/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/apps/job_statuses/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type AppsListInput struct {
+func (c *Client) AppsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/apps.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) AppsList(i *AppsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/apps.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) AppsLocationInstallationsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/apps/location_installations.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type AppsLocationInstallationsListInput struct {
-}
-
-func (c *Client) AppsLocationInstallationsList(i *AppsLocationInstallationsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/apps/location_installations.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type AppsLocationInstallationsReorderInput struct {
-}
-
-func (c *Client) AppsLocationInstallationsReorder(i *AppsLocationInstallationsReorderInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/apps/location_installations/reorder.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) AppsLocationInstallationsReorder(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/apps/location_installations/reorder.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type AppsLocationShowInput struct {
 	ID string
 }
 
-func (c *Client) AppsLocationShow(i *AppsLocationShowInput) ([]byte, error) {
+func (c *Client) AppsLocationShow(i *AppsLocationShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/apps/locations/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/apps/locations/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type AppsLocationsListInput struct {
+func (c *Client) AppsLocationsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/apps/locations.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) AppsLocationsList(i *AppsLocationsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/apps/locations.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) AppsNotifyCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/apps/notify.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
-
-type AppsNotifyCreateInput struct {
+func (c *Client) AppsOwnedList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/apps/owned.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) AppsNotifyCreate(i *AppsNotifyCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/apps/notify.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type AppsOwnedListInput struct {
-}
-
-func (c *Client) AppsOwnedList(i *AppsOwnedListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/apps/owned.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type AppsUploadCreateInput struct {
-}
-
-func (c *Client) AppsUploadCreate(i *AppsUploadCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/apps/uploads.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) AppsUploadCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/apps/uploads.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type AttachmentDeleteInput struct {
 	ID string
 }
 
-func (c *Client) AttachmentDelete(i *AttachmentDeleteInput) ([]byte, error) {
+func (c *Client) AttachmentDelete(i *AttachmentDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/attachments/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/attachments/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type AttachmentShowInput struct {
 	ID string
 }
 
-func (c *Client) AttachmentShow(i *AttachmentShowInput) ([]byte, error) {
+func (c *Client) AttachmentShow(i *AttachmentShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/attachments/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/attachments/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type AuditLogShowInput struct {
 	ID string
 }
 
-func (c *Client) AuditLogShow(i *AuditLogShowInput) ([]byte, error) {
+func (c *Client) AuditLogShow(i *AuditLogShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/audit_logs/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/audit_logs/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type AuditLogsListInput struct {
+func (c *Client) AuditLogsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/audit_logs.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) AuditLogsList(i *AuditLogsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/audit_logs.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) AutocompleteTags(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/autocomplete/tags.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type AutocompleteTagsInput struct {
-}
-
-func (c *Client) AutocompleteTags(i *AutocompleteTagsInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/autocomplete/tags.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type AutomationCreateInput struct {
-}
-
-func (c *Client) AutomationCreate(i *AutomationCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/automations.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) AutomationCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/automations.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type AutomationDeleteInput struct {
 	ID string
 }
 
-func (c *Client) AutomationDelete(i *AutomationDeleteInput) ([]byte, error) {
+func (c *Client) AutomationDelete(i *AutomationDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/automations/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/automations/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type AutomationShowInput struct {
 	ID string
 }
 
-func (c *Client) AutomationShow(i *AutomationShowInput) ([]byte, error) {
+func (c *Client) AutomationShow(i *AutomationShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/automations/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/automations/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type AutomationUpdateInput struct {
 	ID string
 }
 
-func (c *Client) AutomationUpdate(i *AutomationUpdateInput) ([]byte, error) {
+func (c *Client) AutomationUpdate(i *AutomationUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/automations/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/automations/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type AutomationsActiveListInput struct {
+func (c *Client) AutomationsActiveList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/automations/active.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) AutomationsActiveList(i *AutomationsActiveListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/automations/active.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) AutomationsDestroyMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/automations/destroy_many.json"
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
-
-type AutomationsDestroyManyInput struct {
+func (c *Client) AutomationsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/automations.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) AutomationsDestroyMany(i *AutomationsDestroyManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/automations/destroy_many.json")
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) AutomationsSearch(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/automations/search.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type AutomationsListInput struct {
+func (c *Client) AutomationsUpdateMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/automations/update_many.json"
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) AutomationsList(i *AutomationsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/automations.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type AutomationsSearchInput struct {
-}
-
-func (c *Client) AutomationsSearch(i *AutomationsSearchInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/automations/search.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type AutomationsUpdateManyInput struct {
-}
-
-func (c *Client) AutomationsUpdateMany(i *AutomationsUpdateManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/automations/update_many.json")
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type BanCreateInput struct {
-}
-
-func (c *Client) BanCreate(i *BanCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/bans")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) BanCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/bans"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type BanDeleteInput struct {
 	BanID string
 }
 
-func (c *Client) BanDelete(i *BanDeleteInput) ([]byte, error) {
+func (c *Client) BanDelete(i *BanDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.BanID == "" {
 		return nil, errors.New("Missing required field 'BanID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/ban/%s", i.BanID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/ban/%s"
+	path := fmt.Sprintf(api_path, i.BanID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type BanShowInput struct {
 	BanID string
 }
 
-func (c *Client) BanShow(i *BanShowInput) ([]byte, error) {
+func (c *Client) BanShow(i *BanShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.BanID == "" {
 		return nil, errors.New("Missing required field 'BanID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/bans/%s", i.BanID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/bans/%s"
+	path := fmt.Sprintf(api_path, i.BanID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type BansIpListInput struct {
+func (c *Client) BansIpList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/bans/ip"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) BansIpList(i *BansIpListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/bans/ip")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) BansList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/bans"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type BansListInput struct {
-}
-
-func (c *Client) BansList(i *BansListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/bans")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type BookmarkCreateInput struct {
-}
-
-func (c *Client) BookmarkCreate(i *BookmarkCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/bookmarks.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) BookmarkCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/bookmarks.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type BookmarkDeleteInput struct {
 	ID string
 }
 
-func (c *Client) BookmarkDelete(i *BookmarkDeleteInput) ([]byte, error) {
+func (c *Client) BookmarkDelete(i *BookmarkDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/bookmarks/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/bookmarks/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
-
-type BookmarksListInput struct {
-}
-
-func (c *Client) BookmarksList(i *BookmarksListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/bookmarks.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) BookmarksList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/bookmarks.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type BrandCheckHostMappingInput struct {
 	ID string
 }
 
-func (c *Client) BrandCheckHostMapping(i *BrandCheckHostMappingInput) ([]byte, error) {
+func (c *Client) BrandCheckHostMapping(i *BrandCheckHostMappingInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/brands/%s/check_host_mapping.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/brands/%s/check_host_mapping.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type BrandCreateInput struct {
-}
-
-func (c *Client) BrandCreate(i *BrandCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/brands.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) BrandCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/brands.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type BrandDeleteInput struct {
 	ID string
 }
 
-func (c *Client) BrandDelete(i *BrandDeleteInput) ([]byte, error) {
+func (c *Client) BrandDelete(i *BrandDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/brands/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/brands/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type BrandShowInput struct {
 	ID string
 }
 
-func (c *Client) BrandShow(i *BrandShowInput) ([]byte, error) {
+func (c *Client) BrandShow(i *BrandShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/brands/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/brands/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type BrandUpdateInput struct {
 	ID string
 }
 
-func (c *Client) BrandUpdate(i *BrandUpdateInput) ([]byte, error) {
+func (c *Client) BrandUpdate(i *BrandUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/brands/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/brands/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type BrandsCheckHostMappingListInput struct {
+func (c *Client) BrandsCheckHostMappingList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/brands/check_host_mapping.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) BrandsCheckHostMappingList(i *BrandsCheckHostMappingListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/brands/check_host_mapping.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) BrandsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/brands.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type BrandsListInput struct {
-}
-
-func (c *Client) BrandsList(i *BrandsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/brands.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type BusinessHoursScheduleCreateInput struct {
-}
-
-func (c *Client) BusinessHoursScheduleCreate(i *BusinessHoursScheduleCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/business_hours/schedules.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) BusinessHoursScheduleCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/business_hours/schedules.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type BusinessHoursScheduleDeleteInput struct {
 	ID string
 }
 
-func (c *Client) BusinessHoursScheduleDelete(i *BusinessHoursScheduleDeleteInput) ([]byte, error) {
+func (c *Client) BusinessHoursScheduleDelete(i *BusinessHoursScheduleDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/business_hours/schedules/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/business_hours/schedules/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type BusinessHoursScheduleHolidayCreateInput struct {
 	ID string
 }
 
-func (c *Client) BusinessHoursScheduleHolidayCreate(i *BusinessHoursScheduleHolidayCreateInput) ([]byte, error) {
+func (c *Client) BusinessHoursScheduleHolidayCreate(i *BusinessHoursScheduleHolidayCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/business_hours/schedules/%s/holidays.json", i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/business_hours/schedules/%s/holidays.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type BusinessHoursScheduleHolidayDeleteInput struct {
@@ -1526,7 +678,7 @@ type BusinessHoursScheduleHolidayDeleteInput struct {
 	ID         string
 }
 
-func (c *Client) BusinessHoursScheduleHolidayDelete(i *BusinessHoursScheduleHolidayDeleteInput) ([]byte, error) {
+func (c *Client) BusinessHoursScheduleHolidayDelete(i *BusinessHoursScheduleHolidayDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ScheduleID == "" {
 		return nil, errors.New("Missing required field 'ScheduleID'")
 	}
@@ -1535,20 +687,10 @@ func (c *Client) BusinessHoursScheduleHolidayDelete(i *BusinessHoursScheduleHoli
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/business_hours/schedules/%s/holidays/%s.json", i.ScheduleID, i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/business_hours/schedules/%s/holidays/%s.json"
+	path := fmt.Sprintf(api_path, i.ScheduleID, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type BusinessHoursScheduleHolidayShowInput struct {
@@ -1556,7 +698,7 @@ type BusinessHoursScheduleHolidayShowInput struct {
 	ID         string
 }
 
-func (c *Client) BusinessHoursScheduleHolidayShow(i *BusinessHoursScheduleHolidayShowInput) ([]byte, error) {
+func (c *Client) BusinessHoursScheduleHolidayShow(i *BusinessHoursScheduleHolidayShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ScheduleID == "" {
 		return nil, errors.New("Missing required field 'ScheduleID'")
 	}
@@ -1565,20 +707,10 @@ func (c *Client) BusinessHoursScheduleHolidayShow(i *BusinessHoursScheduleHolida
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/business_hours/schedules/%s/holidays/%s.json", i.ScheduleID, i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/business_hours/schedules/%s/holidays/%s.json"
+	path := fmt.Sprintf(api_path, i.ScheduleID, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type BusinessHoursScheduleHolidayUpdateInput struct {
@@ -1586,7 +718,7 @@ type BusinessHoursScheduleHolidayUpdateInput struct {
 	ID         string
 }
 
-func (c *Client) BusinessHoursScheduleHolidayUpdate(i *BusinessHoursScheduleHolidayUpdateInput) ([]byte, error) {
+func (c *Client) BusinessHoursScheduleHolidayUpdate(i *BusinessHoursScheduleHolidayUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ScheduleID == "" {
 		return nil, errors.New("Missing required field 'ScheduleID'")
 	}
@@ -1595,230 +727,115 @@ func (c *Client) BusinessHoursScheduleHolidayUpdate(i *BusinessHoursScheduleHoli
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/business_hours/schedules/%s/holidays/%s.json", i.ScheduleID, i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/business_hours/schedules/%s/holidays/%s.json"
+	path := fmt.Sprintf(api_path, i.ScheduleID, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type BusinessHoursScheduleHolidaysInput struct {
 	ID string
 }
 
-func (c *Client) BusinessHoursScheduleHolidays(i *BusinessHoursScheduleHolidaysInput) ([]byte, error) {
+func (c *Client) BusinessHoursScheduleHolidays(i *BusinessHoursScheduleHolidaysInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/business_hours/schedules/%s/holidays.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/business_hours/schedules/%s/holidays.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type BusinessHoursScheduleShowInput struct {
 	ID string
 }
 
-func (c *Client) BusinessHoursScheduleShow(i *BusinessHoursScheduleShowInput) ([]byte, error) {
+func (c *Client) BusinessHoursScheduleShow(i *BusinessHoursScheduleShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/business_hours/schedules/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/business_hours/schedules/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type BusinessHoursScheduleUpdateInput struct {
 	ID string
 }
 
-func (c *Client) BusinessHoursScheduleUpdate(i *BusinessHoursScheduleUpdateInput) ([]byte, error) {
+func (c *Client) BusinessHoursScheduleUpdate(i *BusinessHoursScheduleUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/business_hours/schedules/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/business_hours/schedules/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type BusinessHoursScheduleWorkweekUpdateInput struct {
 	ID string
 }
 
-func (c *Client) BusinessHoursScheduleWorkweekUpdate(i *BusinessHoursScheduleWorkweekUpdateInput) ([]byte, error) {
+func (c *Client) BusinessHoursScheduleWorkweekUpdate(i *BusinessHoursScheduleWorkweekUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/business_hours/schedules/%s/workweek.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/business_hours/schedules/%s/workweek.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type BusinessHoursSchedulesListInput struct {
-}
-
-func (c *Client) BusinessHoursSchedulesList(i *BusinessHoursSchedulesListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/business_hours/schedules.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) BusinessHoursSchedulesList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/business_hours/schedules.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type ChannelsTwitterMonitoredTwitterHandleShowInput struct {
 	ID string
 }
 
-func (c *Client) ChannelsTwitterMonitoredTwitterHandleShow(i *ChannelsTwitterMonitoredTwitterHandleShowInput) ([]byte, error) {
+func (c *Client) ChannelsTwitterMonitoredTwitterHandleShow(i *ChannelsTwitterMonitoredTwitterHandleShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/channels/twitter/monitored_twitter_handles/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/channels/twitter/monitored_twitter_handles/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type ChannelsTwitterMonitoredTwitterHandlesListInput struct {
+func (c *Client) ChannelsTwitterMonitoredTwitterHandlesList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/channels/twitter/monitored_twitter_handles.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) ChannelsTwitterMonitoredTwitterHandlesList(i *ChannelsTwitterMonitoredTwitterHandlesListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/channels/twitter/monitored_twitter_handles.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type ChannelsTwitterTicketCreateInput struct {
-}
-
-func (c *Client) ChannelsTwitterTicketCreate(i *ChannelsTwitterTicketCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/channels/twitter/tickets.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) ChannelsTwitterTicketCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/channels/twitter/tickets.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type ChannelsTwitterTicketStatusesInput struct {
 	ID string
 }
 
-func (c *Client) ChannelsTwitterTicketStatuses(i *ChannelsTwitterTicketStatusesInput) ([]byte, error) {
+func (c *Client) ChannelsTwitterTicketStatuses(i *ChannelsTwitterTicketStatusesInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/channels/twitter/tickets/%s/statuses.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/channels/twitter/tickets/%s/statuses.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type ChannelsVoiceAgentTicketDisplayCreateInput struct {
@@ -1826,7 +843,7 @@ type ChannelsVoiceAgentTicketDisplayCreateInput struct {
 	TicketID string
 }
 
-func (c *Client) ChannelsVoiceAgentTicketDisplayCreate(i *ChannelsVoiceAgentTicketDisplayCreateInput) ([]byte, error) {
+func (c *Client) ChannelsVoiceAgentTicketDisplayCreate(i *ChannelsVoiceAgentTicketDisplayCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.AgentID == "" {
 		return nil, errors.New("Missing required field 'AgentID'")
 	}
@@ -1835,20 +852,10 @@ func (c *Client) ChannelsVoiceAgentTicketDisplayCreate(i *ChannelsVoiceAgentTick
 		return nil, errors.New("Missing required field 'TicketID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/channels/voice/agents/%s/tickets/%s/display.json", i.AgentID, i.TicketID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/channels/voice/agents/%s/tickets/%s/display.json"
+	path := fmt.Sprintf(api_path, i.AgentID, i.TicketID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type ChannelsVoiceAgentUserDisplayCreateInput struct {
@@ -1856,7 +863,7 @@ type ChannelsVoiceAgentUserDisplayCreateInput struct {
 	UserID  string
 }
 
-func (c *Client) ChannelsVoiceAgentUserDisplayCreate(i *ChannelsVoiceAgentUserDisplayCreateInput) ([]byte, error) {
+func (c *Client) ChannelsVoiceAgentUserDisplayCreate(i *ChannelsVoiceAgentUserDisplayCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.AgentID == "" {
 		return nil, errors.New("Missing required field 'AgentID'")
 	}
@@ -1865,625 +872,275 @@ func (c *Client) ChannelsVoiceAgentUserDisplayCreate(i *ChannelsVoiceAgentUserDi
 		return nil, errors.New("Missing required field 'UserID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/channels/voice/agents/%s/users/%s/display.json", i.AgentID, i.UserID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/channels/voice/agents/%s/users/%s/display.json"
+	path := fmt.Sprintf(api_path, i.AgentID, i.UserID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type ChannelsVoiceAvailabilityShowInput struct {
 	ID string
 }
 
-func (c *Client) ChannelsVoiceAvailabilityShow(i *ChannelsVoiceAvailabilityShowInput) ([]byte, error) {
+func (c *Client) ChannelsVoiceAvailabilityShow(i *ChannelsVoiceAvailabilityShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/channels/voice/availabilities/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/channels/voice/availabilities/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type ChannelsVoiceAvailabilityUpdateInput struct {
 	ID string
 }
 
-func (c *Client) ChannelsVoiceAvailabilityUpdate(i *ChannelsVoiceAvailabilityUpdateInput) ([]byte, error) {
+func (c *Client) ChannelsVoiceAvailabilityUpdate(i *ChannelsVoiceAvailabilityUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/channels/voice/availabilities/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/channels/voice/availabilities/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type ChannelsVoiceGreetingCategoriesListInput struct {
-}
-
-func (c *Client) ChannelsVoiceGreetingCategoriesList(i *ChannelsVoiceGreetingCategoriesListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/channels/voice/greeting_categories.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) ChannelsVoiceGreetingCategoriesList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/channels/voice/greeting_categories.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type ChannelsVoiceGreetingCategoryShowInput struct {
 	ID string
 }
 
-func (c *Client) ChannelsVoiceGreetingCategoryShow(i *ChannelsVoiceGreetingCategoryShowInput) ([]byte, error) {
+func (c *Client) ChannelsVoiceGreetingCategoryShow(i *ChannelsVoiceGreetingCategoryShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/channels/voice/greeting_categories/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/channels/voice/greeting_categories/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type ChannelsVoiceGreetingCreateInput struct {
-}
-
-func (c *Client) ChannelsVoiceGreetingCreate(i *ChannelsVoiceGreetingCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/channels/voice/greetings.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) ChannelsVoiceGreetingCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/channels/voice/greetings.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type ChannelsVoiceGreetingDeleteInput struct {
 	ID string
 }
 
-func (c *Client) ChannelsVoiceGreetingDelete(i *ChannelsVoiceGreetingDeleteInput) ([]byte, error) {
+func (c *Client) ChannelsVoiceGreetingDelete(i *ChannelsVoiceGreetingDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/channels/voice/greetings/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/channels/voice/greetings/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type ChannelsVoiceGreetingRecordingInput struct {
 	ID string
 }
 
-func (c *Client) ChannelsVoiceGreetingRecording(i *ChannelsVoiceGreetingRecordingInput) ([]byte, error) {
+func (c *Client) ChannelsVoiceGreetingRecording(i *ChannelsVoiceGreetingRecordingInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/channels/voice/greetings/%s/recording.mp3", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/channels/voice/greetings/%s/recording.mp3"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type ChannelsVoiceGreetingShowInput struct {
 	ID string
 }
 
-func (c *Client) ChannelsVoiceGreetingShow(i *ChannelsVoiceGreetingShowInput) ([]byte, error) {
+func (c *Client) ChannelsVoiceGreetingShow(i *ChannelsVoiceGreetingShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/channels/voice/greetings/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/channels/voice/greetings/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type ChannelsVoiceGreetingUpdateInput struct {
 	ID string
 }
 
-func (c *Client) ChannelsVoiceGreetingUpdate(i *ChannelsVoiceGreetingUpdateInput) ([]byte, error) {
+func (c *Client) ChannelsVoiceGreetingUpdate(i *ChannelsVoiceGreetingUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/channels/voice/greetings/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/channels/voice/greetings/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type ChannelsVoiceGreetingsListInput struct {
+func (c *Client) ChannelsVoiceGreetingsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/channels/voice/greetings.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) ChannelsVoiceGreetingsList(i *ChannelsVoiceGreetingsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/channels/voice/greetings.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type ChannelsVoicePhoneNumberCreateInput struct {
-}
-
-func (c *Client) ChannelsVoicePhoneNumberCreate(i *ChannelsVoicePhoneNumberCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/channels/voice/phone_numbers.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) ChannelsVoicePhoneNumberCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/channels/voice/phone_numbers.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type ChannelsVoicePhoneNumberShowInput struct {
 	ID string
 }
 
-func (c *Client) ChannelsVoicePhoneNumberShow(i *ChannelsVoicePhoneNumberShowInput) ([]byte, error) {
+func (c *Client) ChannelsVoicePhoneNumberShow(i *ChannelsVoicePhoneNumberShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/channels/voice/phone_numbers/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/channels/voice/phone_numbers/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type ChannelsVoicePhoneNumberUpdateInput struct {
 	ID string
 }
 
-func (c *Client) ChannelsVoicePhoneNumberUpdate(i *ChannelsVoicePhoneNumberUpdateInput) ([]byte, error) {
+func (c *Client) ChannelsVoicePhoneNumberUpdate(i *ChannelsVoicePhoneNumberUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/channels/voice/phone_numbers/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/channels/voice/phone_numbers/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type ChannelsVoicePhoneNumbersDeleteInput struct {
+func (c *Client) ChannelsVoicePhoneNumbersDelete(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/channels/voice/phone_numbers.json"
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) ChannelsVoicePhoneNumbersDelete(i *ChannelsVoicePhoneNumbersDeleteInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/channels/voice/phone_numbers.json")
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) ChannelsVoicePhoneNumbersList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/channels/voice/phone_numbers.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type ChannelsVoicePhoneNumbersListInput struct {
+func (c *Client) ChannelsVoicePhoneNumbersSearch(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/channels/voice/phone_numbers/search.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) ChannelsVoicePhoneNumbersList(i *ChannelsVoicePhoneNumbersListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/channels/voice/phone_numbers.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) ChannelsVoiceStatsAgentsActivityList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/channels/voice/stats/agents_activity.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type ChannelsVoicePhoneNumbersSearchInput struct {
+func (c *Client) ChannelsVoiceStatsCurrentQueueActivityList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/channels/voice/stats/current_queue_activity.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) ChannelsVoicePhoneNumbersSearch(i *ChannelsVoicePhoneNumbersSearchInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/channels/voice/phone_numbers/search.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) ChannelsVoiceStatsHistoricalQueueActivityList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/channels/voice/stats/historical_queue_activity.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type ChannelsVoiceStatsAgentsActivityListInput struct {
+func (c *Client) ChannelsVoiceTicketCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/channels/voice/tickets.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) ChannelsVoiceStatsAgentsActivityList(i *ChannelsVoiceStatsAgentsActivityListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/channels/voice/stats/agents_activity.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type ChannelsVoiceStatsCurrentQueueActivityListInput struct {
-}
-
-func (c *Client) ChannelsVoiceStatsCurrentQueueActivityList(i *ChannelsVoiceStatsCurrentQueueActivityListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/channels/voice/stats/current_queue_activity.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type ChannelsVoiceStatsHistoricalQueueActivityListInput struct {
-}
-
-func (c *Client) ChannelsVoiceStatsHistoricalQueueActivityList(i *ChannelsVoiceStatsHistoricalQueueActivityListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/channels/voice/stats/historical_queue_activity.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type ChannelsVoiceTicketCreateInput struct {
-}
-
-func (c *Client) ChannelsVoiceTicketCreate(i *ChannelsVoiceTicketCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/channels/voice/tickets.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type ChatCreateInput struct {
-}
-
-func (c *Client) ChatCreate(i *ChatCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/chats")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) ChatCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/chats"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type ChatDeleteInput struct {
 	ChatID string
 }
 
-func (c *Client) ChatDelete(i *ChatDeleteInput) ([]byte, error) {
+func (c *Client) ChatDelete(i *ChatDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ChatID == "" {
 		return nil, errors.New("Missing required field 'ChatID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/chats/%s", i.ChatID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/chats/%s"
+	path := fmt.Sprintf(api_path, i.ChatID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type ChatShowInput struct {
 	ChatID string
 }
 
-func (c *Client) ChatShow(i *ChatShowInput) ([]byte, error) {
+func (c *Client) ChatShow(i *ChatShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ChatID == "" {
 		return nil, errors.New("Missing required field 'ChatID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/chats/%s", i.ChatID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/chats/%s"
+	path := fmt.Sprintf(api_path, i.ChatID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type ChatUpdateInput struct {
 	ChatID string
 }
 
-func (c *Client) ChatUpdate(i *ChatUpdateInput) ([]byte, error) {
+func (c *Client) ChatUpdate(i *ChatUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ChatID == "" {
 		return nil, errors.New("Missing required field 'ChatID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/chats/%s", i.ChatID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/chats/%s"
+	path := fmt.Sprintf(api_path, i.ChatID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type ChatsListInput struct {
+func (c *Client) ChatsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/chats"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) ChatsList(i *ChatsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/chats")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type ChatsSearchInput struct {
-}
-
-func (c *Client) ChatsSearch(i *ChatsSearchInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/chats/search")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) ChatsSearch(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/chats/search"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityPostCommentCreateInput struct {
 	PostID string
 }
 
-func (c *Client) CommunityPostCommentCreate(i *CommunityPostCommentCreateInput) ([]byte, error) {
+func (c *Client) CommunityPostCommentCreate(i *CommunityPostCommentCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.PostID == "" {
 		return nil, errors.New("Missing required field 'PostID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/posts/%s/comments.json", i.PostID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/posts/%s/comments.json"
+	path := fmt.Sprintf(api_path, i.PostID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityPostCommentDeleteInput struct {
@@ -2491,7 +1148,7 @@ type CommunityPostCommentDeleteInput struct {
 	ID     string
 }
 
-func (c *Client) CommunityPostCommentDelete(i *CommunityPostCommentDeleteInput) ([]byte, error) {
+func (c *Client) CommunityPostCommentDelete(i *CommunityPostCommentDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.PostID == "" {
 		return nil, errors.New("Missing required field 'PostID'")
 	}
@@ -2500,20 +1157,10 @@ func (c *Client) CommunityPostCommentDelete(i *CommunityPostCommentDeleteInput) 
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/posts/%s/comments/%s.json", i.PostID, i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/posts/%s/comments/%s.json"
+	path := fmt.Sprintf(api_path, i.PostID, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityPostCommentDownCreateInput struct {
@@ -2521,7 +1168,7 @@ type CommunityPostCommentDownCreateInput struct {
 	ID     string
 }
 
-func (c *Client) CommunityPostCommentDownCreate(i *CommunityPostCommentDownCreateInput) ([]byte, error) {
+func (c *Client) CommunityPostCommentDownCreate(i *CommunityPostCommentDownCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.PostID == "" {
 		return nil, errors.New("Missing required field 'PostID'")
 	}
@@ -2530,20 +1177,10 @@ func (c *Client) CommunityPostCommentDownCreate(i *CommunityPostCommentDownCreat
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/posts/%s/comments/%s/down.json", i.PostID, i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/posts/%s/comments/%s/down.json"
+	path := fmt.Sprintf(api_path, i.PostID, i.ID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityPostCommentShowInput struct {
@@ -2551,7 +1188,7 @@ type CommunityPostCommentShowInput struct {
 	ID     string
 }
 
-func (c *Client) CommunityPostCommentShow(i *CommunityPostCommentShowInput) ([]byte, error) {
+func (c *Client) CommunityPostCommentShow(i *CommunityPostCommentShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.PostID == "" {
 		return nil, errors.New("Missing required field 'PostID'")
 	}
@@ -2560,20 +1197,10 @@ func (c *Client) CommunityPostCommentShow(i *CommunityPostCommentShowInput) ([]b
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/posts/%s/comments/%s.json", i.PostID, i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/posts/%s/comments/%s.json"
+	path := fmt.Sprintf(api_path, i.PostID, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityPostCommentUpCreateInput struct {
@@ -2581,7 +1208,7 @@ type CommunityPostCommentUpCreateInput struct {
 	ID     string
 }
 
-func (c *Client) CommunityPostCommentUpCreate(i *CommunityPostCommentUpCreateInput) ([]byte, error) {
+func (c *Client) CommunityPostCommentUpCreate(i *CommunityPostCommentUpCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.PostID == "" {
 		return nil, errors.New("Missing required field 'PostID'")
 	}
@@ -2590,20 +1217,10 @@ func (c *Client) CommunityPostCommentUpCreate(i *CommunityPostCommentUpCreateInp
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/posts/%s/comments/%s/up.json", i.PostID, i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/posts/%s/comments/%s/up.json"
+	path := fmt.Sprintf(api_path, i.PostID, i.ID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityPostCommentUpdateInput struct {
@@ -2611,7 +1228,7 @@ type CommunityPostCommentUpdateInput struct {
 	ID     string
 }
 
-func (c *Client) CommunityPostCommentUpdate(i *CommunityPostCommentUpdateInput) ([]byte, error) {
+func (c *Client) CommunityPostCommentUpdate(i *CommunityPostCommentUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.PostID == "" {
 		return nil, errors.New("Missing required field 'PostID'")
 	}
@@ -2620,20 +1237,10 @@ func (c *Client) CommunityPostCommentUpdate(i *CommunityPostCommentUpdateInput) 
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/posts/%s/comments/%s.json", i.PostID, i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/posts/%s/comments/%s.json"
+	path := fmt.Sprintf(api_path, i.PostID, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityPostCommentVotesInput struct {
@@ -2641,7 +1248,7 @@ type CommunityPostCommentVotesInput struct {
 	CommentID string
 }
 
-func (c *Client) CommunityPostCommentVotes(i *CommunityPostCommentVotesInput) ([]byte, error) {
+func (c *Client) CommunityPostCommentVotes(i *CommunityPostCommentVotesInput, ro *RequestOptions) ([]byte, error) {
 	if i.PostID == "" {
 		return nil, errors.New("Missing required field 'PostID'")
 	}
@@ -2650,165 +1257,90 @@ func (c *Client) CommunityPostCommentVotes(i *CommunityPostCommentVotesInput) ([
 		return nil, errors.New("Missing required field 'CommentID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/posts/%s/comments/%s/votes.json", i.PostID, i.CommentID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/posts/%s/comments/%s/votes.json"
+	path := fmt.Sprintf(api_path, i.PostID, i.CommentID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityPostCommentsInput struct {
 	PostID string
 }
 
-func (c *Client) CommunityPostComments(i *CommunityPostCommentsInput) ([]byte, error) {
+func (c *Client) CommunityPostComments(i *CommunityPostCommentsInput, ro *RequestOptions) ([]byte, error) {
 	if i.PostID == "" {
 		return nil, errors.New("Missing required field 'PostID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/posts/%s/comments.json", i.PostID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/posts/%s/comments.json"
+	path := fmt.Sprintf(api_path, i.PostID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type CommunityPostCreateInput struct {
-}
-
-func (c *Client) CommunityPostCreate(i *CommunityPostCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/community/posts.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) CommunityPostCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/community/posts.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityPostDeleteInput struct {
 	ID string
 }
 
-func (c *Client) CommunityPostDelete(i *CommunityPostDeleteInput) ([]byte, error) {
+func (c *Client) CommunityPostDelete(i *CommunityPostDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/posts/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/posts/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityPostDownCreateInput struct {
 	ID string
 }
 
-func (c *Client) CommunityPostDownCreate(i *CommunityPostDownCreateInput) ([]byte, error) {
+func (c *Client) CommunityPostDownCreate(i *CommunityPostDownCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/posts/%s/down.json", i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/posts/%s/down.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityPostShowInput struct {
 	ID string
 }
 
-func (c *Client) CommunityPostShow(i *CommunityPostShowInput) ([]byte, error) {
+func (c *Client) CommunityPostShow(i *CommunityPostShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/posts/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/posts/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityPostSubscriptionCreateInput struct {
 	PostID string
 }
 
-func (c *Client) CommunityPostSubscriptionCreate(i *CommunityPostSubscriptionCreateInput) ([]byte, error) {
+func (c *Client) CommunityPostSubscriptionCreate(i *CommunityPostSubscriptionCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.PostID == "" {
 		return nil, errors.New("Missing required field 'PostID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/posts/%s/subscriptions.json", i.PostID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/posts/%s/subscriptions.json"
+	path := fmt.Sprintf(api_path, i.PostID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityPostSubscriptionDeleteInput struct {
@@ -2816,7 +1348,7 @@ type CommunityPostSubscriptionDeleteInput struct {
 	ID     string
 }
 
-func (c *Client) CommunityPostSubscriptionDelete(i *CommunityPostSubscriptionDeleteInput) ([]byte, error) {
+func (c *Client) CommunityPostSubscriptionDelete(i *CommunityPostSubscriptionDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.PostID == "" {
 		return nil, errors.New("Missing required field 'PostID'")
 	}
@@ -2825,20 +1357,10 @@ func (c *Client) CommunityPostSubscriptionDelete(i *CommunityPostSubscriptionDel
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/posts/%s/subscriptions/%s.json", i.PostID, i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/posts/%s/subscriptions/%s.json"
+	path := fmt.Sprintf(api_path, i.PostID, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityPostSubscriptionShowInput struct {
@@ -2846,7 +1368,7 @@ type CommunityPostSubscriptionShowInput struct {
 	ID     string
 }
 
-func (c *Client) CommunityPostSubscriptionShow(i *CommunityPostSubscriptionShowInput) ([]byte, error) {
+func (c *Client) CommunityPostSubscriptionShow(i *CommunityPostSubscriptionShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.PostID == "" {
 		return nil, errors.New("Missing required field 'PostID'")
 	}
@@ -2855,310 +1377,170 @@ func (c *Client) CommunityPostSubscriptionShow(i *CommunityPostSubscriptionShowI
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/posts/%s/subscriptions/%s.json", i.PostID, i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/posts/%s/subscriptions/%s.json"
+	path := fmt.Sprintf(api_path, i.PostID, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityPostSubscriptionsInput struct {
 	PostID string
 }
 
-func (c *Client) CommunityPostSubscriptions(i *CommunityPostSubscriptionsInput) ([]byte, error) {
+func (c *Client) CommunityPostSubscriptions(i *CommunityPostSubscriptionsInput, ro *RequestOptions) ([]byte, error) {
 	if i.PostID == "" {
 		return nil, errors.New("Missing required field 'PostID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/posts/%s/subscriptions.json", i.PostID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/posts/%s/subscriptions.json"
+	path := fmt.Sprintf(api_path, i.PostID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityPostUpCreateInput struct {
 	ID string
 }
 
-func (c *Client) CommunityPostUpCreate(i *CommunityPostUpCreateInput) ([]byte, error) {
+func (c *Client) CommunityPostUpCreate(i *CommunityPostUpCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/posts/%s/up.json", i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/posts/%s/up.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityPostUpdateInput struct {
 	ID string
 }
 
-func (c *Client) CommunityPostUpdate(i *CommunityPostUpdateInput) ([]byte, error) {
+func (c *Client) CommunityPostUpdate(i *CommunityPostUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/posts/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/posts/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityPostVotesInput struct {
 	PostID string
 }
 
-func (c *Client) CommunityPostVotes(i *CommunityPostVotesInput) ([]byte, error) {
+func (c *Client) CommunityPostVotes(i *CommunityPostVotesInput, ro *RequestOptions) ([]byte, error) {
 	if i.PostID == "" {
 		return nil, errors.New("Missing required field 'PostID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/posts/%s/votes.json", i.PostID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/posts/%s/votes.json"
+	path := fmt.Sprintf(api_path, i.PostID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type CommunityPostsListInput struct {
-}
-
-func (c *Client) CommunityPostsList(i *CommunityPostsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/community/posts.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) CommunityPostsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/community/posts.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityTopicAccessPolicyInput struct {
 	TopicID string
 }
 
-func (c *Client) CommunityTopicAccessPolicy(i *CommunityTopicAccessPolicyInput) ([]byte, error) {
+func (c *Client) CommunityTopicAccessPolicy(i *CommunityTopicAccessPolicyInput, ro *RequestOptions) ([]byte, error) {
 	if i.TopicID == "" {
 		return nil, errors.New("Missing required field 'TopicID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/topics/%s/access_policy.json", i.TopicID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/topics/%s/access_policy.json"
+	path := fmt.Sprintf(api_path, i.TopicID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityTopicAccessPolicyUpdateInput struct {
 	TopicID string
 }
 
-func (c *Client) CommunityTopicAccessPolicyUpdate(i *CommunityTopicAccessPolicyUpdateInput) ([]byte, error) {
+func (c *Client) CommunityTopicAccessPolicyUpdate(i *CommunityTopicAccessPolicyUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.TopicID == "" {
 		return nil, errors.New("Missing required field 'TopicID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/topics/%s/access_policy.json", i.TopicID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/topics/%s/access_policy.json"
+	path := fmt.Sprintf(api_path, i.TopicID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type CommunityTopicCreateInput struct {
-}
-
-func (c *Client) CommunityTopicCreate(i *CommunityTopicCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/community/topics.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) CommunityTopicCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/community/topics.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityTopicDeleteInput struct {
 	ID string
 }
 
-func (c *Client) CommunityTopicDelete(i *CommunityTopicDeleteInput) ([]byte, error) {
+func (c *Client) CommunityTopicDelete(i *CommunityTopicDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/topics/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/topics/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityTopicPostsInput struct {
 	ID string
 }
 
-func (c *Client) CommunityTopicPosts(i *CommunityTopicPostsInput) ([]byte, error) {
+func (c *Client) CommunityTopicPosts(i *CommunityTopicPostsInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/topics/%s/posts.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/topics/%s/posts.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityTopicShowInput struct {
 	ID string
 }
 
-func (c *Client) CommunityTopicShow(i *CommunityTopicShowInput) ([]byte, error) {
+func (c *Client) CommunityTopicShow(i *CommunityTopicShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/topics/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/topics/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityTopicSubscriptionCreateInput struct {
 	TopicID string
 }
 
-func (c *Client) CommunityTopicSubscriptionCreate(i *CommunityTopicSubscriptionCreateInput) ([]byte, error) {
+func (c *Client) CommunityTopicSubscriptionCreate(i *CommunityTopicSubscriptionCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.TopicID == "" {
 		return nil, errors.New("Missing required field 'TopicID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/topics/%s/subscriptions.json", i.TopicID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/topics/%s/subscriptions.json"
+	path := fmt.Sprintf(api_path, i.TopicID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityTopicSubscriptionDeleteInput struct {
@@ -3166,7 +1548,7 @@ type CommunityTopicSubscriptionDeleteInput struct {
 	ID      string
 }
 
-func (c *Client) CommunityTopicSubscriptionDelete(i *CommunityTopicSubscriptionDeleteInput) ([]byte, error) {
+func (c *Client) CommunityTopicSubscriptionDelete(i *CommunityTopicSubscriptionDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.TopicID == "" {
 		return nil, errors.New("Missing required field 'TopicID'")
 	}
@@ -3175,20 +1557,10 @@ func (c *Client) CommunityTopicSubscriptionDelete(i *CommunityTopicSubscriptionD
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/topics/%s/subscriptions/%s.json", i.TopicID, i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/topics/%s/subscriptions/%s.json"
+	path := fmt.Sprintf(api_path, i.TopicID, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityTopicSubscriptionShowInput struct {
@@ -3196,7 +1568,7 @@ type CommunityTopicSubscriptionShowInput struct {
 	ID      string
 }
 
-func (c *Client) CommunityTopicSubscriptionShow(i *CommunityTopicSubscriptionShowInput) ([]byte, error) {
+func (c *Client) CommunityTopicSubscriptionShow(i *CommunityTopicSubscriptionShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.TopicID == "" {
 		return nil, errors.New("Missing required field 'TopicID'")
 	}
@@ -3205,575 +1577,280 @@ func (c *Client) CommunityTopicSubscriptionShow(i *CommunityTopicSubscriptionSho
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/topics/%s/subscriptions/%s.json", i.TopicID, i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/topics/%s/subscriptions/%s.json"
+	path := fmt.Sprintf(api_path, i.TopicID, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityTopicSubscriptionsInput struct {
 	TopicID string
 }
 
-func (c *Client) CommunityTopicSubscriptions(i *CommunityTopicSubscriptionsInput) ([]byte, error) {
+func (c *Client) CommunityTopicSubscriptions(i *CommunityTopicSubscriptionsInput, ro *RequestOptions) ([]byte, error) {
 	if i.TopicID == "" {
 		return nil, errors.New("Missing required field 'TopicID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/topics/%s/subscriptions.json", i.TopicID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/topics/%s/subscriptions.json"
+	path := fmt.Sprintf(api_path, i.TopicID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityTopicSubscriptionsUpdateInput struct {
 	TopicID string
 }
 
-func (c *Client) CommunityTopicSubscriptionsUpdate(i *CommunityTopicSubscriptionsUpdateInput) ([]byte, error) {
+func (c *Client) CommunityTopicSubscriptionsUpdate(i *CommunityTopicSubscriptionsUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.TopicID == "" {
 		return nil, errors.New("Missing required field 'TopicID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/topics/%s/subscriptions.json", i.TopicID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/topics/%s/subscriptions.json"
+	path := fmt.Sprintf(api_path, i.TopicID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityTopicUpdateInput struct {
 	ID string
 }
 
-func (c *Client) CommunityTopicUpdate(i *CommunityTopicUpdateInput) ([]byte, error) {
+func (c *Client) CommunityTopicUpdate(i *CommunityTopicUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/topics/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/topics/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type CommunityTopicsListInput struct {
-}
-
-func (c *Client) CommunityTopicsList(i *CommunityTopicsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/community/topics.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) CommunityTopicsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/community/topics.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityUserCommentsInput struct {
 	ID string
 }
 
-func (c *Client) CommunityUserComments(i *CommunityUserCommentsInput) ([]byte, error) {
+func (c *Client) CommunityUserComments(i *CommunityUserCommentsInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/users/%s/comments.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/users/%s/comments.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type CommunityUserPostsInput struct {
 	ID string
 }
 
-func (c *Client) CommunityUserPosts(i *CommunityUserPostsInput) ([]byte, error) {
+func (c *Client) CommunityUserPosts(i *CommunityUserPostsInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/community/users/%s/posts.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/community/users/%s/posts.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type CustomRolesListInput struct {
-}
-
-func (c *Client) CustomRolesList(i *CustomRolesListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/custom_roles.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) CustomRolesList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/custom_roles.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type DeletedTicketRestoreUpdateInput struct {
 	ID string
 }
 
-func (c *Client) DeletedTicketRestoreUpdate(i *DeletedTicketRestoreUpdateInput) ([]byte, error) {
+func (c *Client) DeletedTicketRestoreUpdate(i *DeletedTicketRestoreUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/deleted_tickets/%s/restore.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/deleted_tickets/%s/restore.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type DeletedTickets1DeleteInput struct {
+func (c *Client) DeletedTickets1Delete(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/deleted_tickets/1"
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) DeletedTickets1Delete(i *DeletedTickets1DeleteInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/deleted_tickets/1")
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) DeletedTicketsDestroyMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/deleted_tickets/destroy_many"
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
-
-type DeletedTicketsDestroyManyInput struct {
+func (c *Client) DeletedTicketsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/deleted_tickets.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) DeletedTicketsDestroyMany(i *DeletedTicketsDestroyManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/deleted_tickets/destroy_many")
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) DeletedTicketsRestoreManyUpdate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/deleted_tickets/restore_many"
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type DeletedTicketsListInput struct {
-}
-
-func (c *Client) DeletedTicketsList(i *DeletedTicketsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/deleted_tickets.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type DeletedTicketsRestoreManyUpdateInput struct {
-}
-
-func (c *Client) DeletedTicketsRestoreManyUpdate(i *DeletedTicketsRestoreManyUpdateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/deleted_tickets/restore_many")
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type DepartmentCreateInput struct {
-}
-
-func (c *Client) DepartmentCreate(i *DepartmentCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/departments")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) DepartmentCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/departments"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type DepartmentDeleteInput struct {
 	DepartmentID string
 }
 
-func (c *Client) DepartmentDelete(i *DepartmentDeleteInput) ([]byte, error) {
+func (c *Client) DepartmentDelete(i *DepartmentDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.DepartmentID == "" {
 		return nil, errors.New("Missing required field 'DepartmentID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/departments/%s", i.DepartmentID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/departments/%s"
+	path := fmt.Sprintf(api_path, i.DepartmentID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type DepartmentShowInput struct {
 	DepartmentID string
 }
 
-func (c *Client) DepartmentShow(i *DepartmentShowInput) ([]byte, error) {
+func (c *Client) DepartmentShow(i *DepartmentShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.DepartmentID == "" {
 		return nil, errors.New("Missing required field 'DepartmentID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/departments/%s", i.DepartmentID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/departments/%s"
+	path := fmt.Sprintf(api_path, i.DepartmentID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type DepartmentUpdateInput struct {
 	DepartmentIDOrName string
 }
 
-func (c *Client) DepartmentUpdate(i *DepartmentUpdateInput) ([]byte, error) {
+func (c *Client) DepartmentUpdate(i *DepartmentUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.DepartmentIDOrName == "" {
 		return nil, errors.New("Missing required field 'DepartmentIDOrName'")
 	}
 
-	path := fmt.Sprintf("/api/v2/departments/%s", i.DepartmentIDOrName)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/departments/%s"
+	path := fmt.Sprintf(api_path, i.DepartmentIDOrName)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type DepartmentsListInput struct {
-}
-
-func (c *Client) DepartmentsList(i *DepartmentsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/departments")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) DepartmentsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/departments"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type DepartmentsNameDeleteInput struct {
 	Name string
 }
 
-func (c *Client) DepartmentsNameDelete(i *DepartmentsNameDeleteInput) ([]byte, error) {
+func (c *Client) DepartmentsNameDelete(i *DepartmentsNameDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.Name == "" {
 		return nil, errors.New("Missing required field 'Name'")
 	}
 
-	path := fmt.Sprintf("/api/v2/departments/name/%s", i.Name)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/departments/name/%s"
+	path := fmt.Sprintf(api_path, i.Name)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type DepartmentsNameShowInput struct {
 	Name string
 }
 
-func (c *Client) DepartmentsNameShow(i *DepartmentsNameShowInput) ([]byte, error) {
+func (c *Client) DepartmentsNameShow(i *DepartmentsNameShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.Name == "" {
 		return nil, errors.New("Missing required field 'Name'")
 	}
 
-	path := fmt.Sprintf("/api/v2/departments/name/%s", i.Name)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/departments/name/%s"
+	path := fmt.Sprintf(api_path, i.Name)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type DynamicContentItemCreateInput struct {
-}
-
-func (c *Client) DynamicContentItemCreate(i *DynamicContentItemCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/dynamic_content/items.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) DynamicContentItemCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/dynamic_content/items.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type DynamicContentItemDeleteInput struct {
 	ID string
 }
 
-func (c *Client) DynamicContentItemDelete(i *DynamicContentItemDeleteInput) ([]byte, error) {
+func (c *Client) DynamicContentItemDelete(i *DynamicContentItemDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/dynamic_content/items/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/dynamic_content/items/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type DynamicContentItemShowInput struct {
 	ID string
 }
 
-func (c *Client) DynamicContentItemShow(i *DynamicContentItemShowInput) ([]byte, error) {
+func (c *Client) DynamicContentItemShow(i *DynamicContentItemShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/dynamic_content/items/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/dynamic_content/items/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type DynamicContentItemUpdateInput struct {
 	ID string
 }
 
-func (c *Client) DynamicContentItemUpdate(i *DynamicContentItemUpdateInput) ([]byte, error) {
+func (c *Client) DynamicContentItemUpdate(i *DynamicContentItemUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/dynamic_content/items/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/dynamic_content/items/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type DynamicContentItemVariantCreateInput struct {
 	ID string
 }
 
-func (c *Client) DynamicContentItemVariantCreate(i *DynamicContentItemVariantCreateInput) ([]byte, error) {
+func (c *Client) DynamicContentItemVariantCreate(i *DynamicContentItemVariantCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/dynamic_content/items/%s/variants.json", i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/dynamic_content/items/%s/variants.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type DynamicContentItemVariantDeleteInput struct {
@@ -3781,7 +1858,7 @@ type DynamicContentItemVariantDeleteInput struct {
 	ID     string
 }
 
-func (c *Client) DynamicContentItemVariantDelete(i *DynamicContentItemVariantDeleteInput) ([]byte, error) {
+func (c *Client) DynamicContentItemVariantDelete(i *DynamicContentItemVariantDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ItemID == "" {
 		return nil, errors.New("Missing required field 'ItemID'")
 	}
@@ -3790,20 +1867,10 @@ func (c *Client) DynamicContentItemVariantDelete(i *DynamicContentItemVariantDel
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/dynamic_content/items/%s/variants/%s.json", i.ItemID, i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/dynamic_content/items/%s/variants/%s.json"
+	path := fmt.Sprintf(api_path, i.ItemID, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type DynamicContentItemVariantShowInput struct {
@@ -3811,7 +1878,7 @@ type DynamicContentItemVariantShowInput struct {
 	ID     string
 }
 
-func (c *Client) DynamicContentItemVariantShow(i *DynamicContentItemVariantShowInput) ([]byte, error) {
+func (c *Client) DynamicContentItemVariantShow(i *DynamicContentItemVariantShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ItemID == "" {
 		return nil, errors.New("Missing required field 'ItemID'")
 	}
@@ -3820,20 +1887,10 @@ func (c *Client) DynamicContentItemVariantShow(i *DynamicContentItemVariantShowI
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/dynamic_content/items/%s/variants/%s.json", i.ItemID, i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/dynamic_content/items/%s/variants/%s.json"
+	path := fmt.Sprintf(api_path, i.ItemID, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type DynamicContentItemVariantUpdateInput struct {
@@ -3841,7 +1898,7 @@ type DynamicContentItemVariantUpdateInput struct {
 	ID     string
 }
 
-func (c *Client) DynamicContentItemVariantUpdate(i *DynamicContentItemVariantUpdateInput) ([]byte, error) {
+func (c *Client) DynamicContentItemVariantUpdate(i *DynamicContentItemVariantUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ItemID == "" {
 		return nil, errors.New("Missing required field 'ItemID'")
 	}
@@ -3850,140 +1907,75 @@ func (c *Client) DynamicContentItemVariantUpdate(i *DynamicContentItemVariantUpd
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/dynamic_content/items/%s/variants/%s.json", i.ItemID, i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/dynamic_content/items/%s/variants/%s.json"
+	path := fmt.Sprintf(api_path, i.ItemID, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type DynamicContentItemVariantsInput struct {
 	ID string
 }
 
-func (c *Client) DynamicContentItemVariants(i *DynamicContentItemVariantsInput) ([]byte, error) {
+func (c *Client) DynamicContentItemVariants(i *DynamicContentItemVariantsInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/dynamic_content/items/%s/variants.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/dynamic_content/items/%s/variants.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type DynamicContentItemVariantsCreateManyInput struct {
 	ID string
 }
 
-func (c *Client) DynamicContentItemVariantsCreateMany(i *DynamicContentItemVariantsCreateManyInput) ([]byte, error) {
+func (c *Client) DynamicContentItemVariantsCreateMany(i *DynamicContentItemVariantsCreateManyInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/dynamic_content/items/%s/variants/create_many.json", i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/dynamic_content/items/%s/variants/create_many.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type DynamicContentItemVariantsUpdateManyInput struct {
 	ID string
 }
 
-func (c *Client) DynamicContentItemVariantsUpdateMany(i *DynamicContentItemVariantsUpdateManyInput) ([]byte, error) {
+func (c *Client) DynamicContentItemVariantsUpdateMany(i *DynamicContentItemVariantsUpdateManyInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/dynamic_content/items/%s/variants/update_many.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/dynamic_content/items/%s/variants/update_many.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type DynamicContentItemsListInput struct {
-}
-
-func (c *Client) DynamicContentItemsList(i *DynamicContentItemsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/dynamic_content/items.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) DynamicContentItemsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/dynamic_content/items.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type EndUserIdentityCreateInput struct {
 	UserID string
 }
 
-func (c *Client) EndUserIdentityCreate(i *EndUserIdentityCreateInput) ([]byte, error) {
+func (c *Client) EndUserIdentityCreate(i *EndUserIdentityCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/end_users/%s/identities.json", i.UserID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/end_users/%s/identities.json"
+	path := fmt.Sprintf(api_path, i.UserID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type EndUserIdentityMakePrimaryInput struct {
@@ -3991,7 +1983,7 @@ type EndUserIdentityMakePrimaryInput struct {
 	ID     string
 }
 
-func (c *Client) EndUserIdentityMakePrimary(i *EndUserIdentityMakePrimaryInput) ([]byte, error) {
+func (c *Client) EndUserIdentityMakePrimary(i *EndUserIdentityMakePrimaryInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
@@ -4000,695 +1992,360 @@ func (c *Client) EndUserIdentityMakePrimary(i *EndUserIdentityMakePrimaryInput) 
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/end_users/%s/identities/%s/make_primary", i.UserID, i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/end_users/%s/identities/%s/make_primary"
+	path := fmt.Sprintf(api_path, i.UserID, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type EndUserShowInput struct {
 	ID string
 }
 
-func (c *Client) EndUserShow(i *EndUserShowInput) ([]byte, error) {
+func (c *Client) EndUserShow(i *EndUserShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/end_users/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/end_users/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type EndUserUpdateInput struct {
 	ID string
 }
 
-func (c *Client) EndUserUpdate(i *EndUserUpdateInput) ([]byte, error) {
+func (c *Client) EndUserUpdate(i *EndUserUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/end_users/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/end_users/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type GoalCreateInput struct {
-}
-
-func (c *Client) GoalCreate(i *GoalCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/goals")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) GoalCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/goals"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type GoalDeleteInput struct {
 	GoalID string
 }
 
-func (c *Client) GoalDelete(i *GoalDeleteInput) ([]byte, error) {
+func (c *Client) GoalDelete(i *GoalDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.GoalID == "" {
 		return nil, errors.New("Missing required field 'GoalID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/goals/%s", i.GoalID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/goals/%s"
+	path := fmt.Sprintf(api_path, i.GoalID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type GoalShowInput struct {
 	GoalID string
 }
 
-func (c *Client) GoalShow(i *GoalShowInput) ([]byte, error) {
+func (c *Client) GoalShow(i *GoalShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.GoalID == "" {
 		return nil, errors.New("Missing required field 'GoalID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/goals/%s", i.GoalID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/goals/%s"
+	path := fmt.Sprintf(api_path, i.GoalID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type GoalUpdateInput struct {
 	GoalID string
 }
 
-func (c *Client) GoalUpdate(i *GoalUpdateInput) ([]byte, error) {
+func (c *Client) GoalUpdate(i *GoalUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.GoalID == "" {
 		return nil, errors.New("Missing required field 'GoalID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/goals/%s", i.GoalID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/goals/%s"
+	path := fmt.Sprintf(api_path, i.GoalID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type GoalsListInput struct {
+func (c *Client) GoalsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/goals"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) GoalsList(i *GoalsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/goals")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type GroupCreateInput struct {
-}
-
-func (c *Client) GroupCreate(i *GroupCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/groups.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) GroupCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/groups.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type GroupDeleteInput struct {
 	ID string
 }
 
-func (c *Client) GroupDelete(i *GroupDeleteInput) ([]byte, error) {
+func (c *Client) GroupDelete(i *GroupDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/groups/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/groups/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
-
-type GroupMembershipCreateInput struct {
-}
-
-func (c *Client) GroupMembershipCreate(i *GroupMembershipCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/group_memberships.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) GroupMembershipCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/group_memberships.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type GroupMembershipDeleteInput struct {
 	ID string
 }
 
-func (c *Client) GroupMembershipDelete(i *GroupMembershipDeleteInput) ([]byte, error) {
+func (c *Client) GroupMembershipDelete(i *GroupMembershipDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/group_memberships/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/group_memberships/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type GroupMembershipShowInput struct {
 	ID string
 }
 
-func (c *Client) GroupMembershipShow(i *GroupMembershipShowInput) ([]byte, error) {
+func (c *Client) GroupMembershipShow(i *GroupMembershipShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/group_memberships/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/group_memberships/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type GroupMembershipsInput struct {
 	GroupID string
 }
 
-func (c *Client) GroupMemberships(i *GroupMembershipsInput) ([]byte, error) {
+func (c *Client) GroupMemberships(i *GroupMembershipsInput, ro *RequestOptions) ([]byte, error) {
 	if i.GroupID == "" {
 		return nil, errors.New("Missing required field 'GroupID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/groups/%s/memberships.json", i.GroupID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/groups/%s/memberships.json"
+	path := fmt.Sprintf(api_path, i.GroupID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type GroupMembershipsAssignableInput struct {
 	GroupID string
 }
 
-func (c *Client) GroupMembershipsAssignable(i *GroupMembershipsAssignableInput) ([]byte, error) {
+func (c *Client) GroupMembershipsAssignable(i *GroupMembershipsAssignableInput, ro *RequestOptions) ([]byte, error) {
 	if i.GroupID == "" {
 		return nil, errors.New("Missing required field 'GroupID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/groups/%s/memberships/assignable.json", i.GroupID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/groups/%s/memberships/assignable.json"
+	path := fmt.Sprintf(api_path, i.GroupID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type GroupMembershipsAssignableListInput struct {
+func (c *Client) GroupMembershipsAssignableList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/group_memberships/assignable.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) GroupMembershipsAssignableList(i *GroupMembershipsAssignableListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/group_memberships/assignable.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) GroupMembershipsCreateMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/group_memberships/create_many.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
-
-type GroupMembershipsCreateManyInput struct {
+func (c *Client) GroupMembershipsDestroyMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/group_memberships/destroy_many.json"
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) GroupMembershipsCreateMany(i *GroupMembershipsCreateManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/group_memberships/create_many.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type GroupMembershipsDestroyManyInput struct {
-}
-
-func (c *Client) GroupMembershipsDestroyMany(i *GroupMembershipsDestroyManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/group_memberships/destroy_many.json")
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type GroupMembershipsListInput struct {
-}
-
-func (c *Client) GroupMembershipsList(i *GroupMembershipsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/group_memberships.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) GroupMembershipsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/group_memberships.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type GroupShowInput struct {
 	ID string
 }
 
-func (c *Client) GroupShow(i *GroupShowInput) ([]byte, error) {
+func (c *Client) GroupShow(i *GroupShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/groups/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/groups/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type GroupUpdateInput struct {
 	ID string
 }
 
-func (c *Client) GroupUpdate(i *GroupUpdateInput) ([]byte, error) {
+func (c *Client) GroupUpdate(i *GroupUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/groups/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/groups/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type GroupUsersInput struct {
 	ID string
 }
 
-func (c *Client) GroupUsers(i *GroupUsersInput) ([]byte, error) {
+func (c *Client) GroupUsers(i *GroupUsersInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/groups/%s/users.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/groups/%s/users.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type GroupsAssignableListInput struct {
+func (c *Client) GroupsAssignableList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/groups/assignable.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) GroupsAssignableList(i *GroupsAssignableListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/groups/assignable.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type GroupsListInput struct {
-}
-
-func (c *Client) GroupsList(i *GroupsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/groups.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) GroupsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/groups.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleAttachmentCreateInput struct {
 	ArticleID string
 }
 
-func (c *Client) HelpCenterArticleAttachmentCreate(i *HelpCenterArticleAttachmentCreateInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleAttachmentCreate(i *HelpCenterArticleAttachmentCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ArticleID == "" {
 		return nil, errors.New("Missing required field 'ArticleID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/attachments.json", i.ArticleID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/articles/%s/attachments.json"
+	path := fmt.Sprintf(api_path, i.ArticleID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleAttachmentsInput struct {
 	ArticleID string
+	Locale    string
 }
 
-func (c *Client) HelpCenterArticleAttachments(i *HelpCenterArticleAttachmentsInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleAttachments(i *HelpCenterArticleAttachmentsInput, ro *RequestOptions) ([]byte, error) {
 	if i.ArticleID == "" {
 		return nil, errors.New("Missing required field 'ArticleID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/attachments.json", i.ArticleID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
+	api_path := "/api/v2/help_center/articles/%s/attachments.json"
+	path := fmt.Sprintf(api_path, i.ArticleID)
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/articles/{article_id}/attachments.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleAttachmentsBlockInput struct {
 	ArticleID string
+	Locale    string
 }
 
-func (c *Client) HelpCenterArticleAttachmentsBlock(i *HelpCenterArticleAttachmentsBlockInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleAttachmentsBlock(i *HelpCenterArticleAttachmentsBlockInput, ro *RequestOptions) ([]byte, error) {
 	if i.ArticleID == "" {
 		return nil, errors.New("Missing required field 'ArticleID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/attachments/block.json", i.ArticleID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
+	api_path := "/api/v2/help_center/articles/%s/attachments/block.json"
+	path := fmt.Sprintf(api_path, i.ArticleID)
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/articles/{article_id}/attachments/block.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleAttachmentsInlineInput struct {
 	ArticleID string
+	Locale    string
 }
 
-func (c *Client) HelpCenterArticleAttachmentsInline(i *HelpCenterArticleAttachmentsInlineInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleAttachmentsInline(i *HelpCenterArticleAttachmentsInlineInput, ro *RequestOptions) ([]byte, error) {
 	if i.ArticleID == "" {
 		return nil, errors.New("Missing required field 'ArticleID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/attachments/inline.json", i.ArticleID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
+	api_path := "/api/v2/help_center/articles/%s/attachments/inline.json"
+	path := fmt.Sprintf(api_path, i.ArticleID)
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/articles/{article_id}/attachments/inline.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleBulkAttachmentCreateInput struct {
 	ID string
 }
 
-func (c *Client) HelpCenterArticleBulkAttachmentCreate(i *HelpCenterArticleBulkAttachmentCreateInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleBulkAttachmentCreate(i *HelpCenterArticleBulkAttachmentCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/bulk_attachments.json", i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/articles/%s/bulk_attachments.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleCommentCreateInput struct {
 	ID string
 }
 
-func (c *Client) HelpCenterArticleCommentCreate(i *HelpCenterArticleCommentCreateInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleCommentCreate(i *HelpCenterArticleCommentCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/comments.json", i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/articles/%s/comments.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleCommentDeleteInput struct {
@@ -4696,7 +2353,7 @@ type HelpCenterArticleCommentDeleteInput struct {
 	ID        string
 }
 
-func (c *Client) HelpCenterArticleCommentDelete(i *HelpCenterArticleCommentDeleteInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleCommentDelete(i *HelpCenterArticleCommentDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ArticleID == "" {
 		return nil, errors.New("Missing required field 'ArticleID'")
 	}
@@ -4705,20 +2362,10 @@ func (c *Client) HelpCenterArticleCommentDelete(i *HelpCenterArticleCommentDelet
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/comments/%s.json", i.ArticleID, i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/articles/%s/comments/%s.json"
+	path := fmt.Sprintf(api_path, i.ArticleID, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleCommentDownCreateInput struct {
@@ -4726,7 +2373,7 @@ type HelpCenterArticleCommentDownCreateInput struct {
 	ID        string
 }
 
-func (c *Client) HelpCenterArticleCommentDownCreate(i *HelpCenterArticleCommentDownCreateInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleCommentDownCreate(i *HelpCenterArticleCommentDownCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ArticleID == "" {
 		return nil, errors.New("Missing required field 'ArticleID'")
 	}
@@ -4735,28 +2382,19 @@ func (c *Client) HelpCenterArticleCommentDownCreate(i *HelpCenterArticleCommentD
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/comments/%s/down.json", i.ArticleID, i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/articles/%s/comments/%s/down.json"
+	path := fmt.Sprintf(api_path, i.ArticleID, i.ID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleCommentShowInput struct {
 	ArticleID string
 	ID        string
+	Locale    string
 }
 
-func (c *Client) HelpCenterArticleCommentShow(i *HelpCenterArticleCommentShowInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleCommentShow(i *HelpCenterArticleCommentShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ArticleID == "" {
 		return nil, errors.New("Missing required field 'ArticleID'")
 	}
@@ -4765,20 +2403,14 @@ func (c *Client) HelpCenterArticleCommentShow(i *HelpCenterArticleCommentShowInp
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/comments/%s.json", i.ArticleID, i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
+	api_path := "/api/v2/help_center/articles/%s/comments/%s.json"
+	path := fmt.Sprintf(api_path, i.ArticleID, i.ID)
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/articles/{article_id}/comments/{id}.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleCommentUpCreateInput struct {
@@ -4786,7 +2418,7 @@ type HelpCenterArticleCommentUpCreateInput struct {
 	ID        string
 }
 
-func (c *Client) HelpCenterArticleCommentUpCreate(i *HelpCenterArticleCommentUpCreateInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleCommentUpCreate(i *HelpCenterArticleCommentUpCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ArticleID == "" {
 		return nil, errors.New("Missing required field 'ArticleID'")
 	}
@@ -4795,20 +2427,10 @@ func (c *Client) HelpCenterArticleCommentUpCreate(i *HelpCenterArticleCommentUpC
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/comments/%s/up.json", i.ArticleID, i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/articles/%s/comments/%s/up.json"
+	path := fmt.Sprintf(api_path, i.ArticleID, i.ID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleCommentUpdateInput struct {
@@ -4816,7 +2438,7 @@ type HelpCenterArticleCommentUpdateInput struct {
 	ID        string
 }
 
-func (c *Client) HelpCenterArticleCommentUpdate(i *HelpCenterArticleCommentUpdateInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleCommentUpdate(i *HelpCenterArticleCommentUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ArticleID == "" {
 		return nil, errors.New("Missing required field 'ArticleID'")
 	}
@@ -4825,28 +2447,19 @@ func (c *Client) HelpCenterArticleCommentUpdate(i *HelpCenterArticleCommentUpdat
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/comments/%s.json", i.ArticleID, i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/articles/%s/comments/%s.json"
+	path := fmt.Sprintf(api_path, i.ArticleID, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleCommentVotesInput struct {
 	ArticleID string
 	CommentID string
+	Locale    string
 }
 
-func (c *Client) HelpCenterArticleCommentVotes(i *HelpCenterArticleCommentVotesInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleCommentVotes(i *HelpCenterArticleCommentVotesInput, ro *RequestOptions) ([]byte, error) {
 	if i.ArticleID == "" {
 		return nil, errors.New("Missing required field 'ArticleID'")
 	}
@@ -4855,120 +2468,79 @@ func (c *Client) HelpCenterArticleCommentVotes(i *HelpCenterArticleCommentVotesI
 		return nil, errors.New("Missing required field 'CommentID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/comments/%s/votes.json", i.ArticleID, i.CommentID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
+	api_path := "/api/v2/help_center/articles/%s/comments/%s/votes.json"
+	path := fmt.Sprintf(api_path, i.ArticleID, i.CommentID)
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/articles/{article_id}/comments/{comment_id}/votes.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleCommentsInput struct {
-	ID string
+	ID     string
+	Locale string
 }
 
-func (c *Client) HelpCenterArticleComments(i *HelpCenterArticleCommentsInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleComments(i *HelpCenterArticleCommentsInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/comments.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
+	api_path := "/api/v2/help_center/articles/%s/comments.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/articles/{id}/comments.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleDeleteInput struct {
 	ID string
 }
 
-func (c *Client) HelpCenterArticleDelete(i *HelpCenterArticleDeleteInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleDelete(i *HelpCenterArticleDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/articles/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleDownCreateInput struct {
 	ID string
 }
 
-func (c *Client) HelpCenterArticleDownCreate(i *HelpCenterArticleDownCreateInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleDownCreate(i *HelpCenterArticleDownCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/down.json", i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/articles/%s/down.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleLabelCreateInput struct {
 	ID string
 }
 
-func (c *Client) HelpCenterArticleLabelCreate(i *HelpCenterArticleLabelCreateInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleLabelCreate(i *HelpCenterArticleLabelCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/labels.json", i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/articles/%s/labels.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleLabelDeleteInput struct {
@@ -4976,7 +2548,7 @@ type HelpCenterArticleLabelDeleteInput struct {
 	ID        string
 }
 
-func (c *Client) HelpCenterArticleLabelDelete(i *HelpCenterArticleLabelDeleteInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleLabelDelete(i *HelpCenterArticleLabelDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ArticleID == "" {
 		return nil, errors.New("Missing required field 'ArticleID'")
 	}
@@ -4985,45 +2557,25 @@ func (c *Client) HelpCenterArticleLabelDelete(i *HelpCenterArticleLabelDeleteInp
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/labels/%s.json", i.ArticleID, i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/articles/%s/labels/%s.json"
+	path := fmt.Sprintf(api_path, i.ArticleID, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleLabelsInput struct {
 	ID string
 }
 
-func (c *Client) HelpCenterArticleLabels(i *HelpCenterArticleLabelsInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleLabels(i *HelpCenterArticleLabelsInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/labels.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/articles/%s/labels.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleShowInput struct {
@@ -5031,7 +2583,7 @@ type HelpCenterArticleShowInput struct {
 	ID     string
 }
 
-func (c *Client) HelpCenterArticleShow(i *HelpCenterArticleShowInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleShow(i *HelpCenterArticleShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.Locale == "" {
 		return nil, errors.New("Missing required field 'Locale'")
 	}
@@ -5040,70 +2592,40 @@ func (c *Client) HelpCenterArticleShow(i *HelpCenterArticleShowInput) ([]byte, e
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/%s/articles/%s.json", i.Locale, i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/%s/articles/%s.json"
+	path := fmt.Sprintf(api_path, i.Locale, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleSourceLocaleUpdateInput struct {
 	ID string
 }
 
-func (c *Client) HelpCenterArticleSourceLocaleUpdate(i *HelpCenterArticleSourceLocaleUpdateInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleSourceLocaleUpdate(i *HelpCenterArticleSourceLocaleUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/source_locale.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/articles/%s/source_locale.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleSubscriptionCreateInput struct {
 	ArticleID string
 }
 
-func (c *Client) HelpCenterArticleSubscriptionCreate(i *HelpCenterArticleSubscriptionCreateInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleSubscriptionCreate(i *HelpCenterArticleSubscriptionCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ArticleID == "" {
 		return nil, errors.New("Missing required field 'ArticleID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/subscriptions.json", i.ArticleID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/articles/%s/subscriptions.json"
+	path := fmt.Sprintf(api_path, i.ArticleID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleSubscriptionDeleteInput struct {
@@ -5111,7 +2633,7 @@ type HelpCenterArticleSubscriptionDeleteInput struct {
 	ID        string
 }
 
-func (c *Client) HelpCenterArticleSubscriptionDelete(i *HelpCenterArticleSubscriptionDeleteInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleSubscriptionDelete(i *HelpCenterArticleSubscriptionDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ArticleID == "" {
 		return nil, errors.New("Missing required field 'ArticleID'")
 	}
@@ -5120,28 +2642,19 @@ func (c *Client) HelpCenterArticleSubscriptionDelete(i *HelpCenterArticleSubscri
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/subscriptions/%s.json", i.ArticleID, i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/articles/%s/subscriptions/%s.json"
+	path := fmt.Sprintf(api_path, i.ArticleID, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleSubscriptionShowInput struct {
 	ArticleID string
 	ID        string
+	Locale    string
 }
 
-func (c *Client) HelpCenterArticleSubscriptionShow(i *HelpCenterArticleSubscriptionShowInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleSubscriptionShow(i *HelpCenterArticleSubscriptionShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ArticleID == "" {
 		return nil, errors.New("Missing required field 'ArticleID'")
 	}
@@ -5150,70 +2663,49 @@ func (c *Client) HelpCenterArticleSubscriptionShow(i *HelpCenterArticleSubscript
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/subscriptions/%s.json", i.ArticleID, i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
+	api_path := "/api/v2/help_center/articles/%s/subscriptions/%s.json"
+	path := fmt.Sprintf(api_path, i.ArticleID, i.ID)
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/articles/{article_id}/subscriptions/{id}.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleSubscriptionsInput struct {
 	ArticleID string
+	Locale    string
 }
 
-func (c *Client) HelpCenterArticleSubscriptions(i *HelpCenterArticleSubscriptionsInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleSubscriptions(i *HelpCenterArticleSubscriptionsInput, ro *RequestOptions) ([]byte, error) {
 	if i.ArticleID == "" {
 		return nil, errors.New("Missing required field 'ArticleID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/subscriptions.json", i.ArticleID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
+	api_path := "/api/v2/help_center/articles/%s/subscriptions.json"
+	path := fmt.Sprintf(api_path, i.ArticleID)
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/articles/{article_id}/subscriptions.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleTranslationCreateInput struct {
 	ArticleID string
 }
 
-func (c *Client) HelpCenterArticleTranslationCreate(i *HelpCenterArticleTranslationCreateInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleTranslationCreate(i *HelpCenterArticleTranslationCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ArticleID == "" {
 		return nil, errors.New("Missing required field 'ArticleID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/translations.json", i.ArticleID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/articles/%s/translations.json"
+	path := fmt.Sprintf(api_path, i.ArticleID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleTranslationShowInput struct {
@@ -5221,7 +2713,7 @@ type HelpCenterArticleTranslationShowInput struct {
 	Locale    string
 }
 
-func (c *Client) HelpCenterArticleTranslationShow(i *HelpCenterArticleTranslationShowInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleTranslationShow(i *HelpCenterArticleTranslationShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ArticleID == "" {
 		return nil, errors.New("Missing required field 'ArticleID'")
 	}
@@ -5230,20 +2722,10 @@ func (c *Client) HelpCenterArticleTranslationShow(i *HelpCenterArticleTranslatio
 		return nil, errors.New("Missing required field 'Locale'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/translations/%s.json", i.ArticleID, i.Locale)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/articles/%s/translations/%s.json"
+	path := fmt.Sprintf(api_path, i.ArticleID, i.Locale)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleTranslationUpdateInput struct {
@@ -5251,7 +2733,7 @@ type HelpCenterArticleTranslationUpdateInput struct {
 	Locale    string
 }
 
-func (c *Client) HelpCenterArticleTranslationUpdate(i *HelpCenterArticleTranslationUpdateInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleTranslationUpdate(i *HelpCenterArticleTranslationUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ArticleID == "" {
 		return nil, errors.New("Missing required field 'ArticleID'")
 	}
@@ -5260,515 +2742,336 @@ func (c *Client) HelpCenterArticleTranslationUpdate(i *HelpCenterArticleTranslat
 		return nil, errors.New("Missing required field 'Locale'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/translations/%s.json", i.ArticleID, i.Locale)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/articles/%s/translations/%s.json"
+	path := fmt.Sprintf(api_path, i.ArticleID, i.Locale)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleTranslationsInput struct {
 	ArticleID string
 }
 
-func (c *Client) HelpCenterArticleTranslations(i *HelpCenterArticleTranslationsInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleTranslations(i *HelpCenterArticleTranslationsInput, ro *RequestOptions) ([]byte, error) {
 	if i.ArticleID == "" {
 		return nil, errors.New("Missing required field 'ArticleID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/translations.json", i.ArticleID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/articles/%s/translations.json"
+	path := fmt.Sprintf(api_path, i.ArticleID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleTranslationsMissingInput struct {
 	ArticleID string
 }
 
-func (c *Client) HelpCenterArticleTranslationsMissing(i *HelpCenterArticleTranslationsMissingInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleTranslationsMissing(i *HelpCenterArticleTranslationsMissingInput, ro *RequestOptions) ([]byte, error) {
 	if i.ArticleID == "" {
 		return nil, errors.New("Missing required field 'ArticleID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/translations/missing.json", i.ArticleID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/articles/%s/translations/missing.json"
+	path := fmt.Sprintf(api_path, i.ArticleID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleUpCreateInput struct {
 	ID string
 }
 
-func (c *Client) HelpCenterArticleUpCreate(i *HelpCenterArticleUpCreateInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleUpCreate(i *HelpCenterArticleUpCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/up.json", i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/articles/%s/up.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleUpdateInput struct {
-	ID string
+	ID     string
+	Locale string
 }
 
-func (c *Client) HelpCenterArticleUpdate(i *HelpCenterArticleUpdateInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleUpdate(i *HelpCenterArticleUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
+	api_path := "/api/v2/help_center/articles/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/articles/{id}.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticleVotesInput struct {
 	ArticleID string
+	Locale    string
 }
 
-func (c *Client) HelpCenterArticleVotes(i *HelpCenterArticleVotesInput) ([]byte, error) {
+func (c *Client) HelpCenterArticleVotes(i *HelpCenterArticleVotesInput, ro *RequestOptions) ([]byte, error) {
 	if i.ArticleID == "" {
 		return nil, errors.New("Missing required field 'ArticleID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/%s/votes.json", i.ArticleID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
+	api_path := "/api/v2/help_center/articles/%s/votes.json"
+	path := fmt.Sprintf(api_path, i.ArticleID)
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/articles/{article_id}/votes.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type HelpCenterArticlesAttachmentCreateInput struct {
-}
-
-func (c *Client) HelpCenterArticlesAttachmentCreate(i *HelpCenterArticlesAttachmentCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/help_center/articles/attachments.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) HelpCenterArticlesAttachmentCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/help_center/articles/attachments.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticlesAttachmentDeleteInput struct {
 	ID string
 }
 
-func (c *Client) HelpCenterArticlesAttachmentDelete(i *HelpCenterArticlesAttachmentDeleteInput) ([]byte, error) {
+func (c *Client) HelpCenterArticlesAttachmentDelete(i *HelpCenterArticlesAttachmentDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/attachments/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/articles/attachments/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticlesAttachmentShowInput struct {
-	ID string
+	ID     string
+	Locale string
 }
 
-func (c *Client) HelpCenterArticlesAttachmentShow(i *HelpCenterArticlesAttachmentShowInput) ([]byte, error) {
+func (c *Client) HelpCenterArticlesAttachmentShow(i *HelpCenterArticlesAttachmentShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/attachments/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
+	api_path := "/api/v2/help_center/articles/attachments/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/articles/attachments/{id}.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticlesLabelShowInput struct {
 	ID string
 }
 
-func (c *Client) HelpCenterArticlesLabelShow(i *HelpCenterArticlesLabelShowInput) ([]byte, error) {
+func (c *Client) HelpCenterArticlesLabelShow(i *HelpCenterArticlesLabelShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/articles/labels/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/articles/labels/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticlesLabelsListInput struct {
+	Locale string
 }
 
-func (c *Client) HelpCenterArticlesLabelsList(i *HelpCenterArticlesLabelsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/help_center/articles/labels.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
+func (c *Client) HelpCenterArticlesLabelsList(i *HelpCenterArticlesLabelsListInput, ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/help_center/articles/labels.json"
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/articles/labels.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterArticlesListInput struct {
+	Locale string
 }
 
-func (c *Client) HelpCenterArticlesList(i *HelpCenterArticlesListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/help_center/articles.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
+func (c *Client) HelpCenterArticlesList(i *HelpCenterArticlesListInput, ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/help_center/articles.json"
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/articles.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type HelpCenterArticlesSearchInput struct {
-}
-
-func (c *Client) HelpCenterArticlesSearch(i *HelpCenterArticlesSearchInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/help_center/articles/search.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) HelpCenterArticlesSearch(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/help_center/articles/search.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterCategoriesListInput struct {
+	Locale string
 }
 
-func (c *Client) HelpCenterCategoriesList(i *HelpCenterCategoriesListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/help_center/categories.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
+func (c *Client) HelpCenterCategoriesList(i *HelpCenterCategoriesListInput, ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/help_center/categories.json"
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/categories.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterCategoryArticlesInput struct {
-	ID string
+	ID     string
+	Locale string
 }
 
-func (c *Client) HelpCenterCategoryArticles(i *HelpCenterCategoryArticlesInput) ([]byte, error) {
+func (c *Client) HelpCenterCategoryArticles(i *HelpCenterCategoryArticlesInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/categories/%s/articles.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
+	api_path := "/api/v2/help_center/categories/%s/articles.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/categories/{id}/articles.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterCategoryCreateInput struct {
+	Locale string
 }
 
-func (c *Client) HelpCenterCategoryCreate(i *HelpCenterCategoryCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/help_center/categories.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
+func (c *Client) HelpCenterCategoryCreate(i *HelpCenterCategoryCreateInput, ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/help_center/categories.json"
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/categories.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterCategoryDeleteInput struct {
 	ID string
 }
 
-func (c *Client) HelpCenterCategoryDelete(i *HelpCenterCategoryDeleteInput) ([]byte, error) {
+func (c *Client) HelpCenterCategoryDelete(i *HelpCenterCategoryDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/categories/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/categories/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterCategorySectionCreateInput struct {
-	ID string
+	ID     string
+	Locale string
 }
 
-func (c *Client) HelpCenterCategorySectionCreate(i *HelpCenterCategorySectionCreateInput) ([]byte, error) {
+func (c *Client) HelpCenterCategorySectionCreate(i *HelpCenterCategorySectionCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/categories/%s/sections.json", i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
+	api_path := "/api/v2/help_center/categories/%s/sections.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/categories/{id}/sections.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterCategorySectionsInput struct {
-	ID string
+	ID     string
+	Locale string
 }
 
-func (c *Client) HelpCenterCategorySections(i *HelpCenterCategorySectionsInput) ([]byte, error) {
+func (c *Client) HelpCenterCategorySections(i *HelpCenterCategorySectionsInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/categories/%s/sections.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
+	api_path := "/api/v2/help_center/categories/%s/sections.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/categories/{id}/sections.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterCategoryShowInput struct {
-	ID string
+	ID     string
+	Locale string
 }
 
-func (c *Client) HelpCenterCategoryShow(i *HelpCenterCategoryShowInput) ([]byte, error) {
+func (c *Client) HelpCenterCategoryShow(i *HelpCenterCategoryShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/categories/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
+	api_path := "/api/v2/help_center/categories/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/categories/{id}.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterCategorySourceLocaleUpdateInput struct {
 	ID string
 }
 
-func (c *Client) HelpCenterCategorySourceLocaleUpdate(i *HelpCenterCategorySourceLocaleUpdateInput) ([]byte, error) {
+func (c *Client) HelpCenterCategorySourceLocaleUpdate(i *HelpCenterCategorySourceLocaleUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/categories/%s/source_locale.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/categories/%s/source_locale.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterCategoryTranslationCreateInput struct {
 	CategoryID string
 }
 
-func (c *Client) HelpCenterCategoryTranslationCreate(i *HelpCenterCategoryTranslationCreateInput) ([]byte, error) {
+func (c *Client) HelpCenterCategoryTranslationCreate(i *HelpCenterCategoryTranslationCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.CategoryID == "" {
 		return nil, errors.New("Missing required field 'CategoryID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/categories/%s/translations.json", i.CategoryID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/categories/%s/translations.json"
+	path := fmt.Sprintf(api_path, i.CategoryID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterCategoryTranslationUpdateInput struct {
@@ -5776,7 +3079,7 @@ type HelpCenterCategoryTranslationUpdateInput struct {
 	Locale     string
 }
 
-func (c *Client) HelpCenterCategoryTranslationUpdate(i *HelpCenterCategoryTranslationUpdateInput) ([]byte, error) {
+func (c *Client) HelpCenterCategoryTranslationUpdate(i *HelpCenterCategoryTranslationUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.CategoryID == "" {
 		return nil, errors.New("Missing required field 'CategoryID'")
 	}
@@ -5785,335 +3088,205 @@ func (c *Client) HelpCenterCategoryTranslationUpdate(i *HelpCenterCategoryTransl
 		return nil, errors.New("Missing required field 'Locale'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/categories/%s/translations/%s.json", i.CategoryID, i.Locale)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/categories/%s/translations/%s.json"
+	path := fmt.Sprintf(api_path, i.CategoryID, i.Locale)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterCategoryTranslationsInput struct {
 	CategoryID string
 }
 
-func (c *Client) HelpCenterCategoryTranslations(i *HelpCenterCategoryTranslationsInput) ([]byte, error) {
+func (c *Client) HelpCenterCategoryTranslations(i *HelpCenterCategoryTranslationsInput, ro *RequestOptions) ([]byte, error) {
 	if i.CategoryID == "" {
 		return nil, errors.New("Missing required field 'CategoryID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/categories/%s/translations.json", i.CategoryID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/categories/%s/translations.json"
+	path := fmt.Sprintf(api_path, i.CategoryID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterCategoryTranslationsMissingInput struct {
 	CategoryID string
 }
 
-func (c *Client) HelpCenterCategoryTranslationsMissing(i *HelpCenterCategoryTranslationsMissingInput) ([]byte, error) {
+func (c *Client) HelpCenterCategoryTranslationsMissing(i *HelpCenterCategoryTranslationsMissingInput, ro *RequestOptions) ([]byte, error) {
 	if i.CategoryID == "" {
 		return nil, errors.New("Missing required field 'CategoryID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/categories/%s/translations/missing.json", i.CategoryID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/categories/%s/translations/missing.json"
+	path := fmt.Sprintf(api_path, i.CategoryID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterCategoryUpdateInput struct {
-	ID string
+	ID     string
+	Locale string
 }
 
-func (c *Client) HelpCenterCategoryUpdate(i *HelpCenterCategoryUpdateInput) ([]byte, error) {
+func (c *Client) HelpCenterCategoryUpdate(i *HelpCenterCategoryUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/categories/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
+	api_path := "/api/v2/help_center/categories/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/categories/{id}.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type HelpCenterIncrementalArticlesListInput struct {
+func (c *Client) HelpCenterIncrementalArticlesList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/help_center/incremental/articles.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) HelpCenterIncrementalArticlesList(i *HelpCenterIncrementalArticlesListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/help_center/incremental/articles.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type HelpCenterLocalesListInput struct {
-}
-
-func (c *Client) HelpCenterLocalesList(i *HelpCenterLocalesListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/help_center/locales.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) HelpCenterLocalesList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/help_center/locales.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterSectionAccessPolicyInput struct {
 	SectionID string
 }
 
-func (c *Client) HelpCenterSectionAccessPolicy(i *HelpCenterSectionAccessPolicyInput) ([]byte, error) {
+func (c *Client) HelpCenterSectionAccessPolicy(i *HelpCenterSectionAccessPolicyInput, ro *RequestOptions) ([]byte, error) {
 	if i.SectionID == "" {
 		return nil, errors.New("Missing required field 'SectionID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/sections/%s/access_policy.json", i.SectionID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/sections/%s/access_policy.json"
+	path := fmt.Sprintf(api_path, i.SectionID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterSectionAccessPolicyUpdateInput struct {
 	SectionID string
 }
 
-func (c *Client) HelpCenterSectionAccessPolicyUpdate(i *HelpCenterSectionAccessPolicyUpdateInput) ([]byte, error) {
+func (c *Client) HelpCenterSectionAccessPolicyUpdate(i *HelpCenterSectionAccessPolicyUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.SectionID == "" {
 		return nil, errors.New("Missing required field 'SectionID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/sections/%s/access_policy.json", i.SectionID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/sections/%s/access_policy.json"
+	path := fmt.Sprintf(api_path, i.SectionID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterSectionArticleCreateInput struct {
-	ID string
+	ID     string
+	Locale string
 }
 
-func (c *Client) HelpCenterSectionArticleCreate(i *HelpCenterSectionArticleCreateInput) ([]byte, error) {
+func (c *Client) HelpCenterSectionArticleCreate(i *HelpCenterSectionArticleCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/sections/%s/articles.json", i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
+	api_path := "/api/v2/help_center/sections/%s/articles.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/sections/{id}/articles.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterSectionArticlesInput struct {
-	ID string
+	ID     string
+	Locale string
 }
 
-func (c *Client) HelpCenterSectionArticles(i *HelpCenterSectionArticlesInput) ([]byte, error) {
+func (c *Client) HelpCenterSectionArticles(i *HelpCenterSectionArticlesInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/sections/%s/articles.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
+	api_path := "/api/v2/help_center/sections/%s/articles.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/sections/{id}/articles.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterSectionDeleteInput struct {
 	ID string
 }
 
-func (c *Client) HelpCenterSectionDelete(i *HelpCenterSectionDeleteInput) ([]byte, error) {
+func (c *Client) HelpCenterSectionDelete(i *HelpCenterSectionDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/sections/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/sections/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterSectionShowInput struct {
-	ID string
+	ID     string
+	Locale string
 }
 
-func (c *Client) HelpCenterSectionShow(i *HelpCenterSectionShowInput) ([]byte, error) {
+func (c *Client) HelpCenterSectionShow(i *HelpCenterSectionShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/sections/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
+	api_path := "/api/v2/help_center/sections/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/sections/{id}.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterSectionSourceLocaleUpdateInput struct {
 	ID string
 }
 
-func (c *Client) HelpCenterSectionSourceLocaleUpdate(i *HelpCenterSectionSourceLocaleUpdateInput) ([]byte, error) {
+func (c *Client) HelpCenterSectionSourceLocaleUpdate(i *HelpCenterSectionSourceLocaleUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/sections/%s/source_locale.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/sections/%s/source_locale.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterSectionSubscriptionCreateInput struct {
 	SectionID string
 }
 
-func (c *Client) HelpCenterSectionSubscriptionCreate(i *HelpCenterSectionSubscriptionCreateInput) ([]byte, error) {
+func (c *Client) HelpCenterSectionSubscriptionCreate(i *HelpCenterSectionSubscriptionCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.SectionID == "" {
 		return nil, errors.New("Missing required field 'SectionID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/sections/%s/subscriptions.json", i.SectionID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/sections/%s/subscriptions.json"
+	path := fmt.Sprintf(api_path, i.SectionID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterSectionSubscriptionDeleteInput struct {
@@ -6121,7 +3294,7 @@ type HelpCenterSectionSubscriptionDeleteInput struct {
 	ID        string
 }
 
-func (c *Client) HelpCenterSectionSubscriptionDelete(i *HelpCenterSectionSubscriptionDeleteInput) ([]byte, error) {
+func (c *Client) HelpCenterSectionSubscriptionDelete(i *HelpCenterSectionSubscriptionDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.SectionID == "" {
 		return nil, errors.New("Missing required field 'SectionID'")
 	}
@@ -6130,28 +3303,19 @@ func (c *Client) HelpCenterSectionSubscriptionDelete(i *HelpCenterSectionSubscri
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/sections/%s/subscriptions/%s.json", i.SectionID, i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/sections/%s/subscriptions/%s.json"
+	path := fmt.Sprintf(api_path, i.SectionID, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterSectionSubscriptionShowInput struct {
 	SectionID string
 	ID        string
+	Locale    string
 }
 
-func (c *Client) HelpCenterSectionSubscriptionShow(i *HelpCenterSectionSubscriptionShowInput) ([]byte, error) {
+func (c *Client) HelpCenterSectionSubscriptionShow(i *HelpCenterSectionSubscriptionShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.SectionID == "" {
 		return nil, errors.New("Missing required field 'SectionID'")
 	}
@@ -6160,70 +3324,49 @@ func (c *Client) HelpCenterSectionSubscriptionShow(i *HelpCenterSectionSubscript
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/sections/%s/subscriptions/%s.json", i.SectionID, i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
+	api_path := "/api/v2/help_center/sections/%s/subscriptions/%s.json"
+	path := fmt.Sprintf(api_path, i.SectionID, i.ID)
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/sections/{section_id}/subscriptions/{id}.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterSectionSubscriptionsInput struct {
 	SectionID string
+	Locale    string
 }
 
-func (c *Client) HelpCenterSectionSubscriptions(i *HelpCenterSectionSubscriptionsInput) ([]byte, error) {
+func (c *Client) HelpCenterSectionSubscriptions(i *HelpCenterSectionSubscriptionsInput, ro *RequestOptions) ([]byte, error) {
 	if i.SectionID == "" {
 		return nil, errors.New("Missing required field 'SectionID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/sections/%s/subscriptions.json", i.SectionID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
+	api_path := "/api/v2/help_center/sections/%s/subscriptions.json"
+	path := fmt.Sprintf(api_path, i.SectionID)
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/sections/{section_id}/subscriptions.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterSectionTranslationCreateInput struct {
 	SectionID string
 }
 
-func (c *Client) HelpCenterSectionTranslationCreate(i *HelpCenterSectionTranslationCreateInput) ([]byte, error) {
+func (c *Client) HelpCenterSectionTranslationCreate(i *HelpCenterSectionTranslationCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.SectionID == "" {
 		return nil, errors.New("Missing required field 'SectionID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/sections/%s/translations.json", i.SectionID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/sections/%s/translations.json"
+	path := fmt.Sprintf(api_path, i.SectionID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterSectionTranslationUpdateInput struct {
@@ -6231,7 +3374,7 @@ type HelpCenterSectionTranslationUpdateInput struct {
 	Locale    string
 }
 
-func (c *Client) HelpCenterSectionTranslationUpdate(i *HelpCenterSectionTranslationUpdateInput) ([]byte, error) {
+func (c *Client) HelpCenterSectionTranslationUpdate(i *HelpCenterSectionTranslationUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.SectionID == "" {
 		return nil, errors.New("Missing required field 'SectionID'")
 	}
@@ -6240,1295 +3383,579 @@ func (c *Client) HelpCenterSectionTranslationUpdate(i *HelpCenterSectionTranslat
 		return nil, errors.New("Missing required field 'Locale'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/sections/%s/translations/%s.json", i.SectionID, i.Locale)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/sections/%s/translations/%s.json"
+	path := fmt.Sprintf(api_path, i.SectionID, i.Locale)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterSectionTranslationsInput struct {
 	SectionID string
 }
 
-func (c *Client) HelpCenterSectionTranslations(i *HelpCenterSectionTranslationsInput) ([]byte, error) {
+func (c *Client) HelpCenterSectionTranslations(i *HelpCenterSectionTranslationsInput, ro *RequestOptions) ([]byte, error) {
 	if i.SectionID == "" {
 		return nil, errors.New("Missing required field 'SectionID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/sections/%s/translations.json", i.SectionID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/sections/%s/translations.json"
+	path := fmt.Sprintf(api_path, i.SectionID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterSectionTranslationsMissingInput struct {
 	SectionID string
 }
 
-func (c *Client) HelpCenterSectionTranslationsMissing(i *HelpCenterSectionTranslationsMissingInput) ([]byte, error) {
+func (c *Client) HelpCenterSectionTranslationsMissing(i *HelpCenterSectionTranslationsMissingInput, ro *RequestOptions) ([]byte, error) {
 	if i.SectionID == "" {
 		return nil, errors.New("Missing required field 'SectionID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/sections/%s/translations/missing.json", i.SectionID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/sections/%s/translations/missing.json"
+	path := fmt.Sprintf(api_path, i.SectionID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterSectionUpdateInput struct {
-	ID string
+	ID     string
+	Locale string
 }
 
-func (c *Client) HelpCenterSectionUpdate(i *HelpCenterSectionUpdateInput) ([]byte, error) {
+func (c *Client) HelpCenterSectionUpdate(i *HelpCenterSectionUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/sections/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
+	api_path := "/api/v2/help_center/sections/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/sections/{id}.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterSectionsListInput struct {
+	Locale string
 }
 
-func (c *Client) HelpCenterSectionsList(i *HelpCenterSectionsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/help_center/sections.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
+func (c *Client) HelpCenterSectionsList(i *HelpCenterSectionsListInput, ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/help_center/sections.json"
+	if i.Locale != "" {
+		api_opt_path := "/api/v2/help_center/{locale}/sections.json"
+		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterTranslationDeleteInput struct {
 	ID string
 }
 
-func (c *Client) HelpCenterTranslationDelete(i *HelpCenterTranslationDeleteInput) ([]byte, error) {
+func (c *Client) HelpCenterTranslationDelete(i *HelpCenterTranslationDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/translations/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/translations/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterUserArticlesInput struct {
 	ID string
 }
 
-func (c *Client) HelpCenterUserArticles(i *HelpCenterUserArticlesInput) ([]byte, error) {
+func (c *Client) HelpCenterUserArticles(i *HelpCenterUserArticlesInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/users/%s/articles.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/users/%s/articles.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterUserCommentsInput struct {
 	ID string
 }
 
-func (c *Client) HelpCenterUserComments(i *HelpCenterUserCommentsInput) ([]byte, error) {
+func (c *Client) HelpCenterUserComments(i *HelpCenterUserCommentsInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/users/%s/comments.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/users/%s/comments.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type HelpCenterUserSegmentCreateInput struct {
-}
-
-func (c *Client) HelpCenterUserSegmentCreate(i *HelpCenterUserSegmentCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/help_center/user_segments.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) HelpCenterUserSegmentCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/help_center/user_segments.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterUserSegmentDeleteInput struct {
 	ID string
 }
 
-func (c *Client) HelpCenterUserSegmentDelete(i *HelpCenterUserSegmentDeleteInput) ([]byte, error) {
+func (c *Client) HelpCenterUserSegmentDelete(i *HelpCenterUserSegmentDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/user_segments/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/user_segments/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterUserSegmentSectionsInput struct {
 	UserSegmentID string
 }
 
-func (c *Client) HelpCenterUserSegmentSections(i *HelpCenterUserSegmentSectionsInput) ([]byte, error) {
+func (c *Client) HelpCenterUserSegmentSections(i *HelpCenterUserSegmentSectionsInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserSegmentID == "" {
 		return nil, errors.New("Missing required field 'UserSegmentID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/user_segments/%s/sections.json", i.UserSegmentID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/user_segments/%s/sections.json"
+	path := fmt.Sprintf(api_path, i.UserSegmentID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterUserSegmentShowInput struct {
 	ID string
 }
 
-func (c *Client) HelpCenterUserSegmentShow(i *HelpCenterUserSegmentShowInput) ([]byte, error) {
+func (c *Client) HelpCenterUserSegmentShow(i *HelpCenterUserSegmentShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/user_segments/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/user_segments/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterUserSegmentTopicsInput struct {
 	UserSegmentID string
 }
 
-func (c *Client) HelpCenterUserSegmentTopics(i *HelpCenterUserSegmentTopicsInput) ([]byte, error) {
+func (c *Client) HelpCenterUserSegmentTopics(i *HelpCenterUserSegmentTopicsInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserSegmentID == "" {
 		return nil, errors.New("Missing required field 'UserSegmentID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/user_segments/%s/topics.json", i.UserSegmentID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/user_segments/%s/topics.json"
+	path := fmt.Sprintf(api_path, i.UserSegmentID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterUserSegmentUpdateInput struct {
 	ID string
 }
 
-func (c *Client) HelpCenterUserSegmentUpdate(i *HelpCenterUserSegmentUpdateInput) ([]byte, error) {
+func (c *Client) HelpCenterUserSegmentUpdate(i *HelpCenterUserSegmentUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/user_segments/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/user_segments/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type HelpCenterUserSegmentsApplicableListInput struct {
+func (c *Client) HelpCenterUserSegmentsApplicableList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/help_center/user_segments/applicable.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) HelpCenterUserSegmentsApplicableList(i *HelpCenterUserSegmentsApplicableListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/help_center/user_segments/applicable.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type HelpCenterUserSegmentsListInput struct {
-}
-
-func (c *Client) HelpCenterUserSegmentsList(i *HelpCenterUserSegmentsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/help_center/user_segments.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) HelpCenterUserSegmentsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/help_center/user_segments.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterUserSubscriptionsInput struct {
 	UserID string
 }
 
-func (c *Client) HelpCenterUserSubscriptions(i *HelpCenterUserSubscriptionsInput) ([]byte, error) {
+func (c *Client) HelpCenterUserSubscriptions(i *HelpCenterUserSubscriptionsInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/users/%s/subscriptions.json", i.UserID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/users/%s/subscriptions.json"
+	path := fmt.Sprintf(api_path, i.UserID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterUserVotesInput struct {
 	UserID string
 }
 
-func (c *Client) HelpCenterUserVotes(i *HelpCenterUserVotesInput) ([]byte, error) {
+func (c *Client) HelpCenterUserVotes(i *HelpCenterUserVotesInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/users/%s/votes.json", i.UserID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/users/%s/votes.json"
+	path := fmt.Sprintf(api_path, i.UserID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterVoteDeleteInput struct {
 	ID string
 }
 
-func (c *Client) HelpCenterVoteDelete(i *HelpCenterVoteDeleteInput) ([]byte, error) {
+func (c *Client) HelpCenterVoteDelete(i *HelpCenterVoteDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/votes/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/votes/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type HelpCenterVoteShowInput struct {
 	ID string
 }
 
-func (c *Client) HelpCenterVoteShow(i *HelpCenterVoteShowInput) ([]byte, error) {
+func (c *Client) HelpCenterVoteShow(i *HelpCenterVoteShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/help_center/votes/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/help_center/votes/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type ImportsTicketInput struct {
+func (c *Client) ImportsTicket(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/imports/tickets.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) ImportsTicket(i *ImportsTicketInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/imports/tickets.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) ImportsTicketsCreateMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/imports/tickets/create_many.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
-
-type ImportsTicketsCreateManyInput struct {
-}
-
-func (c *Client) ImportsTicketsCreateMany(i *ImportsTicketsCreateManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/imports/tickets/create_many.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type IncrementalOrganizationsListInput struct {
-}
-
-func (c *Client) IncrementalOrganizationsList(i *IncrementalOrganizationsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/incremental/organizations.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) IncrementalOrganizationsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/incremental/organizations.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type IncrementalSampleInput struct {
 	Item string
 }
 
-func (c *Client) IncrementalSample(i *IncrementalSampleInput) ([]byte, error) {
+func (c *Client) IncrementalSample(i *IncrementalSampleInput, ro *RequestOptions) ([]byte, error) {
 	if i.Item == "" {
 		return nil, errors.New("Missing required field 'Item'")
 	}
 
-	path := fmt.Sprintf("/api/v2/incremental/%s/sample.json", i.Item)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/incremental/%s/sample.json"
+	path := fmt.Sprintf(api_path, i.Item)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type IncrementalTicketEventsListInput struct {
+func (c *Client) IncrementalTicketEventsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/incremental/ticket_events.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) IncrementalTicketEventsList(i *IncrementalTicketEventsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/incremental/ticket_events.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) IncrementalTicketMetricEventsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/incremental/ticket_metric_events.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type IncrementalTicketMetricEventsListInput struct {
+func (c *Client) IncrementalTicketsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/incremental/tickets.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) IncrementalTicketMetricEventsList(i *IncrementalTicketMetricEventsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/incremental/ticket_metric_events.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type IncrementalTicketsListInput struct {
-}
-
-func (c *Client) IncrementalTicketsList(i *IncrementalTicketsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/incremental/tickets.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type IncrementalUsersListInput struct {
-}
-
-func (c *Client) IncrementalUsersList(i *IncrementalUsersListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/incremental/users.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) IncrementalUsersList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/incremental/users.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type JobStatusShowInput struct {
 	ID string
 }
 
-func (c *Client) JobStatusShow(i *JobStatusShowInput) ([]byte, error) {
+func (c *Client) JobStatusShow(i *JobStatusShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/job_statuses/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/job_statuses/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type JobStatusesListInput struct {
+func (c *Client) JobStatusesList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/job_statuses.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) JobStatusesList(i *JobStatusesListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/job_statuses.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type JobStatusesShowManyInput struct {
-}
-
-func (c *Client) JobStatusesShowMany(i *JobStatusesShowManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/job_statuses/show_many.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) JobStatusesShowMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/job_statuses/show_many.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type LocaleShowInput struct {
 	ID string
 }
 
-func (c *Client) LocaleShow(i *LocaleShowInput) ([]byte, error) {
+func (c *Client) LocaleShow(i *LocaleShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/locales/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/locales/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type LocalesAgentListInput struct {
+func (c *Client) LocalesAgentList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/locales/agent.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) LocalesAgentList(i *LocalesAgentListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/locales/agent.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) LocalesCurrentList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/locales/current.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type LocalesCurrentListInput struct {
+func (c *Client) LocalesDetectBestLocale(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/locales/detect_best_locale.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) LocalesCurrentList(i *LocalesCurrentListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/locales/current.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) LocalesList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/locales.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type LocalesDetectBestLocaleInput struct {
-}
-
-func (c *Client) LocalesDetectBestLocale(i *LocalesDetectBestLocaleInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/locales/detect_best_locale.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type LocalesListInput struct {
-}
-
-func (c *Client) LocalesList(i *LocalesListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/locales.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type LocalesPublicListInput struct {
-}
-
-func (c *Client) LocalesPublicList(i *LocalesPublicListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/locales/public.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) LocalesPublicList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/locales/public.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type MacroApplyInput struct {
 	ID string
 }
 
-func (c *Client) MacroApply(i *MacroApplyInput) ([]byte, error) {
+func (c *Client) MacroApply(i *MacroApplyInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/macros/%s/apply.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/macros/%s/apply.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type MacroAttachmentCreateInput struct {
 	MacroID string
 }
 
-func (c *Client) MacroAttachmentCreate(i *MacroAttachmentCreateInput) ([]byte, error) {
+func (c *Client) MacroAttachmentCreate(i *MacroAttachmentCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.MacroID == "" {
 		return nil, errors.New("Missing required field 'MacroID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/macros/%s/attachments.json", i.MacroID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/macros/%s/attachments.json"
+	path := fmt.Sprintf(api_path, i.MacroID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type MacroAttachmentsInput struct {
 	MacroID string
 }
 
-func (c *Client) MacroAttachments(i *MacroAttachmentsInput) ([]byte, error) {
+func (c *Client) MacroAttachments(i *MacroAttachmentsInput, ro *RequestOptions) ([]byte, error) {
 	if i.MacroID == "" {
 		return nil, errors.New("Missing required field 'MacroID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/macros/%s/attachments.json", i.MacroID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/macros/%s/attachments.json"
+	path := fmt.Sprintf(api_path, i.MacroID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type MacroCreateInput struct {
-}
-
-func (c *Client) MacroCreate(i *MacroCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/macros.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) MacroCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/macros.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type MacroDeleteInput struct {
 	ID string
 }
 
-func (c *Client) MacroDelete(i *MacroDeleteInput) ([]byte, error) {
+func (c *Client) MacroDelete(i *MacroDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/macros/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/macros/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type MacroShowInput struct {
 	ID string
 }
 
-func (c *Client) MacroShow(i *MacroShowInput) ([]byte, error) {
+func (c *Client) MacroShow(i *MacroShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/macros/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/macros/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type MacroUpdateInput struct {
 	ID string
 }
 
-func (c *Client) MacroUpdate(i *MacroUpdateInput) ([]byte, error) {
+func (c *Client) MacroUpdate(i *MacroUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/macros/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/macros/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type MacrosActionsListInput struct {
+func (c *Client) MacrosActionsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/macros/actions.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) MacrosActionsList(i *MacrosActionsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/macros/actions.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) MacrosActiveList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/macros/active.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type MacrosActiveListInput struct {
-}
-
-func (c *Client) MacrosActiveList(i *MacrosActiveListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/macros/active.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type MacrosAttachmentCreateInput struct {
-}
-
-func (c *Client) MacrosAttachmentCreate(i *MacrosAttachmentCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/macros/attachments.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) MacrosAttachmentCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/macros/attachments.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type MacrosAttachmentShowInput struct {
 	ID string
 }
 
-func (c *Client) MacrosAttachmentShow(i *MacrosAttachmentShowInput) ([]byte, error) {
+func (c *Client) MacrosAttachmentShow(i *MacrosAttachmentShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/macros/attachments/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/macros/attachments/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type MacrosCategoriesListInput struct {
+func (c *Client) MacrosCategoriesList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/macros/categories.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) MacrosCategoriesList(i *MacrosCategoriesListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/macros/categories.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) MacrosDestroyMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/macros/destroy_many.json"
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
-
-type MacrosDestroyManyInput struct {
+func (c *Client) MacrosList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/macros.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) MacrosDestroyMany(i *MacrosDestroyManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/macros/destroy_many.json")
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) MacrosNewList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/macros/new.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type MacrosListInput struct {
+func (c *Client) MacrosSearch(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/macros/search.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) MacrosList(i *MacrosListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/macros.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) MacrosUpdateMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/macros/update_many.json"
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type MacrosNewListInput struct {
+func (c *Client) NpsIncrementalRecipientsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/nps/incremental/recipients.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) MacrosNewList(i *MacrosNewListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/macros/new.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type MacrosSearchInput struct {
-}
-
-func (c *Client) MacrosSearch(i *MacrosSearchInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/macros/search.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type MacrosUpdateManyInput struct {
-}
-
-func (c *Client) MacrosUpdateMany(i *MacrosUpdateManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/macros/update_many.json")
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type NpsIncrementalRecipientsListInput struct {
-}
-
-func (c *Client) NpsIncrementalRecipientsList(i *NpsIncrementalRecipientsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/nps/incremental/recipients.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type NpsIncrementalResponsesListInput struct {
-}
-
-func (c *Client) NpsIncrementalResponsesList(i *NpsIncrementalResponsesListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/nps/incremental/responses.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) NpsIncrementalResponsesList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/nps/incremental/responses.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type NpsSurveyCloseCreateInput struct {
 	ID string
 }
 
-func (c *Client) NpsSurveyCloseCreate(i *NpsSurveyCloseCreateInput) ([]byte, error) {
+func (c *Client) NpsSurveyCloseCreate(i *NpsSurveyCloseCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/nps/surveys/%s/close", i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/nps/surveys/%s/close"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type NpsSurveyInvitationCreateInput struct {
 	ID string
 }
 
-func (c *Client) NpsSurveyInvitationCreate(i *NpsSurveyInvitationCreateInput) ([]byte, error) {
+func (c *Client) NpsSurveyInvitationCreate(i *NpsSurveyInvitationCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/nps/surveys/%s/invitations.json", i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/nps/surveys/%s/invitations.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type NpsSurveyInvitationShowInput struct {
@@ -7536,7 +3963,7 @@ type NpsSurveyInvitationShowInput struct {
 	ID       string
 }
 
-func (c *Client) NpsSurveyInvitationShow(i *NpsSurveyInvitationShowInput) ([]byte, error) {
+func (c *Client) NpsSurveyInvitationShow(i *NpsSurveyInvitationShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.SurveyID == "" {
 		return nil, errors.New("Missing required field 'SurveyID'")
 	}
@@ -7545,95 +3972,55 @@ func (c *Client) NpsSurveyInvitationShow(i *NpsSurveyInvitationShowInput) ([]byt
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/nps/surveys/%s/invitations/%s.json", i.SurveyID, i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/nps/surveys/%s/invitations/%s.json"
+	path := fmt.Sprintf(api_path, i.SurveyID, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type NpsSurveyInvitationsInput struct {
 	SurveyID string
 }
 
-func (c *Client) NpsSurveyInvitations(i *NpsSurveyInvitationsInput) ([]byte, error) {
+func (c *Client) NpsSurveyInvitations(i *NpsSurveyInvitationsInput, ro *RequestOptions) ([]byte, error) {
 	if i.SurveyID == "" {
 		return nil, errors.New("Missing required field 'SurveyID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/nps/surveys/%s/invitations.json", i.SurveyID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/nps/surveys/%s/invitations.json"
+	path := fmt.Sprintf(api_path, i.SurveyID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type NpsSurveyPreviewInput struct {
 	ID string
 }
 
-func (c *Client) NpsSurveyPreview(i *NpsSurveyPreviewInput) ([]byte, error) {
+func (c *Client) NpsSurveyPreview(i *NpsSurveyPreviewInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/nps/surveys/%s/preview", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/nps/surveys/%s/preview"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type NpsSurveyRecipientCreateInput struct {
 	SurveyID string
 }
 
-func (c *Client) NpsSurveyRecipientCreate(i *NpsSurveyRecipientCreateInput) ([]byte, error) {
+func (c *Client) NpsSurveyRecipientCreate(i *NpsSurveyRecipientCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.SurveyID == "" {
 		return nil, errors.New("Missing required field 'SurveyID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/nps/surveys/%s/recipients.json", i.SurveyID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/nps/surveys/%s/recipients.json"
+	path := fmt.Sprintf(api_path, i.SurveyID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type NpsSurveyRecipientShowInput struct {
@@ -7641,7 +4028,7 @@ type NpsSurveyRecipientShowInput struct {
 	ID       string
 }
 
-func (c *Client) NpsSurveyRecipientShow(i *NpsSurveyRecipientShowInput) ([]byte, error) {
+func (c *Client) NpsSurveyRecipientShow(i *NpsSurveyRecipientShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.SurveyID == "" {
 		return nil, errors.New("Missing required field 'SurveyID'")
 	}
@@ -7650,20 +4037,10 @@ func (c *Client) NpsSurveyRecipientShow(i *NpsSurveyRecipientShowInput) ([]byte,
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/nps/surveys/%s/recipients/%s.json", i.SurveyID, i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/nps/surveys/%s/recipients/%s.json"
+	path := fmt.Sprintf(api_path, i.SurveyID, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type NpsSurveyRecipientUpdateInput struct {
@@ -7671,7 +4048,7 @@ type NpsSurveyRecipientUpdateInput struct {
 	ID       string
 }
 
-func (c *Client) NpsSurveyRecipientUpdate(i *NpsSurveyRecipientUpdateInput) ([]byte, error) {
+func (c *Client) NpsSurveyRecipientUpdate(i *NpsSurveyRecipientUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.SurveyID == "" {
 		return nil, errors.New("Missing required field 'SurveyID'")
 	}
@@ -7680,95 +4057,55 @@ func (c *Client) NpsSurveyRecipientUpdate(i *NpsSurveyRecipientUpdateInput) ([]b
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/nps/surveys/%s/recipients/%s.json", i.SurveyID, i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/nps/surveys/%s/recipients/%s.json"
+	path := fmt.Sprintf(api_path, i.SurveyID, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type NpsSurveyRecipientsInput struct {
 	SurveyID string
 }
 
-func (c *Client) NpsSurveyRecipients(i *NpsSurveyRecipientsInput) ([]byte, error) {
+func (c *Client) NpsSurveyRecipients(i *NpsSurveyRecipientsInput, ro *RequestOptions) ([]byte, error) {
 	if i.SurveyID == "" {
 		return nil, errors.New("Missing required field 'SurveyID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/nps/surveys/%s/recipients.json", i.SurveyID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/nps/surveys/%s/recipients.json"
+	path := fmt.Sprintf(api_path, i.SurveyID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type NpsSurveyRecipientsSearchInput struct {
 	SurveyID string
 }
 
-func (c *Client) NpsSurveyRecipientsSearch(i *NpsSurveyRecipientsSearchInput) ([]byte, error) {
+func (c *Client) NpsSurveyRecipientsSearch(i *NpsSurveyRecipientsSearchInput, ro *RequestOptions) ([]byte, error) {
 	if i.SurveyID == "" {
 		return nil, errors.New("Missing required field 'SurveyID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/nps/surveys/%s/recipients/search.json", i.SurveyID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/nps/surveys/%s/recipients/search.json"
+	path := fmt.Sprintf(api_path, i.SurveyID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type NpsSurveyResponseCreateInput struct {
 	SurveyID string
 }
 
-func (c *Client) NpsSurveyResponseCreate(i *NpsSurveyResponseCreateInput) ([]byte, error) {
+func (c *Client) NpsSurveyResponseCreate(i *NpsSurveyResponseCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.SurveyID == "" {
 		return nil, errors.New("Missing required field 'SurveyID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/nps/surveys/%s/responses.json", i.SurveyID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/nps/surveys/%s/responses.json"
+	path := fmt.Sprintf(api_path, i.SurveyID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type NpsSurveyResponseShowInput struct {
@@ -7776,7 +4113,7 @@ type NpsSurveyResponseShowInput struct {
 	ID       string
 }
 
-func (c *Client) NpsSurveyResponseShow(i *NpsSurveyResponseShowInput) ([]byte, error) {
+func (c *Client) NpsSurveyResponseShow(i *NpsSurveyResponseShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.SurveyID == "" {
 		return nil, errors.New("Missing required field 'SurveyID'")
 	}
@@ -7785,20 +4122,10 @@ func (c *Client) NpsSurveyResponseShow(i *NpsSurveyResponseShowInput) ([]byte, e
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/nps/surveys/%s/responses/%s.json", i.SurveyID, i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/nps/surveys/%s/responses/%s.json"
+	path := fmt.Sprintf(api_path, i.SurveyID, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type NpsSurveyResponseUpdateInput struct {
@@ -7806,7 +4133,7 @@ type NpsSurveyResponseUpdateInput struct {
 	ID       string
 }
 
-func (c *Client) NpsSurveyResponseUpdate(i *NpsSurveyResponseUpdateInput) ([]byte, error) {
+func (c *Client) NpsSurveyResponseUpdate(i *NpsSurveyResponseUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.SurveyID == "" {
 		return nil, errors.New("Missing required field 'SurveyID'")
 	}
@@ -7815,1460 +4142,650 @@ func (c *Client) NpsSurveyResponseUpdate(i *NpsSurveyResponseUpdateInput) ([]byt
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/nps/surveys/%s/responses/%s.json", i.SurveyID, i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/nps/surveys/%s/responses/%s.json"
+	path := fmt.Sprintf(api_path, i.SurveyID, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type NpsSurveyResponsesInput struct {
 	SurveyID string
 }
 
-func (c *Client) NpsSurveyResponses(i *NpsSurveyResponsesInput) ([]byte, error) {
+func (c *Client) NpsSurveyResponses(i *NpsSurveyResponsesInput, ro *RequestOptions) ([]byte, error) {
 	if i.SurveyID == "" {
 		return nil, errors.New("Missing required field 'SurveyID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/nps/surveys/%s/responses.json", i.SurveyID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/nps/surveys/%s/responses.json"
+	path := fmt.Sprintf(api_path, i.SurveyID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type NpsSurveyShowInput struct {
 	ID string
 }
 
-func (c *Client) NpsSurveyShow(i *NpsSurveyShowInput) ([]byte, error) {
+func (c *Client) NpsSurveyShow(i *NpsSurveyShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/nps/surveys/%s", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/nps/surveys/%s"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type NpsSurveys1UpdateInput struct {
+func (c *Client) NpsSurveys1Update(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/nps/surveys/1"
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) NpsSurveys1Update(i *NpsSurveys1UpdateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/nps/surveys/1")
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) NpsSurveysList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/nps/surveys"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type NpsSurveysListInput struct {
-}
-
-func (c *Client) NpsSurveysList(i *NpsSurveysListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/nps/surveys")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type OauthClientCreateInput struct {
-}
-
-func (c *Client) OauthClientCreate(i *OauthClientCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/oauth/clients")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) OauthClientCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/oauth/clients"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type OauthClientDeleteInput struct {
 	ID string
 }
 
-func (c *Client) OauthClientDelete(i *OauthClientDeleteInput) ([]byte, error) {
+func (c *Client) OauthClientDelete(i *OauthClientDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/oauth/clients/%s", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/oauth/clients/%s"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type OauthClientGenerateSecretUpdateInput struct {
 	ID string
 }
 
-func (c *Client) OauthClientGenerateSecretUpdate(i *OauthClientGenerateSecretUpdateInput) ([]byte, error) {
+func (c *Client) OauthClientGenerateSecretUpdate(i *OauthClientGenerateSecretUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/oauth/clients/%s/generate_secret.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/oauth/clients/%s/generate_secret.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type OauthClientShowInput struct {
 	ID string
 }
 
-func (c *Client) OauthClientShow(i *OauthClientShowInput) ([]byte, error) {
+func (c *Client) OauthClientShow(i *OauthClientShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/oauth/clients/%s", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/oauth/clients/%s"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type OauthClientUpdateInput struct {
 	ID string
 }
 
-func (c *Client) OauthClientUpdate(i *OauthClientUpdateInput) ([]byte, error) {
+func (c *Client) OauthClientUpdate(i *OauthClientUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/oauth/clients/%s", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/oauth/clients/%s"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type OauthClientsListInput struct {
+func (c *Client) OauthClientsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/oauth/clients"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) OauthClientsList(i *OauthClientsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/oauth/clients")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) OauthGlobalClientsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/oauth/global_clients.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type OauthGlobalClientsListInput struct {
-}
-
-func (c *Client) OauthGlobalClientsList(i *OauthGlobalClientsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/oauth/global_clients.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type OauthTokenCreateInput struct {
-}
-
-func (c *Client) OauthTokenCreate(i *OauthTokenCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/oauth/tokens.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) OauthTokenCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/oauth/tokens.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type OauthTokenDeleteInput struct {
 	ID string
 }
 
-func (c *Client) OauthTokenDelete(i *OauthTokenDeleteInput) ([]byte, error) {
+func (c *Client) OauthTokenDelete(i *OauthTokenDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/oauth/tokens/%s", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/oauth/tokens/%s"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type OauthTokenShowInput struct {
 	ID string
 }
 
-func (c *Client) OauthTokenShow(i *OauthTokenShowInput) ([]byte, error) {
+func (c *Client) OauthTokenShow(i *OauthTokenShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/oauth/tokens/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/oauth/tokens/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type OauthTokensCurrentDeleteInput struct {
+func (c *Client) OauthTokensCurrentDelete(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/oauth/tokens/current.json"
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) OauthTokensCurrentDelete(i *OauthTokensCurrentDeleteInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/oauth/tokens/current.json")
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) OauthTokensCurrentList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/oauth/tokens/current.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type OauthTokensCurrentListInput struct {
+func (c *Client) OauthTokensList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/oauth/tokens"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) OauthTokensCurrentList(i *OauthTokensCurrentListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/oauth/tokens/current.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type OauthTokensListInput struct {
-}
-
-func (c *Client) OauthTokensList(i *OauthTokensListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/oauth/tokens")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type OrganizationCreateInput struct {
-}
-
-func (c *Client) OrganizationCreate(i *OrganizationCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/organizations.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) OrganizationCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/organizations.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type OrganizationDeleteInput struct {
 	ID string
 }
 
-func (c *Client) OrganizationDelete(i *OrganizationDeleteInput) ([]byte, error) {
+func (c *Client) OrganizationDelete(i *OrganizationDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/organizations/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/organizations/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
-
-type OrganizationFieldCreateInput struct {
-}
-
-func (c *Client) OrganizationFieldCreate(i *OrganizationFieldCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/organization_fields.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) OrganizationFieldCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/organization_fields.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type OrganizationFieldDeleteInput struct {
 	ID string
 }
 
-func (c *Client) OrganizationFieldDelete(i *OrganizationFieldDeleteInput) ([]byte, error) {
+func (c *Client) OrganizationFieldDelete(i *OrganizationFieldDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/organization_fields/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/organization_fields/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type OrganizationFieldShowInput struct {
 	ID string
 }
 
-func (c *Client) OrganizationFieldShow(i *OrganizationFieldShowInput) ([]byte, error) {
+func (c *Client) OrganizationFieldShow(i *OrganizationFieldShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/organization_fields/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/organization_fields/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type OrganizationFieldUpdateInput struct {
 	ID string
 }
 
-func (c *Client) OrganizationFieldUpdate(i *OrganizationFieldUpdateInput) ([]byte, error) {
+func (c *Client) OrganizationFieldUpdate(i *OrganizationFieldUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/organization_fields/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/organization_fields/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type OrganizationFieldsListInput struct {
+func (c *Client) OrganizationFieldsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/organization_fields.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) OrganizationFieldsList(i *OrganizationFieldsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/organization_fields.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) OrganizationFieldsReorder(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/organization_fields/reorder.json"
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type OrganizationFieldsReorderInput struct {
-}
-
-func (c *Client) OrganizationFieldsReorder(i *OrganizationFieldsReorderInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/organization_fields/reorder.json")
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type OrganizationMembershipCreateInput struct {
-}
-
-func (c *Client) OrganizationMembershipCreate(i *OrganizationMembershipCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/organization_memberships.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) OrganizationMembershipCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/organization_memberships.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type OrganizationMembershipDeleteInput struct {
 	ID string
 }
 
-func (c *Client) OrganizationMembershipDelete(i *OrganizationMembershipDeleteInput) ([]byte, error) {
+func (c *Client) OrganizationMembershipDelete(i *OrganizationMembershipDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/organization_memberships/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/organization_memberships/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type OrganizationMembershipShowInput struct {
 	ID string
 }
 
-func (c *Client) OrganizationMembershipShow(i *OrganizationMembershipShowInput) ([]byte, error) {
+func (c *Client) OrganizationMembershipShow(i *OrganizationMembershipShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/organization_memberships/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/organization_memberships/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type OrganizationMembershipsCreateManyInput struct {
+func (c *Client) OrganizationMembershipsCreateMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/organization_memberships/create_many.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) OrganizationMembershipsCreateMany(i *OrganizationMembershipsCreateManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/organization_memberships/create_many.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) OrganizationMembershipsDestroyMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/organization_memberships/destroy_many.json"
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
-
-type OrganizationMembershipsDestroyManyInput struct {
-}
-
-func (c *Client) OrganizationMembershipsDestroyMany(i *OrganizationMembershipsDestroyManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/organization_memberships/destroy_many.json")
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type OrganizationMembershipsListInput struct {
-}
-
-func (c *Client) OrganizationMembershipsList(i *OrganizationMembershipsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/organization_memberships.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) OrganizationMembershipsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/organization_memberships.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type OrganizationOrganizationMembershipsInput struct {
 	OrganizationID string
 }
 
-func (c *Client) OrganizationOrganizationMemberships(i *OrganizationOrganizationMembershipsInput) ([]byte, error) {
+func (c *Client) OrganizationOrganizationMemberships(i *OrganizationOrganizationMembershipsInput, ro *RequestOptions) ([]byte, error) {
 	if i.OrganizationID == "" {
 		return nil, errors.New("Missing required field 'OrganizationID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/organizations/%s/organization_memberships.json", i.OrganizationID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/organizations/%s/organization_memberships.json"
+	path := fmt.Sprintf(api_path, i.OrganizationID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type OrganizationRelatedInput struct {
 	ID string
 }
 
-func (c *Client) OrganizationRelated(i *OrganizationRelatedInput) ([]byte, error) {
+func (c *Client) OrganizationRelated(i *OrganizationRelatedInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/organizations/%s/related.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/organizations/%s/related.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type OrganizationRequestsInput struct {
 	ID string
 }
 
-func (c *Client) OrganizationRequests(i *OrganizationRequestsInput) ([]byte, error) {
+func (c *Client) OrganizationRequests(i *OrganizationRequestsInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/organizations/%s/requests.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/organizations/%s/requests.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type OrganizationShowInput struct {
 	ID string
 }
 
-func (c *Client) OrganizationShow(i *OrganizationShowInput) ([]byte, error) {
+func (c *Client) OrganizationShow(i *OrganizationShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/organizations/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/organizations/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type OrganizationSubscriptionCreateInput struct {
-}
-
-func (c *Client) OrganizationSubscriptionCreate(i *OrganizationSubscriptionCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/organization_subscriptions.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) OrganizationSubscriptionCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/organization_subscriptions.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type OrganizationSubscriptionDeleteInput struct {
 	ID string
 }
 
-func (c *Client) OrganizationSubscriptionDelete(i *OrganizationSubscriptionDeleteInput) ([]byte, error) {
+func (c *Client) OrganizationSubscriptionDelete(i *OrganizationSubscriptionDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/organization_subscriptions/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/organization_subscriptions/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type OrganizationSubscriptionShowInput struct {
 	ID string
 }
 
-func (c *Client) OrganizationSubscriptionShow(i *OrganizationSubscriptionShowInput) ([]byte, error) {
+func (c *Client) OrganizationSubscriptionShow(i *OrganizationSubscriptionShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/organization_subscriptions/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/organization_subscriptions/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type OrganizationSubscriptionsInput struct {
 	OrganizationID string
 }
 
-func (c *Client) OrganizationSubscriptions(i *OrganizationSubscriptionsInput) ([]byte, error) {
+func (c *Client) OrganizationSubscriptions(i *OrganizationSubscriptionsInput, ro *RequestOptions) ([]byte, error) {
 	if i.OrganizationID == "" {
 		return nil, errors.New("Missing required field 'OrganizationID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/organizations/%s/subscriptions.json", i.OrganizationID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/organizations/%s/subscriptions.json"
+	path := fmt.Sprintf(api_path, i.OrganizationID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type OrganizationSubscriptionsListInput struct {
-}
-
-func (c *Client) OrganizationSubscriptionsList(i *OrganizationSubscriptionsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/organization_subscriptions.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) OrganizationSubscriptionsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/organization_subscriptions.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type OrganizationTagCreateInput struct {
 	ID string
 }
 
-func (c *Client) OrganizationTagCreate(i *OrganizationTagCreateInput) ([]byte, error) {
+func (c *Client) OrganizationTagCreate(i *OrganizationTagCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/organizations/%s/tags.json", i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/organizations/%s/tags.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type OrganizationTagsInput struct {
 	ID string
 }
 
-func (c *Client) OrganizationTags(i *OrganizationTagsInput) ([]byte, error) {
+func (c *Client) OrganizationTags(i *OrganizationTagsInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/organizations/%s/tags.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/organizations/%s/tags.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type OrganizationTagsDeleteInput struct {
 	ID string
 }
 
-func (c *Client) OrganizationTagsDelete(i *OrganizationTagsDeleteInput) ([]byte, error) {
+func (c *Client) OrganizationTagsDelete(i *OrganizationTagsDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/organizations/%s/tags.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/organizations/%s/tags.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type OrganizationTagsUpdateInput struct {
 	ID string
 }
 
-func (c *Client) OrganizationTagsUpdate(i *OrganizationTagsUpdateInput) ([]byte, error) {
+func (c *Client) OrganizationTagsUpdate(i *OrganizationTagsUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/organizations/%s/tags.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/organizations/%s/tags.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type OrganizationTicketsInput struct {
 	OrganizationID string
 }
 
-func (c *Client) OrganizationTickets(i *OrganizationTicketsInput) ([]byte, error) {
+func (c *Client) OrganizationTickets(i *OrganizationTicketsInput, ro *RequestOptions) ([]byte, error) {
 	if i.OrganizationID == "" {
 		return nil, errors.New("Missing required field 'OrganizationID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/organizations/%s/tickets.json", i.OrganizationID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/organizations/%s/tickets.json"
+	path := fmt.Sprintf(api_path, i.OrganizationID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type OrganizationUpdateInput struct {
 	ID string
 }
 
-func (c *Client) OrganizationUpdate(i *OrganizationUpdateInput) ([]byte, error) {
+func (c *Client) OrganizationUpdate(i *OrganizationUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/organizations/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/organizations/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type OrganizationUsersInput struct {
 	ID string
 }
 
-func (c *Client) OrganizationUsers(i *OrganizationUsersInput) ([]byte, error) {
+func (c *Client) OrganizationUsers(i *OrganizationUsersInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/organizations/%s/users.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/organizations/%s/users.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type OrganizationsAutocompleteInput struct {
+func (c *Client) OrganizationsAutocomplete(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/organizations/autocomplete.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) OrganizationsAutocomplete(i *OrganizationsAutocompleteInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/organizations/autocomplete.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) OrganizationsCreateMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/organizations/create_many.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
-
-type OrganizationsCreateManyInput struct {
+func (c *Client) OrganizationsCreateOrUpdate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/organizations/create_or_update.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) OrganizationsCreateMany(i *OrganizationsCreateManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/organizations/create_many.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) OrganizationsDestroyMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/organizations/destroy_many.json"
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
-
-type OrganizationsCreateOrUpdateInput struct {
+func (c *Client) OrganizationsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/organizations.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) OrganizationsCreateOrUpdate(i *OrganizationsCreateOrUpdateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/organizations/create_or_update.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) OrganizationsSearch(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/organizations/search.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type OrganizationsDestroyManyInput struct {
+func (c *Client) OrganizationsShowMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/organizations/show_many.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) OrganizationsDestroyMany(i *OrganizationsDestroyManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/organizations/destroy_many.json")
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) OrganizationsUpdateMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/organizations/update_many.json"
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type OrganizationsListInput struct {
+func (c *Client) ProblemsAutocomplete(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/problems/autocomplete.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) OrganizationsList(i *OrganizationsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/organizations.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) ProblemsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/problems.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type OrganizationsSearchInput struct {
+func (c *Client) PushNotificationDevicesDestroyMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/push_notification_devices/destroy_many.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) OrganizationsSearch(i *OrganizationsSearchInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/organizations/search.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type OrganizationsShowManyInput struct {
-}
-
-func (c *Client) OrganizationsShowMany(i *OrganizationsShowManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/organizations/show_many.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type OrganizationsUpdateManyInput struct {
-}
-
-func (c *Client) OrganizationsUpdateMany(i *OrganizationsUpdateManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/organizations/update_many.json")
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type ProblemsAutocompleteInput struct {
-}
-
-func (c *Client) ProblemsAutocomplete(i *ProblemsAutocompleteInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/problems/autocomplete.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type ProblemsListInput struct {
-}
-
-func (c *Client) ProblemsList(i *ProblemsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/problems.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type PushNotificationDevicesDestroyManyInput struct {
-}
-
-func (c *Client) PushNotificationDevicesDestroyMany(i *PushNotificationDevicesDestroyManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/push_notification_devices/destroy_many.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type RecipientAddressCreateInput struct {
-}
-
-func (c *Client) RecipientAddressCreate(i *RecipientAddressCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/recipient_addresses.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) RecipientAddressCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/recipient_addresses.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type RecipientAddressDeleteInput struct {
 	ID string
 }
 
-func (c *Client) RecipientAddressDelete(i *RecipientAddressDeleteInput) ([]byte, error) {
+func (c *Client) RecipientAddressDelete(i *RecipientAddressDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/recipient_addresses/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/recipient_addresses/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type RecipientAddressShowInput struct {
 	ID string
 }
 
-func (c *Client) RecipientAddressShow(i *RecipientAddressShowInput) ([]byte, error) {
+func (c *Client) RecipientAddressShow(i *RecipientAddressShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/recipient_addresses/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/recipient_addresses/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type RecipientAddressUpdateInput struct {
 	ID string
 }
 
-func (c *Client) RecipientAddressUpdate(i *RecipientAddressUpdateInput) ([]byte, error) {
+func (c *Client) RecipientAddressUpdate(i *RecipientAddressUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/recipient_addresses/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/recipient_addresses/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type RecipientAddressVerifyInput struct {
 	ID string
 }
 
-func (c *Client) RecipientAddressVerify(i *RecipientAddressVerifyInput) ([]byte, error) {
+func (c *Client) RecipientAddressVerify(i *RecipientAddressVerifyInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/recipient_addresses/%s/verify.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/recipient_addresses/%s/verify.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type RecipientAddressesListInput struct {
-}
-
-func (c *Client) RecipientAddressesList(i *RecipientAddressesListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/recipient_addresses.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) RecipientAddressesList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/recipient_addresses.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type RequestCommentShowInput struct {
@@ -9276,7 +4793,7 @@ type RequestCommentShowInput struct {
 	ID        string
 }
 
-func (c *Client) RequestCommentShow(i *RequestCommentShowInput) ([]byte, error) {
+func (c *Client) RequestCommentShow(i *RequestCommentShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.RequestID == "" {
 		return nil, errors.New("Missing required field 'RequestID'")
 	}
@@ -9285,1280 +4802,535 @@ func (c *Client) RequestCommentShow(i *RequestCommentShowInput) ([]byte, error) 
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/requests/%s/comments/%s.json", i.RequestID, i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/requests/%s/comments/%s.json"
+	path := fmt.Sprintf(api_path, i.RequestID, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type RequestCommentsInput struct {
 	ID string
 }
 
-func (c *Client) RequestComments(i *RequestCommentsInput) ([]byte, error) {
+func (c *Client) RequestComments(i *RequestCommentsInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/requests/%s/comments.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/requests/%s/comments.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type RequestCreateInput struct {
-}
-
-func (c *Client) RequestCreate(i *RequestCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/requests.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) RequestCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/requests.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type RequestShowInput struct {
 	ID string
 }
 
-func (c *Client) RequestShow(i *RequestShowInput) ([]byte, error) {
+func (c *Client) RequestShow(i *RequestShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/requests/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/requests/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type RequestUpdateInput struct {
 	ID string
 }
 
-func (c *Client) RequestUpdate(i *RequestUpdateInput) ([]byte, error) {
+func (c *Client) RequestUpdate(i *RequestUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/requests/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/requests/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type RequestsCcdListInput struct {
+func (c *Client) RequestsCcdList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/requests/ccd.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) RequestsCcdList(i *RequestsCcdListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/requests/ccd.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) RequestsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/requests.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type RequestsListInput struct {
+func (c *Client) RequestsOpenList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/requests/open.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) RequestsList(i *RequestsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/requests.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) RequestsSearch(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/requests/search.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type RequestsOpenListInput struct {
+func (c *Client) RequestsSolvedList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/requests/solved.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) RequestsOpenList(i *RequestsOpenListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/requests/open.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type RequestsSearchInput struct {
-}
-
-func (c *Client) RequestsSearch(i *RequestsSearchInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/requests/search.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type RequestsSolvedListInput struct {
-}
-
-func (c *Client) RequestsSolvedList(i *RequestsSolvedListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/requests/solved.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type ResourceCollectionCreateInput struct {
-}
-
-func (c *Client) ResourceCollectionCreate(i *ResourceCollectionCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/resource_collections.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) ResourceCollectionCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/resource_collections.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type ResourceCollectionDeleteInput struct {
 	ID string
 }
 
-func (c *Client) ResourceCollectionDelete(i *ResourceCollectionDeleteInput) ([]byte, error) {
+func (c *Client) ResourceCollectionDelete(i *ResourceCollectionDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/resource_collections/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/resource_collections/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type ResourceCollectionShowInput struct {
 	ID string
 }
 
-func (c *Client) ResourceCollectionShow(i *ResourceCollectionShowInput) ([]byte, error) {
+func (c *Client) ResourceCollectionShow(i *ResourceCollectionShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/resource_collections/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/resource_collections/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type ResourceCollectionsListInput struct {
+func (c *Client) ResourceCollectionsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/resource_collections.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) ResourceCollectionsList(i *ResourceCollectionsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/resource_collections.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type ResourceCollectionsUpdateInput struct {
-}
-
-func (c *Client) ResourceCollectionsUpdate(i *ResourceCollectionsUpdateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/resource_collections.json")
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) ResourceCollectionsUpdate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/resource_collections.json"
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type SatisfactionRatingShowInput struct {
 	ID string
 }
 
-func (c *Client) SatisfactionRatingShow(i *SatisfactionRatingShowInput) ([]byte, error) {
+func (c *Client) SatisfactionRatingShow(i *SatisfactionRatingShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/satisfaction_ratings/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/satisfaction_ratings/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type SatisfactionRatingsListInput struct {
-}
-
-func (c *Client) SatisfactionRatingsList(i *SatisfactionRatingsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/satisfaction_ratings.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) SatisfactionRatingsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/satisfaction_ratings.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type SatisfactionReasonShowInput struct {
 	ID string
 }
 
-func (c *Client) SatisfactionReasonShow(i *SatisfactionReasonShowInput) ([]byte, error) {
+func (c *Client) SatisfactionReasonShow(i *SatisfactionReasonShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/satisfaction_reasons/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/satisfaction_reasons/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type SatisfactionReasonsListInput struct {
+func (c *Client) SatisfactionReasonsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/satisfaction_reasons.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) SatisfactionReasonsList(i *SatisfactionReasonsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/satisfaction_reasons.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) Search(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/search.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type SearchInput struct {
+func (c *Client) SessionsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/sessions.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) Search(i *SearchInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/search.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type SessionsListInput struct {
-}
-
-func (c *Client) SessionsList(i *SessionsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/sessions.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type SharingAgreementCreateInput struct {
-}
-
-func (c *Client) SharingAgreementCreate(i *SharingAgreementCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/sharing_agreements.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) SharingAgreementCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/sharing_agreements.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type SharingAgreementDeleteInput struct {
 	ID string
 }
 
-func (c *Client) SharingAgreementDelete(i *SharingAgreementDeleteInput) ([]byte, error) {
+func (c *Client) SharingAgreementDelete(i *SharingAgreementDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/sharing_agreements/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/sharing_agreements/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type SharingAgreementShowInput struct {
 	ID string
 }
 
-func (c *Client) SharingAgreementShow(i *SharingAgreementShowInput) ([]byte, error) {
+func (c *Client) SharingAgreementShow(i *SharingAgreementShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/sharing_agreements/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/sharing_agreements/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type SharingAgreementUpdateInput struct {
 	ID string
 }
 
-func (c *Client) SharingAgreementUpdate(i *SharingAgreementUpdateInput) ([]byte, error) {
+func (c *Client) SharingAgreementUpdate(i *SharingAgreementUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/sharing_agreements/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/sharing_agreements/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type SharingAgreementsListInput struct {
+func (c *Client) SharingAgreementsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/sharing_agreements.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) SharingAgreementsList(i *SharingAgreementsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/sharing_agreements.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type ShortcutCreateInput struct {
-}
-
-func (c *Client) ShortcutCreate(i *ShortcutCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/shortcuts")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) ShortcutCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/shortcuts"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type ShortcutDeleteInput struct {
 	ShortcutName string
 }
 
-func (c *Client) ShortcutDelete(i *ShortcutDeleteInput) ([]byte, error) {
+func (c *Client) ShortcutDelete(i *ShortcutDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ShortcutName == "" {
 		return nil, errors.New("Missing required field 'ShortcutName'")
 	}
 
-	path := fmt.Sprintf("/api/v2/shortcuts/%s", i.ShortcutName)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/shortcuts/%s"
+	path := fmt.Sprintf(api_path, i.ShortcutName)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type ShortcutShowInput struct {
 	ShortcutName string
 }
 
-func (c *Client) ShortcutShow(i *ShortcutShowInput) ([]byte, error) {
+func (c *Client) ShortcutShow(i *ShortcutShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ShortcutName == "" {
 		return nil, errors.New("Missing required field 'ShortcutName'")
 	}
 
-	path := fmt.Sprintf("/api/v2/shortcuts/%s", i.ShortcutName)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/shortcuts/%s"
+	path := fmt.Sprintf(api_path, i.ShortcutName)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type ShortcutUpdateInput struct {
 	ShortcutName string
 }
 
-func (c *Client) ShortcutUpdate(i *ShortcutUpdateInput) ([]byte, error) {
+func (c *Client) ShortcutUpdate(i *ShortcutUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ShortcutName == "" {
 		return nil, errors.New("Missing required field 'ShortcutName'")
 	}
 
-	path := fmt.Sprintf("/api/v2/shortcuts/%s", i.ShortcutName)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/shortcuts/%s"
+	path := fmt.Sprintf(api_path, i.ShortcutName)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type ShortcutsListInput struct {
+func (c *Client) ShortcutsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/shortcuts"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) ShortcutsList(i *ShortcutsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/shortcuts")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) SkipCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/skips.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
-
-type SkipCreateInput struct {
+func (c *Client) SkipsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/skips.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) SkipCreate(i *SkipCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/skips.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) SlasPoliciesDefinitionsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/slas/policies/definitions.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type SkipsListInput struct {
+func (c *Client) SlasPoliciesList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/slas/policies"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) SkipsList(i *SkipsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/skips.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) SlasPoliciesReorder(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/slas/policies/reorder.json"
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type SlasPoliciesDefinitionsListInput struct {
-}
-
-func (c *Client) SlasPoliciesDefinitionsList(i *SlasPoliciesDefinitionsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/slas/policies/definitions.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type SlasPoliciesListInput struct {
-}
-
-func (c *Client) SlasPoliciesList(i *SlasPoliciesListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/slas/policies")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type SlasPoliciesReorderInput struct {
-}
-
-func (c *Client) SlasPoliciesReorder(i *SlasPoliciesReorderInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/slas/policies/reorder.json")
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type SlasPolicyCreateInput struct {
-}
-
-func (c *Client) SlasPolicyCreate(i *SlasPolicyCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/slas/policies")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) SlasPolicyCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/slas/policies"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type SlasPolicyDeleteInput struct {
 	ID string
 }
 
-func (c *Client) SlasPolicyDelete(i *SlasPolicyDeleteInput) ([]byte, error) {
+func (c *Client) SlasPolicyDelete(i *SlasPolicyDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/slas/policies/%s", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/slas/policies/%s"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type SlasPolicyShowInput struct {
 	ID string
 }
 
-func (c *Client) SlasPolicyShow(i *SlasPolicyShowInput) ([]byte, error) {
+func (c *Client) SlasPolicyShow(i *SlasPolicyShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/slas/policies/%s", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/slas/policies/%s"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type SlasPolicyUpdateInput struct {
 	ID string
 }
 
-func (c *Client) SlasPolicyUpdate(i *SlasPolicyUpdateInput) ([]byte, error) {
+func (c *Client) SlasPolicyUpdate(i *SlasPolicyUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/slas/policies/%s", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/slas/policies/%s"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type StreamAgentShowInput struct {
 	MetricKey string
 }
 
-func (c *Client) StreamAgentShow(i *StreamAgentShowInput) ([]byte, error) {
+func (c *Client) StreamAgentShow(i *StreamAgentShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.MetricKey == "" {
 		return nil, errors.New("Missing required field 'MetricKey'")
 	}
 
-	path := fmt.Sprintf("/stream/agents/%s", i.MetricKey)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/stream/agents/%s"
+	path := fmt.Sprintf(api_path, i.MetricKey)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type StreamAgentsAgentsOnlineListInput struct {
+func (c *Client) StreamAgentsAgentsOnlineList(ro *RequestOptions) ([]byte, error) {
+	path := "/stream/agents/agents_online"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) StreamAgentsAgentsOnlineList(i *StreamAgentsAgentsOnlineListInput) ([]byte, error) {
-	path := fmt.Sprintf("/stream/agents/agents_online")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type StreamAgentsListInput struct {
-}
-
-func (c *Client) StreamAgentsList(i *StreamAgentsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/stream/agents")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) StreamAgentsList(ro *RequestOptions) ([]byte, error) {
+	path := "/stream/agents"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type StreamChatShowInput struct {
 	MetricKey string
 }
 
-func (c *Client) StreamChatShow(i *StreamChatShowInput) ([]byte, error) {
+func (c *Client) StreamChatShow(i *StreamChatShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.MetricKey == "" {
 		return nil, errors.New("Missing required field 'MetricKey'")
 	}
 
-	path := fmt.Sprintf("/stream/chats/%s", i.MetricKey)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/stream/chats/%s"
+	path := fmt.Sprintf(api_path, i.MetricKey)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type StreamChatsListInput struct {
+func (c *Client) StreamChatsList(ro *RequestOptions) ([]byte, error) {
+	path := "/stream/chats"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) StreamChatsList(i *StreamChatsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/stream/chats")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type StreamChatsMissedChatsListInput struct {
-}
-
-func (c *Client) StreamChatsMissedChatsList(i *StreamChatsMissedChatsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/stream/chats/missed_chats")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) StreamChatsMissedChatsList(ro *RequestOptions) ([]byte, error) {
+	path := "/stream/chats/missed_chats"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type SuspendedTicketDeleteInput struct {
 	ID string
 }
 
-func (c *Client) SuspendedTicketDelete(i *SuspendedTicketDeleteInput) ([]byte, error) {
+func (c *Client) SuspendedTicketDelete(i *SuspendedTicketDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/suspended_tickets/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/suspended_tickets/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type SuspendedTicketRecoverInput struct {
 	ID string
 }
 
-func (c *Client) SuspendedTicketRecover(i *SuspendedTicketRecoverInput) ([]byte, error) {
+func (c *Client) SuspendedTicketRecover(i *SuspendedTicketRecoverInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/suspended_tickets/%s/recover.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/suspended_tickets/%s/recover.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type SuspendedTicketShowInput struct {
 	ID string
 }
 
-func (c *Client) SuspendedTicketShow(i *SuspendedTicketShowInput) ([]byte, error) {
+func (c *Client) SuspendedTicketShow(i *SuspendedTicketShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/suspended_tickets/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/suspended_tickets/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type SuspendedTicketsDestroyManyInput struct {
+func (c *Client) SuspendedTicketsDestroyMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/suspended_tickets/destroy_many.json"
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) SuspendedTicketsDestroyMany(i *SuspendedTicketsDestroyManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/suspended_tickets/destroy_many.json")
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) SuspendedTicketsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/suspended_tickets.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type SuspendedTicketsListInput struct {
+func (c *Client) SuspendedTicketsRecoverMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/suspended_tickets/recover_many.json"
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) SuspendedTicketsList(i *SuspendedTicketsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/suspended_tickets.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) TagsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/tags.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type SuspendedTicketsRecoverManyInput struct {
-}
-
-func (c *Client) SuspendedTicketsRecoverMany(i *SuspendedTicketsRecoverManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/suspended_tickets/recover_many.json")
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type TagsListInput struct {
-}
-
-func (c *Client) TagsList(i *TagsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/tags.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type TargetCreateInput struct {
-}
-
-func (c *Client) TargetCreate(i *TargetCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/targets.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) TargetCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/targets.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type TargetDeleteInput struct {
 	ID string
 }
 
-func (c *Client) TargetDelete(i *TargetDeleteInput) ([]byte, error) {
+func (c *Client) TargetDelete(i *TargetDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/targets/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/targets/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type TargetShowInput struct {
 	ID string
 }
 
-func (c *Client) TargetShow(i *TargetShowInput) ([]byte, error) {
+func (c *Client) TargetShow(i *TargetShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/targets/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/targets/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type TargetUpdateInput struct {
 	ID string
 }
 
-func (c *Client) TargetUpdate(i *TargetUpdateInput) ([]byte, error) {
+func (c *Client) TargetUpdate(i *TargetUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/targets/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/targets/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type TargetsListInput struct {
-}
-
-func (c *Client) TargetsList(i *TargetsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/targets.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) TargetsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/targets.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type TicketAuditMakePrivateInput struct {
@@ -10566,7 +5338,7 @@ type TicketAuditMakePrivateInput struct {
 	ID       string
 }
 
-func (c *Client) TicketAuditMakePrivate(i *TicketAuditMakePrivateInput) ([]byte, error) {
+func (c *Client) TicketAuditMakePrivate(i *TicketAuditMakePrivateInput, ro *RequestOptions) ([]byte, error) {
 	if i.TicketID == "" {
 		return nil, errors.New("Missing required field 'TicketID'")
 	}
@@ -10575,20 +5347,10 @@ func (c *Client) TicketAuditMakePrivate(i *TicketAuditMakePrivateInput) ([]byte,
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/tickets/%s/audits/%s/make_private.json", i.TicketID, i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/tickets/%s/audits/%s/make_private.json"
+	path := fmt.Sprintf(api_path, i.TicketID, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type TicketAuditShowInput struct {
@@ -10596,7 +5358,7 @@ type TicketAuditShowInput struct {
 	ID       string
 }
 
-func (c *Client) TicketAuditShow(i *TicketAuditShowInput) ([]byte, error) {
+func (c *Client) TicketAuditShow(i *TicketAuditShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.TicketID == "" {
 		return nil, errors.New("Missing required field 'TicketID'")
 	}
@@ -10605,70 +5367,40 @@ func (c *Client) TicketAuditShow(i *TicketAuditShowInput) ([]byte, error) {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/tickets/%s/audits/%s.json", i.TicketID, i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/tickets/%s/audits/%s.json"
+	path := fmt.Sprintf(api_path, i.TicketID, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type TicketAuditsInput struct {
 	TicketID string
 }
 
-func (c *Client) TicketAudits(i *TicketAuditsInput) ([]byte, error) {
+func (c *Client) TicketAudits(i *TicketAuditsInput, ro *RequestOptions) ([]byte, error) {
 	if i.TicketID == "" {
 		return nil, errors.New("Missing required field 'TicketID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/tickets/%s/audits.json", i.TicketID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/tickets/%s/audits.json"
+	path := fmt.Sprintf(api_path, i.TicketID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type TicketCollaboratorsInput struct {
 	ID string
 }
 
-func (c *Client) TicketCollaborators(i *TicketCollaboratorsInput) ([]byte, error) {
+func (c *Client) TicketCollaborators(i *TicketCollaboratorsInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/tickets/%s/collaborators.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/tickets/%s/collaborators.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type TicketCommentAttachmentRedactInput struct {
@@ -10677,7 +5409,7 @@ type TicketCommentAttachmentRedactInput struct {
 	AttachmentID string
 }
 
-func (c *Client) TicketCommentAttachmentRedact(i *TicketCommentAttachmentRedactInput) ([]byte, error) {
+func (c *Client) TicketCommentAttachmentRedact(i *TicketCommentAttachmentRedactInput, ro *RequestOptions) ([]byte, error) {
 	if i.TicketID == "" {
 		return nil, errors.New("Missing required field 'TicketID'")
 	}
@@ -10690,20 +5422,10 @@ func (c *Client) TicketCommentAttachmentRedact(i *TicketCommentAttachmentRedactI
 		return nil, errors.New("Missing required field 'AttachmentID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/tickets/%s/comments/%s/attachments/%s/redact.json", i.TicketID, i.CommentID, i.AttachmentID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/tickets/%s/comments/%s/attachments/%s/redact.json"
+	path := fmt.Sprintf(api_path, i.TicketID, i.CommentID, i.AttachmentID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type TicketCommentMakePrivateInput struct {
@@ -10711,7 +5433,7 @@ type TicketCommentMakePrivateInput struct {
 	ID       string
 }
 
-func (c *Client) TicketCommentMakePrivate(i *TicketCommentMakePrivateInput) ([]byte, error) {
+func (c *Client) TicketCommentMakePrivate(i *TicketCommentMakePrivateInput, ro *RequestOptions) ([]byte, error) {
 	if i.TicketID == "" {
 		return nil, errors.New("Missing required field 'TicketID'")
 	}
@@ -10720,20 +5442,10 @@ func (c *Client) TicketCommentMakePrivate(i *TicketCommentMakePrivateInput) ([]b
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/tickets/%s/comments/%s/make_private.json", i.TicketID, i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/tickets/%s/comments/%s/make_private.json"
+	path := fmt.Sprintf(api_path, i.TicketID, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type TicketCommentRedactInput struct {
@@ -10741,7 +5453,7 @@ type TicketCommentRedactInput struct {
 	ID       string
 }
 
-func (c *Client) TicketCommentRedact(i *TicketCommentRedactInput) ([]byte, error) {
+func (c *Client) TicketCommentRedact(i *TicketCommentRedactInput, ro *RequestOptions) ([]byte, error) {
 	if i.TicketID == "" {
 		return nil, errors.New("Missing required field 'TicketID'")
 	}
@@ -10750,135 +5462,65 @@ func (c *Client) TicketCommentRedact(i *TicketCommentRedactInput) ([]byte, error
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/tickets/%s/comments/%s/redact.json", i.TicketID, i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/tickets/%s/comments/%s/redact.json"
+	path := fmt.Sprintf(api_path, i.TicketID, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type TicketCommentsInput struct {
 	TicketID string
 }
 
-func (c *Client) TicketComments(i *TicketCommentsInput) ([]byte, error) {
+func (c *Client) TicketComments(i *TicketCommentsInput, ro *RequestOptions) ([]byte, error) {
 	if i.TicketID == "" {
 		return nil, errors.New("Missing required field 'TicketID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/tickets/%s/comments.json", i.TicketID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/tickets/%s/comments.json"
+	path := fmt.Sprintf(api_path, i.TicketID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type TicketCreateInput struct {
-}
-
-func (c *Client) TicketCreate(i *TicketCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/tickets.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) TicketCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/tickets.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type TicketDeleteInput struct {
 	ID string
 }
 
-func (c *Client) TicketDelete(i *TicketDeleteInput) ([]byte, error) {
+func (c *Client) TicketDelete(i *TicketDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/tickets/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/tickets/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
-
-type TicketFieldCreateInput struct {
-}
-
-func (c *Client) TicketFieldCreate(i *TicketFieldCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/ticket_fields.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) TicketFieldCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/ticket_fields.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type TicketFieldDeleteInput struct {
 	ID string
 }
 
-func (c *Client) TicketFieldDelete(i *TicketFieldDeleteInput) ([]byte, error) {
+func (c *Client) TicketFieldDelete(i *TicketFieldDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/ticket_fields/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/ticket_fields/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type TicketFieldOptionCreateInput struct {
@@ -10886,7 +5528,7 @@ type TicketFieldOptionCreateInput struct {
 	ID      string
 }
 
-func (c *Client) TicketFieldOptionCreate(i *TicketFieldOptionCreateInput) ([]byte, error) {
+func (c *Client) TicketFieldOptionCreate(i *TicketFieldOptionCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.FieldID == "" {
 		return nil, errors.New("Missing required field 'FieldID'")
 	}
@@ -10895,20 +5537,10 @@ func (c *Client) TicketFieldOptionCreate(i *TicketFieldOptionCreateInput) ([]byt
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/ticket_fields/%s/options/%s.json", i.FieldID, i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/ticket_fields/%s/options/%s.json"
+	path := fmt.Sprintf(api_path, i.FieldID, i.ID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type TicketFieldOptionDeleteInput struct {
@@ -10916,7 +5548,7 @@ type TicketFieldOptionDeleteInput struct {
 	ID      string
 }
 
-func (c *Client) TicketFieldOptionDelete(i *TicketFieldOptionDeleteInput) ([]byte, error) {
+func (c *Client) TicketFieldOptionDelete(i *TicketFieldOptionDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.FieldID == "" {
 		return nil, errors.New("Missing required field 'FieldID'")
 	}
@@ -10925,20 +5557,10 @@ func (c *Client) TicketFieldOptionDelete(i *TicketFieldOptionDeleteInput) ([]byt
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/ticket_fields/%s/options/%s.json", i.FieldID, i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/ticket_fields/%s/options/%s.json"
+	path := fmt.Sprintf(api_path, i.FieldID, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type TicketFieldOptionShowInput struct {
@@ -10946,7 +5568,7 @@ type TicketFieldOptionShowInput struct {
 	ID      string
 }
 
-func (c *Client) TicketFieldOptionShow(i *TicketFieldOptionShowInput) ([]byte, error) {
+func (c *Client) TicketFieldOptionShow(i *TicketFieldOptionShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.FieldID == "" {
 		return nil, errors.New("Missing required field 'FieldID'")
 	}
@@ -10955,320 +5577,155 @@ func (c *Client) TicketFieldOptionShow(i *TicketFieldOptionShowInput) ([]byte, e
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/ticket_fields/%s/options/%s.json", i.FieldID, i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/ticket_fields/%s/options/%s.json"
+	path := fmt.Sprintf(api_path, i.FieldID, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type TicketFieldOptionsInput struct {
 	FieldID string
 }
 
-func (c *Client) TicketFieldOptions(i *TicketFieldOptionsInput) ([]byte, error) {
+func (c *Client) TicketFieldOptions(i *TicketFieldOptionsInput, ro *RequestOptions) ([]byte, error) {
 	if i.FieldID == "" {
 		return nil, errors.New("Missing required field 'FieldID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/ticket_fields/%s/options.json", i.FieldID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/ticket_fields/%s/options.json"
+	path := fmt.Sprintf(api_path, i.FieldID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type TicketFieldShowInput struct {
 	ID string
 }
 
-func (c *Client) TicketFieldShow(i *TicketFieldShowInput) ([]byte, error) {
+func (c *Client) TicketFieldShow(i *TicketFieldShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/ticket_fields/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/ticket_fields/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type TicketFieldUpdateInput struct {
 	ID string
 }
 
-func (c *Client) TicketFieldUpdate(i *TicketFieldUpdateInput) ([]byte, error) {
+func (c *Client) TicketFieldUpdate(i *TicketFieldUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/ticket_fields/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/ticket_fields/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type TicketFieldsListInput struct {
-}
-
-func (c *Client) TicketFieldsList(i *TicketFieldsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/ticket_fields.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) TicketFieldsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/ticket_fields.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type TicketFormCloneInput struct {
 	ID string
 }
 
-func (c *Client) TicketFormClone(i *TicketFormCloneInput) ([]byte, error) {
+func (c *Client) TicketFormClone(i *TicketFormCloneInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/ticket_forms/%s/clone.json", i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/ticket_forms/%s/clone.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
-
-type TicketFormCreateInput struct {
-}
-
-func (c *Client) TicketFormCreate(i *TicketFormCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/ticket_forms.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) TicketFormCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/ticket_forms.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type TicketFormDeleteInput struct {
 	ID string
 }
 
-func (c *Client) TicketFormDelete(i *TicketFormDeleteInput) ([]byte, error) {
+func (c *Client) TicketFormDelete(i *TicketFormDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/ticket_forms/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/ticket_forms/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type TicketFormShowInput struct {
 	ID string
 }
 
-func (c *Client) TicketFormShow(i *TicketFormShowInput) ([]byte, error) {
+func (c *Client) TicketFormShow(i *TicketFormShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/ticket_forms/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/ticket_forms/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type TicketFormUpdateInput struct {
 	ID string
 }
 
-func (c *Client) TicketFormUpdate(i *TicketFormUpdateInput) ([]byte, error) {
+func (c *Client) TicketFormUpdate(i *TicketFormUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/ticket_forms/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/ticket_forms/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type TicketFormsListInput struct {
+func (c *Client) TicketFormsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/ticket_forms.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) TicketFormsList(i *TicketFormsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/ticket_forms.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) TicketFormsReorder(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/ticket_forms/reorder.json"
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type TicketFormsReorderInput struct {
-}
-
-func (c *Client) TicketFormsReorder(i *TicketFormsReorderInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/ticket_forms/reorder.json")
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type TicketFormsShowManyInput struct {
-}
-
-func (c *Client) TicketFormsShowMany(i *TicketFormsShowManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/ticket_forms/show_many.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) TicketFormsShowMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/ticket_forms/show_many.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type TicketIncidentsInput struct {
 	ID string
 }
 
-func (c *Client) TicketIncidents(i *TicketIncidentsInput) ([]byte, error) {
+func (c *Client) TicketIncidents(i *TicketIncidentsInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/tickets/%s/incidents.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/tickets/%s/incidents.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type TicketMacroApplyInput struct {
@@ -11276,7 +5733,7 @@ type TicketMacroApplyInput struct {
 	ID       string
 }
 
-func (c *Client) TicketMacroApply(i *TicketMacroApplyInput) ([]byte, error) {
+func (c *Client) TicketMacroApply(i *TicketMacroApplyInput, ro *RequestOptions) ([]byte, error) {
 	if i.TicketID == "" {
 		return nil, errors.New("Missing required field 'TicketID'")
 	}
@@ -11285,1055 +5742,505 @@ func (c *Client) TicketMacroApply(i *TicketMacroApplyInput) ([]byte, error) {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/tickets/%s/macros/%s/apply.json", i.TicketID, i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/tickets/%s/macros/%s/apply.json"
+	path := fmt.Sprintf(api_path, i.TicketID, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type TicketMarkAsSpamInput struct {
 	ID string
 }
 
-func (c *Client) TicketMarkAsSpam(i *TicketMarkAsSpamInput) ([]byte, error) {
+func (c *Client) TicketMarkAsSpam(i *TicketMarkAsSpamInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/tickets/%s/mark_as_spam.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/tickets/%s/mark_as_spam.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type TicketMergeInput struct {
 	ID string
 }
 
-func (c *Client) TicketMerge(i *TicketMergeInput) ([]byte, error) {
+func (c *Client) TicketMerge(i *TicketMergeInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/tickets/%s/merge.json", i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/tickets/%s/merge.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type TicketMetricShowInput struct {
 	TicketMetricID string
 }
 
-func (c *Client) TicketMetricShow(i *TicketMetricShowInput) ([]byte, error) {
+func (c *Client) TicketMetricShow(i *TicketMetricShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.TicketMetricID == "" {
 		return nil, errors.New("Missing required field 'TicketMetricID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/ticket_metrics/%s.json", i.TicketMetricID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/ticket_metrics/%s.json"
+	path := fmt.Sprintf(api_path, i.TicketMetricID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type TicketMetricsInput struct {
 	TicketID string
 }
 
-func (c *Client) TicketMetrics(i *TicketMetricsInput) ([]byte, error) {
+func (c *Client) TicketMetrics(i *TicketMetricsInput, ro *RequestOptions) ([]byte, error) {
 	if i.TicketID == "" {
 		return nil, errors.New("Missing required field 'TicketID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/tickets/%s/metrics.json", i.TicketID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/tickets/%s/metrics.json"
+	path := fmt.Sprintf(api_path, i.TicketID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type TicketMetricsListInput struct {
-}
-
-func (c *Client) TicketMetricsList(i *TicketMetricsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/ticket_metrics.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) TicketMetricsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/ticket_metrics.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type TicketRelatedInput struct {
 	ID string
 }
 
-func (c *Client) TicketRelated(i *TicketRelatedInput) ([]byte, error) {
+func (c *Client) TicketRelated(i *TicketRelatedInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/tickets/%s/related.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/tickets/%s/related.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type TicketSatisfactionRatingCreateInput struct {
 	TicketID string
 }
 
-func (c *Client) TicketSatisfactionRatingCreate(i *TicketSatisfactionRatingCreateInput) ([]byte, error) {
+func (c *Client) TicketSatisfactionRatingCreate(i *TicketSatisfactionRatingCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.TicketID == "" {
 		return nil, errors.New("Missing required field 'TicketID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/tickets/%s/satisfaction_rating.json", i.TicketID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/tickets/%s/satisfaction_rating.json"
+	path := fmt.Sprintf(api_path, i.TicketID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type TicketShowInput struct {
 	ID string
 }
 
-func (c *Client) TicketShow(i *TicketShowInput) ([]byte, error) {
+func (c *Client) TicketShow(i *TicketShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/tickets/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/tickets/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type TicketSkipsInput struct {
 	TicketID string
 }
 
-func (c *Client) TicketSkips(i *TicketSkipsInput) ([]byte, error) {
+func (c *Client) TicketSkips(i *TicketSkipsInput, ro *RequestOptions) ([]byte, error) {
 	if i.TicketID == "" {
 		return nil, errors.New("Missing required field 'TicketID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/tickets/%s/skips.json", i.TicketID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/tickets/%s/skips.json"
+	path := fmt.Sprintf(api_path, i.TicketID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type TicketTagCreateInput struct {
 	ID string
 }
 
-func (c *Client) TicketTagCreate(i *TicketTagCreateInput) ([]byte, error) {
+func (c *Client) TicketTagCreate(i *TicketTagCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/tickets/%s/tags.json", i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/tickets/%s/tags.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type TicketTagsInput struct {
 	ID string
 }
 
-func (c *Client) TicketTags(i *TicketTagsInput) ([]byte, error) {
+func (c *Client) TicketTags(i *TicketTagsInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/tickets/%s/tags.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/tickets/%s/tags.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type TicketTagsDeleteInput struct {
 	ID string
 }
 
-func (c *Client) TicketTagsDelete(i *TicketTagsDeleteInput) ([]byte, error) {
+func (c *Client) TicketTagsDelete(i *TicketTagsDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/tickets/%s/tags.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/tickets/%s/tags.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type TicketTagsUpdateInput struct {
 	ID string
 }
 
-func (c *Client) TicketTagsUpdate(i *TicketTagsUpdateInput) ([]byte, error) {
+func (c *Client) TicketTagsUpdate(i *TicketTagsUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/tickets/%s/tags.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/tickets/%s/tags.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type TicketUpdateInput struct {
 	ID string
 }
 
-func (c *Client) TicketUpdate(i *TicketUpdateInput) ([]byte, error) {
+func (c *Client) TicketUpdate(i *TicketUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/tickets/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/tickets/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type TicketsCreateManyInput struct {
+func (c *Client) TicketsCreateMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/tickets/create_many.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) TicketsCreateMany(i *TicketsCreateManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/tickets/create_many.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) TicketsDestroyMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/tickets/destroy_many.json"
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
-
-type TicketsDestroyManyInput struct {
+func (c *Client) TicketsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/tickets.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) TicketsDestroyMany(i *TicketsDestroyManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/tickets/destroy_many.json")
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) TicketsMarkManyAsSpam(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/tickets/mark_many_as_spam.json"
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type TicketsListInput struct {
+func (c *Client) TicketsRecentList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/tickets/recent.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) TicketsList(i *TicketsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/tickets.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) TicketsShowMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/tickets/show_many.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type TicketsMarkManyAsSpamInput struct {
-}
-
-func (c *Client) TicketsMarkManyAsSpam(i *TicketsMarkManyAsSpamInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/tickets/mark_many_as_spam.json")
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type TicketsRecentListInput struct {
-}
-
-func (c *Client) TicketsRecentList(i *TicketsRecentListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/tickets/recent.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type TicketsShowManyInput struct {
-}
-
-func (c *Client) TicketsShowMany(i *TicketsShowManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/tickets/show_many.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type TicketsUpdateManyInput struct {
-}
-
-func (c *Client) TicketsUpdateMany(i *TicketsUpdateManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/tickets/update_many.json")
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) TicketsUpdateMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/tickets/update_many.json"
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type TopicTagCreateInput struct {
 	ID string
 }
 
-func (c *Client) TopicTagCreate(i *TopicTagCreateInput) ([]byte, error) {
+func (c *Client) TopicTagCreate(i *TopicTagCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/topics/%s/tags.json", i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/topics/%s/tags.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type TopicTagsInput struct {
 	ID string
 }
 
-func (c *Client) TopicTags(i *TopicTagsInput) ([]byte, error) {
+func (c *Client) TopicTags(i *TopicTagsInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/topics/%s/tags.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/topics/%s/tags.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type TopicTagsDeleteInput struct {
 	ID string
 }
 
-func (c *Client) TopicTagsDelete(i *TopicTagsDeleteInput) ([]byte, error) {
+func (c *Client) TopicTagsDelete(i *TopicTagsDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/topics/%s/tags.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/topics/%s/tags.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type TopicTagsUpdateInput struct {
 	ID string
 }
 
-func (c *Client) TopicTagsUpdate(i *TopicTagsUpdateInput) ([]byte, error) {
+func (c *Client) TopicTagsUpdate(i *TopicTagsUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/topics/%s/tags.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/topics/%s/tags.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type TriggerCreateInput struct {
-}
-
-func (c *Client) TriggerCreate(i *TriggerCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/triggers")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) TriggerCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/triggers"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type TriggerDeleteByIDInput struct {
 	ID string
 }
 
-func (c *Client) TriggerDeleteByID(i *TriggerDeleteByIDInput) ([]byte, error) {
+func (c *Client) TriggerDeleteByID(i *TriggerDeleteByIDInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/triggers/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/triggers/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type TriggerDeleteByTriggerNameInput struct {
 	TriggerName string
 }
 
-func (c *Client) TriggerDeleteByTriggerName(i *TriggerDeleteByTriggerNameInput) ([]byte, error) {
+func (c *Client) TriggerDeleteByTriggerName(i *TriggerDeleteByTriggerNameInput, ro *RequestOptions) ([]byte, error) {
 	if i.TriggerName == "" {
 		return nil, errors.New("Missing required field 'TriggerName'")
 	}
 
-	path := fmt.Sprintf("/api/v2/triggers/%s", i.TriggerName)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/triggers/%s"
+	path := fmt.Sprintf(api_path, i.TriggerName)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type TriggerShowByIDInput struct {
 	ID string
 }
 
-func (c *Client) TriggerShowByID(i *TriggerShowByIDInput) ([]byte, error) {
+func (c *Client) TriggerShowByID(i *TriggerShowByIDInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/triggers/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/triggers/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type TriggerShowByTriggerNameInput struct {
 	TriggerName string
 }
 
-func (c *Client) TriggerShowByTriggerName(i *TriggerShowByTriggerNameInput) ([]byte, error) {
+func (c *Client) TriggerShowByTriggerName(i *TriggerShowByTriggerNameInput, ro *RequestOptions) ([]byte, error) {
 	if i.TriggerName == "" {
 		return nil, errors.New("Missing required field 'TriggerName'")
 	}
 
-	path := fmt.Sprintf("/api/v2/triggers/%s", i.TriggerName)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/triggers/%s"
+	path := fmt.Sprintf(api_path, i.TriggerName)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type TriggerUpdateByIDInput struct {
 	ID string
 }
 
-func (c *Client) TriggerUpdateByID(i *TriggerUpdateByIDInput) ([]byte, error) {
+func (c *Client) TriggerUpdateByID(i *TriggerUpdateByIDInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/triggers/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/triggers/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type TriggerUpdateByTriggerNameInput struct {
 	TriggerName string
 }
 
-func (c *Client) TriggerUpdateByTriggerName(i *TriggerUpdateByTriggerNameInput) ([]byte, error) {
+func (c *Client) TriggerUpdateByTriggerName(i *TriggerUpdateByTriggerNameInput, ro *RequestOptions) ([]byte, error) {
 	if i.TriggerName == "" {
 		return nil, errors.New("Missing required field 'TriggerName'")
 	}
 
-	path := fmt.Sprintf("/api/v2/triggers/%s", i.TriggerName)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/triggers/%s"
+	path := fmt.Sprintf(api_path, i.TriggerName)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type TriggersActiveListInput struct {
+func (c *Client) TriggersActiveList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/triggers/active.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) TriggersActiveList(i *TriggersActiveListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/triggers/active.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) TriggersDestroyMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/triggers/destroy_many.json"
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
-
-type TriggersDestroyManyInput struct {
+func (c *Client) TriggersList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/triggers"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) TriggersDestroyMany(i *TriggersDestroyManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/triggers/destroy_many.json")
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) TriggersReorder(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/triggers/reorder.json"
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type TriggersListInput struct {
+func (c *Client) TriggersSearch(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/triggers/search.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) TriggersList(i *TriggersListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/triggers")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) TriggersUpdateMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/triggers/update_many.json"
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type TriggersReorderInput struct {
-}
-
-func (c *Client) TriggersReorder(i *TriggersReorderInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/triggers/reorder.json")
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type TriggersSearchInput struct {
-}
-
-func (c *Client) TriggersSearch(i *TriggersSearchInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/triggers/search.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type TriggersUpdateManyInput struct {
-}
-
-func (c *Client) TriggersUpdateMany(i *TriggersUpdateManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/triggers/update_many.json")
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type UploadCreateInput struct {
-}
-
-func (c *Client) UploadCreate(i *UploadCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/uploads.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) UploadCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/uploads.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type UploadDeleteInput struct {
 	Token string
 }
 
-func (c *Client) UploadDelete(i *UploadDeleteInput) ([]byte, error) {
+func (c *Client) UploadDelete(i *UploadDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.Token == "" {
 		return nil, errors.New("Missing required field 'Token'")
 	}
 
-	path := fmt.Sprintf("/api/v2/uploads/%s.json", i.Token)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/uploads/%s.json"
+	path := fmt.Sprintf(api_path, i.Token)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
-
-type UserCreateInput struct {
-}
-
-func (c *Client) UserCreate(i *UserCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/users.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) UserCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/users.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type UserDeleteInput struct {
 	ID string
 }
 
-func (c *Client) UserDelete(i *UserDeleteInput) ([]byte, error) {
+func (c *Client) UserDelete(i *UserDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
-
-type UserFieldCreateInput struct {
-}
-
-func (c *Client) UserFieldCreate(i *UserFieldCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/user_fields.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) UserFieldCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/user_fields.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type UserFieldDeleteInput struct {
 	ID string
 }
 
-func (c *Client) UserFieldDelete(i *UserFieldDeleteInput) ([]byte, error) {
+func (c *Client) UserFieldDelete(i *UserFieldDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/user_fields/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/user_fields/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type UserFieldOptionCreateInput struct {
 	FieldID string
 }
 
-func (c *Client) UserFieldOptionCreate(i *UserFieldOptionCreateInput) ([]byte, error) {
+func (c *Client) UserFieldOptionCreate(i *UserFieldOptionCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.FieldID == "" {
 		return nil, errors.New("Missing required field 'FieldID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/user_fields/%s/options.json", i.FieldID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/user_fields/%s/options.json"
+	path := fmt.Sprintf(api_path, i.FieldID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type UserFieldOptionDeleteInput struct {
@@ -12341,7 +6248,7 @@ type UserFieldOptionDeleteInput struct {
 	ID      string
 }
 
-func (c *Client) UserFieldOptionDelete(i *UserFieldOptionDeleteInput) ([]byte, error) {
+func (c *Client) UserFieldOptionDelete(i *UserFieldOptionDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.FieldID == "" {
 		return nil, errors.New("Missing required field 'FieldID'")
 	}
@@ -12350,20 +6257,10 @@ func (c *Client) UserFieldOptionDelete(i *UserFieldOptionDeleteInput) ([]byte, e
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/user_fields/%s/options/%s.json", i.FieldID, i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/user_fields/%s/options/%s.json"
+	path := fmt.Sprintf(api_path, i.FieldID, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type UserFieldOptionShowInput struct {
@@ -12371,7 +6268,7 @@ type UserFieldOptionShowInput struct {
 	ID      string
 }
 
-func (c *Client) UserFieldOptionShow(i *UserFieldOptionShowInput) ([]byte, error) {
+func (c *Client) UserFieldOptionShow(i *UserFieldOptionShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.FieldID == "" {
 		return nil, errors.New("Missing required field 'FieldID'")
 	}
@@ -12380,160 +6277,80 @@ func (c *Client) UserFieldOptionShow(i *UserFieldOptionShowInput) ([]byte, error
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/user_fields/%s/options/%s.json", i.FieldID, i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/user_fields/%s/options/%s.json"
+	path := fmt.Sprintf(api_path, i.FieldID, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type UserFieldOptionsInput struct {
 	FieldID string
 }
 
-func (c *Client) UserFieldOptions(i *UserFieldOptionsInput) ([]byte, error) {
+func (c *Client) UserFieldOptions(i *UserFieldOptionsInput, ro *RequestOptions) ([]byte, error) {
 	if i.FieldID == "" {
 		return nil, errors.New("Missing required field 'FieldID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/user_fields/%s/options.json", i.FieldID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/user_fields/%s/options.json"
+	path := fmt.Sprintf(api_path, i.FieldID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type UserFieldShowInput struct {
 	ID string
 }
 
-func (c *Client) UserFieldShow(i *UserFieldShowInput) ([]byte, error) {
+func (c *Client) UserFieldShow(i *UserFieldShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/user_fields/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/user_fields/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type UserFieldUpdateInput struct {
 	ID string
 }
 
-func (c *Client) UserFieldUpdate(i *UserFieldUpdateInput) ([]byte, error) {
+func (c *Client) UserFieldUpdate(i *UserFieldUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/user_fields/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/user_fields/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type UserFieldsListInput struct {
+func (c *Client) UserFieldsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/user_fields.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) UserFieldsList(i *UserFieldsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/user_fields.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type UserFieldsReorderInput struct {
-}
-
-func (c *Client) UserFieldsReorder(i *UserFieldsReorderInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/user_fields/reorder.json")
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) UserFieldsReorder(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/user_fields/reorder.json"
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type UserGroupMembershipCreateInput struct {
 	UserID string
 }
 
-func (c *Client) UserGroupMembershipCreate(i *UserGroupMembershipCreateInput) ([]byte, error) {
+func (c *Client) UserGroupMembershipCreate(i *UserGroupMembershipCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/group_memberships.json", i.UserID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/group_memberships.json"
+	path := fmt.Sprintf(api_path, i.UserID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type UserGroupMembershipDeleteInput struct {
@@ -12541,7 +6358,7 @@ type UserGroupMembershipDeleteInput struct {
 	ID     string
 }
 
-func (c *Client) UserGroupMembershipDelete(i *UserGroupMembershipDeleteInput) ([]byte, error) {
+func (c *Client) UserGroupMembershipDelete(i *UserGroupMembershipDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
@@ -12550,20 +6367,10 @@ func (c *Client) UserGroupMembershipDelete(i *UserGroupMembershipDeleteInput) ([
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/group_memberships/%s.json", i.UserID, i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/group_memberships/%s.json"
+	path := fmt.Sprintf(api_path, i.UserID, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type UserGroupMembershipMakeDefaultInput struct {
@@ -12571,7 +6378,7 @@ type UserGroupMembershipMakeDefaultInput struct {
 	MembershipID string
 }
 
-func (c *Client) UserGroupMembershipMakeDefault(i *UserGroupMembershipMakeDefaultInput) ([]byte, error) {
+func (c *Client) UserGroupMembershipMakeDefault(i *UserGroupMembershipMakeDefaultInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
@@ -12580,20 +6387,10 @@ func (c *Client) UserGroupMembershipMakeDefault(i *UserGroupMembershipMakeDefaul
 		return nil, errors.New("Missing required field 'MembershipID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/group_memberships/%s/make_default.json", i.UserID, i.MembershipID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/group_memberships/%s/make_default.json"
+	path := fmt.Sprintf(api_path, i.UserID, i.MembershipID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type UserGroupMembershipShowInput struct {
@@ -12601,7 +6398,7 @@ type UserGroupMembershipShowInput struct {
 	ID     string
 }
 
-func (c *Client) UserGroupMembershipShow(i *UserGroupMembershipShowInput) ([]byte, error) {
+func (c *Client) UserGroupMembershipShow(i *UserGroupMembershipShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
@@ -12610,120 +6407,70 @@ func (c *Client) UserGroupMembershipShow(i *UserGroupMembershipShowInput) ([]byt
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/group_memberships/%s.json", i.UserID, i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/group_memberships/%s.json"
+	path := fmt.Sprintf(api_path, i.UserID, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type UserGroupMembershipsInput struct {
 	UserID string
 }
 
-func (c *Client) UserGroupMemberships(i *UserGroupMembershipsInput) ([]byte, error) {
+func (c *Client) UserGroupMemberships(i *UserGroupMembershipsInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/group_memberships.json", i.UserID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/group_memberships.json"
+	path := fmt.Sprintf(api_path, i.UserID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type UserGroupsInput struct {
 	UserID string
 }
 
-func (c *Client) UserGroups(i *UserGroupsInput) ([]byte, error) {
+func (c *Client) UserGroups(i *UserGroupsInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/groups.json", i.UserID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/groups.json"
+	path := fmt.Sprintf(api_path, i.UserID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type UserIdentitiesInput struct {
 	UserID string
 }
 
-func (c *Client) UserIdentities(i *UserIdentitiesInput) ([]byte, error) {
+func (c *Client) UserIdentities(i *UserIdentitiesInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/identities.json", i.UserID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/identities.json"
+	path := fmt.Sprintf(api_path, i.UserID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type UserIdentityCreateInput struct {
 	UserID string
 }
 
-func (c *Client) UserIdentityCreate(i *UserIdentityCreateInput) ([]byte, error) {
+func (c *Client) UserIdentityCreate(i *UserIdentityCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/identities.json", i.UserID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/identities.json"
+	path := fmt.Sprintf(api_path, i.UserID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type UserIdentityDeleteInput struct {
@@ -12731,7 +6478,7 @@ type UserIdentityDeleteInput struct {
 	ID     string
 }
 
-func (c *Client) UserIdentityDelete(i *UserIdentityDeleteInput) ([]byte, error) {
+func (c *Client) UserIdentityDelete(i *UserIdentityDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
@@ -12740,20 +6487,10 @@ func (c *Client) UserIdentityDelete(i *UserIdentityDeleteInput) ([]byte, error) 
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/identities/%s.json", i.UserID, i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/identities/%s.json"
+	path := fmt.Sprintf(api_path, i.UserID, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type UserIdentityMakePrimaryInput struct {
@@ -12761,7 +6498,7 @@ type UserIdentityMakePrimaryInput struct {
 	ID     string
 }
 
-func (c *Client) UserIdentityMakePrimary(i *UserIdentityMakePrimaryInput) ([]byte, error) {
+func (c *Client) UserIdentityMakePrimary(i *UserIdentityMakePrimaryInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
@@ -12770,20 +6507,10 @@ func (c *Client) UserIdentityMakePrimary(i *UserIdentityMakePrimaryInput) ([]byt
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/identities/%s/make_primary", i.UserID, i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/identities/%s/make_primary"
+	path := fmt.Sprintf(api_path, i.UserID, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type UserIdentityRequestVerificationUpdateInput struct {
@@ -12791,7 +6518,7 @@ type UserIdentityRequestVerificationUpdateInput struct {
 	ID     string
 }
 
-func (c *Client) UserIdentityRequestVerificationUpdate(i *UserIdentityRequestVerificationUpdateInput) ([]byte, error) {
+func (c *Client) UserIdentityRequestVerificationUpdate(i *UserIdentityRequestVerificationUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
@@ -12800,20 +6527,10 @@ func (c *Client) UserIdentityRequestVerificationUpdate(i *UserIdentityRequestVer
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/identities/%s/request_verification.json", i.UserID, i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/identities/%s/request_verification.json"
+	path := fmt.Sprintf(api_path, i.UserID, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type UserIdentityShowInput struct {
@@ -12821,7 +6538,7 @@ type UserIdentityShowInput struct {
 	ID     string
 }
 
-func (c *Client) UserIdentityShow(i *UserIdentityShowInput) ([]byte, error) {
+func (c *Client) UserIdentityShow(i *UserIdentityShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
@@ -12830,20 +6547,10 @@ func (c *Client) UserIdentityShow(i *UserIdentityShowInput) ([]byte, error) {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/identities/%s.json", i.UserID, i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/identities/%s.json"
+	path := fmt.Sprintf(api_path, i.UserID, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type UserIdentityUpdateInput struct {
@@ -12851,7 +6558,7 @@ type UserIdentityUpdateInput struct {
 	ID     string
 }
 
-func (c *Client) UserIdentityUpdate(i *UserIdentityUpdateInput) ([]byte, error) {
+func (c *Client) UserIdentityUpdate(i *UserIdentityUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
@@ -12860,20 +6567,10 @@ func (c *Client) UserIdentityUpdate(i *UserIdentityUpdateInput) ([]byte, error) 
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/identities/%s.json", i.UserID, i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/identities/%s.json"
+	path := fmt.Sprintf(api_path, i.UserID, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type UserIdentityVerifyInput struct {
@@ -12881,7 +6578,7 @@ type UserIdentityVerifyInput struct {
 	ID     string
 }
 
-func (c *Client) UserIdentityVerify(i *UserIdentityVerifyInput) ([]byte, error) {
+func (c *Client) UserIdentityVerify(i *UserIdentityVerifyInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
@@ -12890,70 +6587,40 @@ func (c *Client) UserIdentityVerify(i *UserIdentityVerifyInput) ([]byte, error) 
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/identities/%s/verify", i.UserID, i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/identities/%s/verify"
+	path := fmt.Sprintf(api_path, i.UserID, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type UserMergeInput struct {
 	ID string
 }
 
-func (c *Client) UserMerge(i *UserMergeInput) ([]byte, error) {
+func (c *Client) UserMerge(i *UserMergeInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/merge.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/merge.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type UserOrganizationMembershipCreateInput struct {
 	UserID string
 }
 
-func (c *Client) UserOrganizationMembershipCreate(i *UserOrganizationMembershipCreateInput) ([]byte, error) {
+func (c *Client) UserOrganizationMembershipCreate(i *UserOrganizationMembershipCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/organization_memberships.json", i.UserID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/organization_memberships.json"
+	path := fmt.Sprintf(api_path, i.UserID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type UserOrganizationMembershipDeleteInput struct {
@@ -12961,7 +6628,7 @@ type UserOrganizationMembershipDeleteInput struct {
 	ID     string
 }
 
-func (c *Client) UserOrganizationMembershipDelete(i *UserOrganizationMembershipDeleteInput) ([]byte, error) {
+func (c *Client) UserOrganizationMembershipDelete(i *UserOrganizationMembershipDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
@@ -12970,20 +6637,10 @@ func (c *Client) UserOrganizationMembershipDelete(i *UserOrganizationMembershipD
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/organization_memberships/%s.json", i.UserID, i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/organization_memberships/%s.json"
+	path := fmt.Sprintf(api_path, i.UserID, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type UserOrganizationMembershipMakeDefaultInput struct {
@@ -12991,7 +6648,7 @@ type UserOrganizationMembershipMakeDefaultInput struct {
 	MembershipID string
 }
 
-func (c *Client) UserOrganizationMembershipMakeDefault(i *UserOrganizationMembershipMakeDefaultInput) ([]byte, error) {
+func (c *Client) UserOrganizationMembershipMakeDefault(i *UserOrganizationMembershipMakeDefaultInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
@@ -13000,20 +6657,10 @@ func (c *Client) UserOrganizationMembershipMakeDefault(i *UserOrganizationMember
 		return nil, errors.New("Missing required field 'MembershipID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/organization_memberships/%s/make_default.json", i.ID, i.MembershipID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/organization_memberships/%s/make_default.json"
+	path := fmt.Sprintf(api_path, i.ID, i.MembershipID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type UserOrganizationMembershipShowInput struct {
@@ -13021,7 +6668,7 @@ type UserOrganizationMembershipShowInput struct {
 	ID     string
 }
 
-func (c *Client) UserOrganizationMembershipShow(i *UserOrganizationMembershipShowInput) ([]byte, error) {
+func (c *Client) UserOrganizationMembershipShow(i *UserOrganizationMembershipShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
@@ -13030,220 +6677,130 @@ func (c *Client) UserOrganizationMembershipShow(i *UserOrganizationMembershipSho
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/organization_memberships/%s.json", i.UserID, i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/organization_memberships/%s.json"
+	path := fmt.Sprintf(api_path, i.UserID, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type UserOrganizationMembershipsInput struct {
 	UserID string
 }
 
-func (c *Client) UserOrganizationMemberships(i *UserOrganizationMembershipsInput) ([]byte, error) {
+func (c *Client) UserOrganizationMemberships(i *UserOrganizationMembershipsInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/organization_memberships.json", i.UserID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/organization_memberships.json"
+	path := fmt.Sprintf(api_path, i.UserID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type UserOrganizationSubscriptionsInput struct {
 	UserID string
 }
 
-func (c *Client) UserOrganizationSubscriptions(i *UserOrganizationSubscriptionsInput) ([]byte, error) {
+func (c *Client) UserOrganizationSubscriptions(i *UserOrganizationSubscriptionsInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/organization_subscriptions.json", i.UserID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/organization_subscriptions.json"
+	path := fmt.Sprintf(api_path, i.UserID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type UserOrganizationsInput struct {
 	UserID string
 }
 
-func (c *Client) UserOrganizations(i *UserOrganizationsInput) ([]byte, error) {
+func (c *Client) UserOrganizations(i *UserOrganizationsInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/organizations.json", i.UserID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/organizations.json"
+	path := fmt.Sprintf(api_path, i.UserID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type UserPasswordCreateInput struct {
 	UserID string
 }
 
-func (c *Client) UserPasswordCreate(i *UserPasswordCreateInput) ([]byte, error) {
+func (c *Client) UserPasswordCreate(i *UserPasswordCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/password.json", i.UserID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/password.json"
+	path := fmt.Sprintf(api_path, i.UserID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type UserPasswordRequirementsInput struct {
 	UserID string
 }
 
-func (c *Client) UserPasswordRequirements(i *UserPasswordRequirementsInput) ([]byte, error) {
+func (c *Client) UserPasswordRequirements(i *UserPasswordRequirementsInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/password/requirements.json", i.UserID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/password/requirements.json"
+	path := fmt.Sprintf(api_path, i.UserID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type UserPasswordUpdateInput struct {
 	UserID string
 }
 
-func (c *Client) UserPasswordUpdate(i *UserPasswordUpdateInput) ([]byte, error) {
+func (c *Client) UserPasswordUpdate(i *UserPasswordUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/password.json", i.UserID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/password.json"
+	path := fmt.Sprintf(api_path, i.UserID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type UserRelatedInput struct {
 	ID string
 }
 
-func (c *Client) UserRelated(i *UserRelatedInput) ([]byte, error) {
+func (c *Client) UserRelated(i *UserRelatedInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/related.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/related.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type UserRequestsInput struct {
 	ID string
 }
 
-func (c *Client) UserRequests(i *UserRequestsInput) ([]byte, error) {
+func (c *Client) UserRequests(i *UserRequestsInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/requests.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/requests.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type UserSessionDeleteInput struct {
@@ -13251,7 +6808,7 @@ type UserSessionDeleteInput struct {
 	ID     string
 }
 
-func (c *Client) UserSessionDelete(i *UserSessionDeleteInput) ([]byte, error) {
+func (c *Client) UserSessionDelete(i *UserSessionDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
@@ -13260,20 +6817,10 @@ func (c *Client) UserSessionDelete(i *UserSessionDeleteInput) ([]byte, error) {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/sessions/%s.json", i.UserID, i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/sessions/%s.json"
+	path := fmt.Sprintf(api_path, i.UserID, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type UserSessionShowInput struct {
@@ -13281,7 +6828,7 @@ type UserSessionShowInput struct {
 	ID     string
 }
 
-func (c *Client) UserSessionShow(i *UserSessionShowInput) ([]byte, error) {
+func (c *Client) UserSessionShow(i *UserSessionShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
@@ -13290,1083 +6837,458 @@ func (c *Client) UserSessionShow(i *UserSessionShowInput) ([]byte, error) {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/sessions/%s.json", i.UserID, i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/sessions/%s.json"
+	path := fmt.Sprintf(api_path, i.UserID, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type UserSessionsInput struct {
 	UserID string
 }
 
-func (c *Client) UserSessions(i *UserSessionsInput) ([]byte, error) {
+func (c *Client) UserSessions(i *UserSessionsInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/sessions.json", i.UserID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/sessions.json"
+	path := fmt.Sprintf(api_path, i.UserID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type UserSessionsDeleteInput struct {
 	UserID string
 }
 
-func (c *Client) UserSessionsDelete(i *UserSessionsDeleteInput) ([]byte, error) {
+func (c *Client) UserSessionsDelete(i *UserSessionsDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/sessions.json", i.UserID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/sessions.json"
+	path := fmt.Sprintf(api_path, i.UserID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type UserShowInput struct {
 	ID string
 }
 
-func (c *Client) UserShow(i *UserShowInput) ([]byte, error) {
+func (c *Client) UserShow(i *UserShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type UserSkipsInput struct {
 	UserID string
 }
 
-func (c *Client) UserSkips(i *UserSkipsInput) ([]byte, error) {
+func (c *Client) UserSkips(i *UserSkipsInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/skips.json", i.UserID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/skips.json"
+	path := fmt.Sprintf(api_path, i.UserID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type UserTagCreateInput struct {
 	ID string
 }
 
-func (c *Client) UserTagCreate(i *UserTagCreateInput) ([]byte, error) {
+func (c *Client) UserTagCreate(i *UserTagCreateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/tags.json", i.ID)
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/tags.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type UserTagsInput struct {
 	ID string
 }
 
-func (c *Client) UserTags(i *UserTagsInput) ([]byte, error) {
+func (c *Client) UserTags(i *UserTagsInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/tags.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/tags.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type UserTagsDeleteInput struct {
 	ID string
 }
 
-func (c *Client) UserTagsDelete(i *UserTagsDeleteInput) ([]byte, error) {
+func (c *Client) UserTagsDelete(i *UserTagsDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/tags.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/tags.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type UserTagsUpdateInput struct {
 	ID string
 }
 
-func (c *Client) UserTagsUpdate(i *UserTagsUpdateInput) ([]byte, error) {
+func (c *Client) UserTagsUpdate(i *UserTagsUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/tags.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/tags.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type UserTicketsAssignedInput struct {
 	UserID string
 }
 
-func (c *Client) UserTicketsAssigned(i *UserTicketsAssignedInput) ([]byte, error) {
+func (c *Client) UserTicketsAssigned(i *UserTicketsAssignedInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/tickets/assigned.json", i.UserID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/tickets/assigned.json"
+	path := fmt.Sprintf(api_path, i.UserID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type UserTicketsCcdInput struct {
 	UserID string
 }
 
-func (c *Client) UserTicketsCcd(i *UserTicketsCcdInput) ([]byte, error) {
+func (c *Client) UserTicketsCcd(i *UserTicketsCcdInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/tickets/ccd.json", i.UserID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/tickets/ccd.json"
+	path := fmt.Sprintf(api_path, i.UserID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type UserTicketsRequestedInput struct {
 	UserID string
 }
 
-func (c *Client) UserTicketsRequested(i *UserTicketsRequestedInput) ([]byte, error) {
+func (c *Client) UserTicketsRequested(i *UserTicketsRequestedInput, ro *RequestOptions) ([]byte, error) {
 	if i.UserID == "" {
 		return nil, errors.New("Missing required field 'UserID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s/tickets/requested.json", i.UserID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s/tickets/requested.json"
+	path := fmt.Sprintf(api_path, i.UserID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type UserUpdateInput struct {
 	ID string
 }
 
-func (c *Client) UserUpdate(i *UserUpdateInput) ([]byte, error) {
+func (c *Client) UserUpdate(i *UserUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/users/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/users/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type UsersAutocompleteInput struct {
+func (c *Client) UsersAutocomplete(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/users/autocomplete.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) UsersAutocomplete(i *UsersAutocompleteInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/users/autocomplete.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) UsersCreateMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/users/create_many.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
-
-type UsersCreateManyInput struct {
+func (c *Client) UsersCreateOrUpdate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/users/create_or_update.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) UsersCreateMany(i *UsersCreateManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/users/create_many.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) UsersCreateOrUpdateMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/users/create_or_update_many.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
-
-type UsersCreateOrUpdateInput struct {
+func (c *Client) UsersDestroyMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/users/destroy_many.json"
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) UsersCreateOrUpdate(i *UsersCreateOrUpdateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/users/create_or_update.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) UsersList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/users.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type UsersCreateOrUpdateManyInput struct {
+func (c *Client) UsersMe(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/users/me.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) UsersCreateOrUpdateMany(i *UsersCreateOrUpdateManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/users/create_or_update_many.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) UsersMeLogout(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/users/me/logout.json"
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
-
-type UsersDestroyManyInput struct {
+func (c *Client) UsersMeMerge(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/users/me/merge.json"
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) UsersDestroyMany(i *UsersDestroyManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/users/destroy_many.json")
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) UsersMeOauthClients(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/users/me/oauth/clients.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type UsersListInput struct {
+func (c *Client) UsersMeSession(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/users/me/session.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) UsersList(i *UsersListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/users.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) UsersRequestCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/users/request_create.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
-
-type UsersMeInput struct {
+func (c *Client) UsersSearch(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/users/search.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) UsersMe(i *UsersMeInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/users/me.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) UsersShowMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/users/show_many.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type UsersMeLogoutInput struct {
-}
-
-func (c *Client) UsersMeLogout(i *UsersMeLogoutInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/users/me/logout.json")
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type UsersMeMergeInput struct {
-}
-
-func (c *Client) UsersMeMerge(i *UsersMeMergeInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/users/me/merge.json")
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type UsersMeOauthClientsInput struct {
-}
-
-func (c *Client) UsersMeOauthClients(i *UsersMeOauthClientsInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/users/me/oauth/clients.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type UsersMeSessionInput struct {
-}
-
-func (c *Client) UsersMeSession(i *UsersMeSessionInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/users/me/session.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type UsersRequestCreateInput struct {
-}
-
-func (c *Client) UsersRequestCreate(i *UsersRequestCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/users/request_create.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type UsersSearchInput struct {
-}
-
-func (c *Client) UsersSearch(i *UsersSearchInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/users/search.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type UsersShowManyInput struct {
-}
-
-func (c *Client) UsersShowMany(i *UsersShowManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/users/show_many.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type UsersUpdateManyInput struct {
-}
-
-func (c *Client) UsersUpdateMany(i *UsersUpdateManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/users/update_many.json")
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) UsersUpdateMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/users/update_many.json"
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
 
 type ViewCountInput struct {
 	ID string
 }
 
-func (c *Client) ViewCount(i *ViewCountInput) ([]byte, error) {
+func (c *Client) ViewCount(i *ViewCountInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/views/%s/count.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/views/%s/count.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type ViewCreateInput struct {
-}
-
-func (c *Client) ViewCreate(i *ViewCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/views.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) ViewCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/views.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type ViewDeleteInput struct {
 	ID string
 }
 
-func (c *Client) ViewDelete(i *ViewDeleteInput) ([]byte, error) {
+func (c *Client) ViewDelete(i *ViewDeleteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/views/%s.json", i.ID)
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/views/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
 
 type ViewExecuteInput struct {
 	ID string
 }
 
-func (c *Client) ViewExecute(i *ViewExecuteInput) ([]byte, error) {
+func (c *Client) ViewExecute(i *ViewExecuteInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/views/%s/execute.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/views/%s/execute.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type ViewExportInput struct {
 	ID string
 }
 
-func (c *Client) ViewExport(i *ViewExportInput) ([]byte, error) {
+func (c *Client) ViewExport(i *ViewExportInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/views/%s/export.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/views/%s/export.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type ViewShowInput struct {
 	ID string
 }
 
-func (c *Client) ViewShow(i *ViewShowInput) ([]byte, error) {
+func (c *Client) ViewShow(i *ViewShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/views/%s.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/views/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type ViewTicketsInput struct {
 	ID string
 }
 
-func (c *Client) ViewTickets(i *ViewTicketsInput) ([]byte, error) {
+func (c *Client) ViewTickets(i *ViewTicketsInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/views/%s/tickets.json", i.ID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/views/%s/tickets.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type ViewUpdateInput struct {
 	ID string
 }
 
-func (c *Client) ViewUpdate(i *ViewUpdateInput) ([]byte, error) {
+func (c *Client) ViewUpdate(i *ViewUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.ID == "" {
 		return nil, errors.New("Missing required field 'ID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/views/%s.json", i.ID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/views/%s.json"
+	path := fmt.Sprintf(api_path, i.ID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type ViewsActiveListInput struct {
+func (c *Client) ViewsActiveList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/views/active.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) ViewsActiveList(i *ViewsActiveListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/views/active.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) ViewsCompact(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/views/compact.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type ViewsCompactInput struct {
+func (c *Client) ViewsCountManyList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/views/count_many.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) ViewsCompact(i *ViewsCompactInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/views/compact.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) ViewsDestroyMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/views/destroy_many.json"
+	resp, err := c.Request("DELETE", path, ro)
+	return handle(resp, err)
 }
-
-type ViewsCountManyListInput struct {
+func (c *Client) ViewsList(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/views.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) ViewsCountManyList(i *ViewsCountManyListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/views/count_many.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) ViewsPreview(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/views/preview.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
-
-type ViewsDestroyManyInput struct {
+func (c *Client) ViewsPreviewCount(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/views/preview/count.json"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) ViewsDestroyMany(i *ViewsDestroyManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/views/destroy_many.json")
-	resp, err := c.Request("DELETE", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) ViewsSearch(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/views/search.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-type ViewsListInput struct {
+func (c *Client) ViewsShowMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/views/show_many.json"
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
-
-func (c *Client) ViewsList(i *ViewsListInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/views.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) ViewsUpdateMany(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/views/update_many.json"
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
-
-type ViewsPreviewInput struct {
-}
-
-func (c *Client) ViewsPreview(i *ViewsPreviewInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/views/preview.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type ViewsPreviewCountInput struct {
-}
-
-func (c *Client) ViewsPreviewCount(i *ViewsPreviewCountInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/views/preview/count.json")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type ViewsSearchInput struct {
-}
-
-func (c *Client) ViewsSearch(i *ViewsSearchInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/views/search.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type ViewsShowManyInput struct {
-}
-
-func (c *Client) ViewsShowMany(i *ViewsShowManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/views/show_many.json")
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type ViewsUpdateManyInput struct {
-}
-
-func (c *Client) ViewsUpdateMany(i *ViewsUpdateManyInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/views/update_many.json")
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
-}
-
-type VisitorCreateInput struct {
-}
-
-func (c *Client) VisitorCreate(i *VisitorCreateInput) ([]byte, error) {
-	path := fmt.Sprintf("/api/v2/visitors")
-	resp, err := c.Request("POST", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+func (c *Client) VisitorCreate(ro *RequestOptions) ([]byte, error) {
+	path := "/api/v2/visitors"
+	resp, err := c.Request("POST", path, ro)
+	return handle(resp, err)
 }
 
 type VisitorShowInput struct {
 	VisitorID string
 }
 
-func (c *Client) VisitorShow(i *VisitorShowInput) ([]byte, error) {
+func (c *Client) VisitorShow(i *VisitorShowInput, ro *RequestOptions) ([]byte, error) {
 	if i.VisitorID == "" {
 		return nil, errors.New("Missing required field 'VisitorID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/visitors/%s", i.VisitorID)
-	resp, err := c.Request("GET", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/visitors/%s"
+	path := fmt.Sprintf(api_path, i.VisitorID)
+	resp, err := c.Request("GET", path, ro)
+	return handle(resp, err)
 }
 
 type VisitorUpdateInput struct {
 	VisitorID string
 }
 
-func (c *Client) VisitorUpdate(i *VisitorUpdateInput) ([]byte, error) {
+func (c *Client) VisitorUpdate(i *VisitorUpdateInput, ro *RequestOptions) ([]byte, error) {
 	if i.VisitorID == "" {
 		return nil, errors.New("Missing required field 'VisitorID'")
 	}
 
-	path := fmt.Sprintf("/api/v2/visitors/%s", i.VisitorID)
-	resp, err := c.Request("PUT", path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	api_path := "/api/v2/visitors/%s"
+	path := fmt.Sprintf(api_path, i.VisitorID)
+	resp, err := c.Request("PUT", path, ro)
+	return handle(resp, err)
 }
