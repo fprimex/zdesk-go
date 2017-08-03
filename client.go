@@ -3,28 +3,27 @@ package zdesk
 import (
 	"bytes"
 	"fmt"
-	"io"
 	"net/http"
 	"net/url"
 	"os"
 	"runtime"
 	"strings"
-	"encoding/json"
 
 	"github.com/ajg/form"
-	"github.com/mitchellh/mapstructure"
 	"github.com/hashicorp/go-cleanhttp"
 )
 
+// APIUsernameEnvVar is the environment variable where the Zendesk username /
+// email should be read from.
 const APIUsernameEnvVar = "ZDESK_USERNAME"
 
-// APIKeyEnvVar is the name of the environment variable where the Fastly API
+// APIKeyEnvVar is the name of the environment variable where the Zendesk API
 // key should be read from.
 const APIKeyEnvVar = "ZDESK_TOKEN"
 
-// DefaultEndpoint is the default endpoint for Fastly. Since Fastly does not
-// support an on-premise solution, this is likely to always be the default.
-const DefaultEndpoint = "https://fprimex.zendesk.com"
+// APIDomainURLEnvVar is the name of the environment variable where the Zendesk
+// domain, such as https://example.zendesk.com should be read from.
+const APIDomainURLEnvVar = "ZDESK_DOMAIN"
 
 // ProjectURL is the url for this library.
 var ProjectURL = "github.com/fprimex/zdesk-go"
@@ -33,52 +32,39 @@ var ProjectURL = "github.com/fprimex/zdesk-go"
 var ProjectVersion = "0.1"
 
 // UserAgent is the user agent for this particular client.
-var UserAgent = fmt.Sprintf("ZdeskGo/%s (+%s; %s)",
+var UserAgent = fmt.Sprintf("zdesk-go/%s (+%s; %s)",
 	ProjectVersion, ProjectURL, runtime.Version())
 
-// Client is the main entrypoint to the Fastly golang API library.
+// Client is the main entrypoint to the API library.
 type Client struct {
-	// Address is the address of Fastly's API endpoint.
+	// Address is the address of Zendesk's API endpoint.
 	Address string
 
 	// HTTPClient is the HTTP client to use. If one is not provided, a default
 	// client will be used.
 	HTTPClient *http.Client
 
-    apiUsername string
+	// apiUsername is the Zendesk login / email.
+	apiUsername string
 
-	// apiKey is the Fastly API key to authenticate requests.
+	// apiKey is the Zendesk API token to authenticate requests.
 	apiKey string
 
 	// url is the parsed URL from Address
 	url *url.URL
 }
 
-// DefaultClient instantiates a new Fastly API client. This function requires
-// the environment variable `FASTLY_API_KEY` is set and contains a valid API key
-// to authenticate with Fastly.
-func DefaultClient() *Client {
-	client, err := NewClient(os.Getenv(APIUsernameEnvVar),
-                             os.Getenv(APIKeyEnvVar))
-	if err != nil {
-		panic(err)
-	}
-	return client
+// DefaultClient instantiates a new Zendesk API client. This function requires
+// the environment variables to be set.
+func DefaultClient() (*Client, error) {
+	return NewClient(os.Getenv(fmt.Sprintf("%s/token", APIUsernameEnvVar)),
+                         os.Getenv(APIKeyEnvVar),
+                         os.Getenv(APIDomainURLEnvVar))
 }
 
-// NewClient creates a new API client with the given key and the default API
-// endpoint. Because Fastly allows some requests without an API key, this
-// function will not error if the API token is not supplied. Attempts to make a
-// request that requires an API key will return a 403 response.
-func NewClient(user string, key string) (*Client, error) {
-	return NewClientForEndpoint(user, key, DefaultEndpoint)
-}
-
-// NewClientForEndpoint creates a new API client with the given key and API
-// endpoint. Because Fastly allows some requests without an API key, this
-// function will not error if the API token is not supplied. Attempts to make a
-// request that requires an API key will return a 403 response.
-func NewClientForEndpoint(user string, key string, endpoint string) (*Client, error) {
+// NewClient creates a new API client with the given key and the domain
+// endpoint. 
+func NewClient(user string, key string, endpoint string) (*Client, error) {
 	client := &Client{apiUsername: user, apiKey: key, Address: endpoint}
 	return client.init()
 }
@@ -190,26 +176,3 @@ func checkResp(resp *http.Response, err error) (*http.Response, error) {
 	}
 }
 
-// decodeJSON is used to decode an HTTP response body into an interface as JSON.
-func decodeJSON(out interface{}, body io.ReadCloser) error {
-	defer body.Close()
-
-	var parsed interface{}
-	dec := json.NewDecoder(body)
-	if err := dec.Decode(&parsed); err != nil {
-		return err
-	}
-
-	decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
-		DecodeHook: mapstructure.ComposeDecodeHookFunc(
-			mapToHTTPHeaderHookFunc(),
-			stringToTimeHookFunc(),
-		),
-		WeaklyTypedInput: true,
-		Result:           out,
-	})
-	if err != nil {
-		return err
-	}
-	return decoder.Decode(parsed)
-}
