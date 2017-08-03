@@ -7,9 +7,19 @@ import (
 	"net/http"
 )
 
-func handle(resp *http.Response, err error) ([]byte, error) {
+func handle(resp *http.Response, ro *RequestOptions, err error) ([]byte, error) {
 	if err != nil {
 		return nil, err
+	}
+
+	if ro != nil {
+		if ro.ResponseOption == "location" {
+			return []byte(resp.Header.Get("Location")), nil
+		}
+
+		if ro.ResponseOption == "code" {
+			return []byte(fmt.Sprintf("%d", resp.StatusCode)), nil
+		}
 	}
 
 	defer resp.Body.Close()
@@ -25,27 +35,27 @@ func handle(resp *http.Response, err error) ([]byte, error) {
 func (c *Client) AccountList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/account"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AccountSettingsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/account/settings.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AccountSettingsUpdate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/account/settings.json"
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AccountUpdate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/account"
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ActivitiesList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/activities.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ActivityShowInput struct {
@@ -60,12 +70,12 @@ func (c *Client) ActivityShow(i *ActivityShowInput, ro *RequestOptions) ([]byte,
 	api_path := "/api/v2/activities/%s.json"
 	path := fmt.Sprintf(api_path, i.ActivityID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AgentCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/agents"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type AgentDeleteInput struct {
@@ -80,7 +90,7 @@ func (c *Client) AgentDelete(i *AgentDeleteInput, ro *RequestOptions) ([]byte, e
 	api_path := "/api/v2/agents/%s"
 	path := fmt.Sprintf(api_path, i.AgentID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type AgentShowInput struct {
@@ -95,7 +105,7 @@ func (c *Client) AgentShow(i *AgentShowInput, ro *RequestOptions) ([]byte, error
 	api_path := "/api/v2/agents/%s"
 	path := fmt.Sprintf(api_path, i.AgentID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type AgentUpdateInput struct {
@@ -110,7 +120,7 @@ func (c *Client) AgentUpdate(i *AgentUpdateInput, ro *RequestOptions) ([]byte, e
 	api_path := "/api/v2/agents/%s"
 	path := fmt.Sprintf(api_path, i.AgentID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type AgentsEmailShowInput struct {
@@ -125,32 +135,32 @@ func (c *Client) AgentsEmailShow(i *AgentsEmailShowInput, ro *RequestOptions) ([
 	api_path := "/api/v2/agents/email/%s"
 	path := fmt.Sprintf(api_path, i.EmailID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AgentsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/agents"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AgentsMe(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/agents/me"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AgentsMeUpdate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/agents/me"
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AnyChannelPushCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/any_channel/push"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AppCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/apps.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type AppDeleteInput struct {
@@ -165,7 +175,7 @@ func (c *Client) AppDelete(i *AppDeleteInput, ro *RequestOptions) ([]byte, error
 	api_path := "/api/v2/apps/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type AppPublicKeyInput struct {
@@ -180,7 +190,7 @@ func (c *Client) AppPublicKey(i *AppPublicKeyInput, ro *RequestOptions) ([]byte,
 	api_path := "/api/v2/apps/%s/public_key.pem"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type AppShowInput struct {
@@ -195,7 +205,7 @@ func (c *Client) AppShow(i *AppShowInput, ro *RequestOptions) ([]byte, error) {
 	api_path := "/api/v2/apps/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type AppUpdateInput struct {
@@ -210,12 +220,12 @@ func (c *Client) AppUpdate(i *AppUpdateInput, ro *RequestOptions) ([]byte, error
 	api_path := "/api/v2/apps/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AppsInstallationCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/apps/installations.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type AppsInstallationDeleteInput struct {
@@ -230,7 +240,7 @@ func (c *Client) AppsInstallationDelete(i *AppsInstallationDeleteInput, ro *Requ
 	api_path := "/api/v2/apps/installations/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type AppsInstallationRequirementsInput struct {
@@ -245,7 +255,7 @@ func (c *Client) AppsInstallationRequirements(i *AppsInstallationRequirementsInp
 	api_path := "/api/v2/apps/installations/%s/requirements.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type AppsInstallationShowInput struct {
@@ -260,7 +270,7 @@ func (c *Client) AppsInstallationShow(i *AppsInstallationShowInput, ro *RequestO
 	api_path := "/api/v2/apps/installations/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type AppsInstallationUpdateInput struct {
@@ -275,7 +285,7 @@ func (c *Client) AppsInstallationUpdate(i *AppsInstallationUpdateInput, ro *Requ
 	api_path := "/api/v2/apps/installations/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type AppsInstallationsJobStatusShowInput struct {
@@ -290,12 +300,12 @@ func (c *Client) AppsInstallationsJobStatusShow(i *AppsInstallationsJobStatusSho
 	api_path := "/api/v2/apps/installations/job_statuses/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AppsInstallationsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/apps/installations.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type AppsJobStatusShowInput struct {
@@ -310,22 +320,22 @@ func (c *Client) AppsJobStatusShow(i *AppsJobStatusShowInput, ro *RequestOptions
 	api_path := "/api/v2/apps/job_statuses/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AppsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/apps.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AppsLocationInstallationsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/apps/location_installations.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AppsLocationInstallationsReorder(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/apps/location_installations/reorder.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type AppsLocationShowInput struct {
@@ -340,27 +350,27 @@ func (c *Client) AppsLocationShow(i *AppsLocationShowInput, ro *RequestOptions) 
 	api_path := "/api/v2/apps/locations/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AppsLocationsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/apps/locations.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AppsNotifyCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/apps/notify.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AppsOwnedList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/apps/owned.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AppsUploadCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/apps/uploads.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type AttachmentDeleteInput struct {
@@ -375,7 +385,7 @@ func (c *Client) AttachmentDelete(i *AttachmentDeleteInput, ro *RequestOptions) 
 	api_path := "/api/v2/attachments/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type AttachmentShowInput struct {
@@ -390,7 +400,7 @@ func (c *Client) AttachmentShow(i *AttachmentShowInput, ro *RequestOptions) ([]b
 	api_path := "/api/v2/attachments/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type AuditLogShowInput struct {
@@ -405,22 +415,22 @@ func (c *Client) AuditLogShow(i *AuditLogShowInput, ro *RequestOptions) ([]byte,
 	api_path := "/api/v2/audit_logs/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AuditLogsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/audit_logs.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AutocompleteTags(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/autocomplete/tags.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AutomationCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/automations.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type AutomationDeleteInput struct {
@@ -435,7 +445,7 @@ func (c *Client) AutomationDelete(i *AutomationDeleteInput, ro *RequestOptions) 
 	api_path := "/api/v2/automations/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type AutomationShowInput struct {
@@ -450,7 +460,7 @@ func (c *Client) AutomationShow(i *AutomationShowInput, ro *RequestOptions) ([]b
 	api_path := "/api/v2/automations/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type AutomationUpdateInput struct {
@@ -465,37 +475,37 @@ func (c *Client) AutomationUpdate(i *AutomationUpdateInput, ro *RequestOptions) 
 	api_path := "/api/v2/automations/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AutomationsActiveList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/automations/active.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AutomationsDestroyMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/automations/destroy_many.json"
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AutomationsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/automations.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AutomationsSearch(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/automations/search.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) AutomationsUpdateMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/automations/update_many.json"
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) BanCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/bans"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type BanDeleteInput struct {
@@ -510,7 +520,7 @@ func (c *Client) BanDelete(i *BanDeleteInput, ro *RequestOptions) ([]byte, error
 	api_path := "/api/v2/ban/%s"
 	path := fmt.Sprintf(api_path, i.BanID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type BanShowInput struct {
@@ -525,22 +535,22 @@ func (c *Client) BanShow(i *BanShowInput, ro *RequestOptions) ([]byte, error) {
 	api_path := "/api/v2/bans/%s"
 	path := fmt.Sprintf(api_path, i.BanID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) BansIpList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/bans/ip"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) BansList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/bans"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) BookmarkCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/bookmarks.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type BookmarkDeleteInput struct {
@@ -555,12 +565,12 @@ func (c *Client) BookmarkDelete(i *BookmarkDeleteInput, ro *RequestOptions) ([]b
 	api_path := "/api/v2/bookmarks/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) BookmarksList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/bookmarks.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type BrandCheckHostMappingInput struct {
@@ -575,12 +585,12 @@ func (c *Client) BrandCheckHostMapping(i *BrandCheckHostMappingInput, ro *Reques
 	api_path := "/api/v2/brands/%s/check_host_mapping.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) BrandCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/brands.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type BrandDeleteInput struct {
@@ -595,7 +605,7 @@ func (c *Client) BrandDelete(i *BrandDeleteInput, ro *RequestOptions) ([]byte, e
 	api_path := "/api/v2/brands/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type BrandShowInput struct {
@@ -610,7 +620,7 @@ func (c *Client) BrandShow(i *BrandShowInput, ro *RequestOptions) ([]byte, error
 	api_path := "/api/v2/brands/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type BrandUpdateInput struct {
@@ -625,22 +635,22 @@ func (c *Client) BrandUpdate(i *BrandUpdateInput, ro *RequestOptions) ([]byte, e
 	api_path := "/api/v2/brands/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) BrandsCheckHostMappingList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/brands/check_host_mapping.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) BrandsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/brands.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) BusinessHoursScheduleCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/business_hours/schedules.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type BusinessHoursScheduleDeleteInput struct {
@@ -655,7 +665,7 @@ func (c *Client) BusinessHoursScheduleDelete(i *BusinessHoursScheduleDeleteInput
 	api_path := "/api/v2/business_hours/schedules/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type BusinessHoursScheduleHolidayCreateInput struct {
@@ -670,7 +680,7 @@ func (c *Client) BusinessHoursScheduleHolidayCreate(i *BusinessHoursScheduleHoli
 	api_path := "/api/v2/business_hours/schedules/%s/holidays.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type BusinessHoursScheduleHolidayDeleteInput struct {
@@ -690,7 +700,7 @@ func (c *Client) BusinessHoursScheduleHolidayDelete(i *BusinessHoursScheduleHoli
 	api_path := "/api/v2/business_hours/schedules/%s/holidays/%s.json"
 	path := fmt.Sprintf(api_path, i.ScheduleID, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type BusinessHoursScheduleHolidayShowInput struct {
@@ -710,7 +720,7 @@ func (c *Client) BusinessHoursScheduleHolidayShow(i *BusinessHoursScheduleHolida
 	api_path := "/api/v2/business_hours/schedules/%s/holidays/%s.json"
 	path := fmt.Sprintf(api_path, i.ScheduleID, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type BusinessHoursScheduleHolidayUpdateInput struct {
@@ -730,7 +740,7 @@ func (c *Client) BusinessHoursScheduleHolidayUpdate(i *BusinessHoursScheduleHoli
 	api_path := "/api/v2/business_hours/schedules/%s/holidays/%s.json"
 	path := fmt.Sprintf(api_path, i.ScheduleID, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type BusinessHoursScheduleHolidaysInput struct {
@@ -745,7 +755,7 @@ func (c *Client) BusinessHoursScheduleHolidays(i *BusinessHoursScheduleHolidaysI
 	api_path := "/api/v2/business_hours/schedules/%s/holidays.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type BusinessHoursScheduleShowInput struct {
@@ -760,7 +770,7 @@ func (c *Client) BusinessHoursScheduleShow(i *BusinessHoursScheduleShowInput, ro
 	api_path := "/api/v2/business_hours/schedules/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type BusinessHoursScheduleUpdateInput struct {
@@ -775,7 +785,7 @@ func (c *Client) BusinessHoursScheduleUpdate(i *BusinessHoursScheduleUpdateInput
 	api_path := "/api/v2/business_hours/schedules/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type BusinessHoursScheduleWorkweekUpdateInput struct {
@@ -790,12 +800,12 @@ func (c *Client) BusinessHoursScheduleWorkweekUpdate(i *BusinessHoursScheduleWor
 	api_path := "/api/v2/business_hours/schedules/%s/workweek.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) BusinessHoursSchedulesList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/business_hours/schedules.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ChannelsTwitterMonitoredTwitterHandleShowInput struct {
@@ -810,17 +820,17 @@ func (c *Client) ChannelsTwitterMonitoredTwitterHandleShow(i *ChannelsTwitterMon
 	api_path := "/api/v2/channels/twitter/monitored_twitter_handles/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ChannelsTwitterMonitoredTwitterHandlesList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/channels/twitter/monitored_twitter_handles.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ChannelsTwitterTicketCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/channels/twitter/tickets.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ChannelsTwitterTicketStatusesInput struct {
@@ -835,7 +845,7 @@ func (c *Client) ChannelsTwitterTicketStatuses(i *ChannelsTwitterTicketStatusesI
 	api_path := "/api/v2/channels/twitter/tickets/%s/statuses.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ChannelsVoiceAgentTicketDisplayCreateInput struct {
@@ -855,7 +865,7 @@ func (c *Client) ChannelsVoiceAgentTicketDisplayCreate(i *ChannelsVoiceAgentTick
 	api_path := "/api/v2/channels/voice/agents/%s/tickets/%s/display.json"
 	path := fmt.Sprintf(api_path, i.AgentID, i.TicketID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ChannelsVoiceAgentUserDisplayCreateInput struct {
@@ -875,7 +885,7 @@ func (c *Client) ChannelsVoiceAgentUserDisplayCreate(i *ChannelsVoiceAgentUserDi
 	api_path := "/api/v2/channels/voice/agents/%s/users/%s/display.json"
 	path := fmt.Sprintf(api_path, i.AgentID, i.UserID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ChannelsVoiceAvailabilityShowInput struct {
@@ -890,7 +900,7 @@ func (c *Client) ChannelsVoiceAvailabilityShow(i *ChannelsVoiceAvailabilityShowI
 	api_path := "/api/v2/channels/voice/availabilities/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ChannelsVoiceAvailabilityUpdateInput struct {
@@ -905,12 +915,12 @@ func (c *Client) ChannelsVoiceAvailabilityUpdate(i *ChannelsVoiceAvailabilityUpd
 	api_path := "/api/v2/channels/voice/availabilities/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ChannelsVoiceGreetingCategoriesList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/channels/voice/greeting_categories.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ChannelsVoiceGreetingCategoryShowInput struct {
@@ -925,12 +935,12 @@ func (c *Client) ChannelsVoiceGreetingCategoryShow(i *ChannelsVoiceGreetingCateg
 	api_path := "/api/v2/channels/voice/greeting_categories/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ChannelsVoiceGreetingCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/channels/voice/greetings.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ChannelsVoiceGreetingDeleteInput struct {
@@ -945,7 +955,7 @@ func (c *Client) ChannelsVoiceGreetingDelete(i *ChannelsVoiceGreetingDeleteInput
 	api_path := "/api/v2/channels/voice/greetings/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ChannelsVoiceGreetingRecordingInput struct {
@@ -960,7 +970,7 @@ func (c *Client) ChannelsVoiceGreetingRecording(i *ChannelsVoiceGreetingRecordin
 	api_path := "/api/v2/channels/voice/greetings/%s/recording.mp3"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ChannelsVoiceGreetingShowInput struct {
@@ -975,7 +985,7 @@ func (c *Client) ChannelsVoiceGreetingShow(i *ChannelsVoiceGreetingShowInput, ro
 	api_path := "/api/v2/channels/voice/greetings/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ChannelsVoiceGreetingUpdateInput struct {
@@ -990,17 +1000,17 @@ func (c *Client) ChannelsVoiceGreetingUpdate(i *ChannelsVoiceGreetingUpdateInput
 	api_path := "/api/v2/channels/voice/greetings/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ChannelsVoiceGreetingsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/channels/voice/greetings.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ChannelsVoicePhoneNumberCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/channels/voice/phone_numbers.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ChannelsVoicePhoneNumberShowInput struct {
@@ -1015,7 +1025,7 @@ func (c *Client) ChannelsVoicePhoneNumberShow(i *ChannelsVoicePhoneNumberShowInp
 	api_path := "/api/v2/channels/voice/phone_numbers/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ChannelsVoicePhoneNumberUpdateInput struct {
@@ -1030,47 +1040,47 @@ func (c *Client) ChannelsVoicePhoneNumberUpdate(i *ChannelsVoicePhoneNumberUpdat
 	api_path := "/api/v2/channels/voice/phone_numbers/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ChannelsVoicePhoneNumbersDelete(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/channels/voice/phone_numbers.json"
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ChannelsVoicePhoneNumbersList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/channels/voice/phone_numbers.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ChannelsVoicePhoneNumbersSearch(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/channels/voice/phone_numbers/search.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ChannelsVoiceStatsAgentsActivityList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/channels/voice/stats/agents_activity.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ChannelsVoiceStatsCurrentQueueActivityList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/channels/voice/stats/current_queue_activity.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ChannelsVoiceStatsHistoricalQueueActivityList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/channels/voice/stats/historical_queue_activity.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ChannelsVoiceTicketCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/channels/voice/tickets.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ChatCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/chats"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ChatDeleteInput struct {
@@ -1085,7 +1095,7 @@ func (c *Client) ChatDelete(i *ChatDeleteInput, ro *RequestOptions) ([]byte, err
 	api_path := "/api/v2/chats/%s"
 	path := fmt.Sprintf(api_path, i.ChatID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ChatShowInput struct {
@@ -1100,7 +1110,7 @@ func (c *Client) ChatShow(i *ChatShowInput, ro *RequestOptions) ([]byte, error) 
 	api_path := "/api/v2/chats/%s"
 	path := fmt.Sprintf(api_path, i.ChatID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ChatUpdateInput struct {
@@ -1115,17 +1125,17 @@ func (c *Client) ChatUpdate(i *ChatUpdateInput, ro *RequestOptions) ([]byte, err
 	api_path := "/api/v2/chats/%s"
 	path := fmt.Sprintf(api_path, i.ChatID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ChatsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/chats"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ChatsSearch(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/chats/search"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityPostCommentCreateInput struct {
@@ -1140,7 +1150,7 @@ func (c *Client) CommunityPostCommentCreate(i *CommunityPostCommentCreateInput, 
 	api_path := "/api/v2/community/posts/%s/comments.json"
 	path := fmt.Sprintf(api_path, i.PostID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityPostCommentDeleteInput struct {
@@ -1160,7 +1170,7 @@ func (c *Client) CommunityPostCommentDelete(i *CommunityPostCommentDeleteInput, 
 	api_path := "/api/v2/community/posts/%s/comments/%s.json"
 	path := fmt.Sprintf(api_path, i.PostID, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityPostCommentDownCreateInput struct {
@@ -1180,7 +1190,7 @@ func (c *Client) CommunityPostCommentDownCreate(i *CommunityPostCommentDownCreat
 	api_path := "/api/v2/community/posts/%s/comments/%s/down.json"
 	path := fmt.Sprintf(api_path, i.PostID, i.ID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityPostCommentShowInput struct {
@@ -1200,7 +1210,7 @@ func (c *Client) CommunityPostCommentShow(i *CommunityPostCommentShowInput, ro *
 	api_path := "/api/v2/community/posts/%s/comments/%s.json"
 	path := fmt.Sprintf(api_path, i.PostID, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityPostCommentUpCreateInput struct {
@@ -1220,7 +1230,7 @@ func (c *Client) CommunityPostCommentUpCreate(i *CommunityPostCommentUpCreateInp
 	api_path := "/api/v2/community/posts/%s/comments/%s/up.json"
 	path := fmt.Sprintf(api_path, i.PostID, i.ID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityPostCommentUpdateInput struct {
@@ -1240,7 +1250,7 @@ func (c *Client) CommunityPostCommentUpdate(i *CommunityPostCommentUpdateInput, 
 	api_path := "/api/v2/community/posts/%s/comments/%s.json"
 	path := fmt.Sprintf(api_path, i.PostID, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityPostCommentVotesInput struct {
@@ -1260,7 +1270,7 @@ func (c *Client) CommunityPostCommentVotes(i *CommunityPostCommentVotesInput, ro
 	api_path := "/api/v2/community/posts/%s/comments/%s/votes.json"
 	path := fmt.Sprintf(api_path, i.PostID, i.CommentID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityPostCommentsInput struct {
@@ -1275,12 +1285,12 @@ func (c *Client) CommunityPostComments(i *CommunityPostCommentsInput, ro *Reques
 	api_path := "/api/v2/community/posts/%s/comments.json"
 	path := fmt.Sprintf(api_path, i.PostID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) CommunityPostCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/community/posts.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityPostDeleteInput struct {
@@ -1295,7 +1305,7 @@ func (c *Client) CommunityPostDelete(i *CommunityPostDeleteInput, ro *RequestOpt
 	api_path := "/api/v2/community/posts/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityPostDownCreateInput struct {
@@ -1310,7 +1320,7 @@ func (c *Client) CommunityPostDownCreate(i *CommunityPostDownCreateInput, ro *Re
 	api_path := "/api/v2/community/posts/%s/down.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityPostShowInput struct {
@@ -1325,7 +1335,7 @@ func (c *Client) CommunityPostShow(i *CommunityPostShowInput, ro *RequestOptions
 	api_path := "/api/v2/community/posts/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityPostSubscriptionCreateInput struct {
@@ -1340,7 +1350,7 @@ func (c *Client) CommunityPostSubscriptionCreate(i *CommunityPostSubscriptionCre
 	api_path := "/api/v2/community/posts/%s/subscriptions.json"
 	path := fmt.Sprintf(api_path, i.PostID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityPostSubscriptionDeleteInput struct {
@@ -1360,7 +1370,7 @@ func (c *Client) CommunityPostSubscriptionDelete(i *CommunityPostSubscriptionDel
 	api_path := "/api/v2/community/posts/%s/subscriptions/%s.json"
 	path := fmt.Sprintf(api_path, i.PostID, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityPostSubscriptionShowInput struct {
@@ -1380,7 +1390,7 @@ func (c *Client) CommunityPostSubscriptionShow(i *CommunityPostSubscriptionShowI
 	api_path := "/api/v2/community/posts/%s/subscriptions/%s.json"
 	path := fmt.Sprintf(api_path, i.PostID, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityPostSubscriptionsInput struct {
@@ -1395,7 +1405,7 @@ func (c *Client) CommunityPostSubscriptions(i *CommunityPostSubscriptionsInput, 
 	api_path := "/api/v2/community/posts/%s/subscriptions.json"
 	path := fmt.Sprintf(api_path, i.PostID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityPostUpCreateInput struct {
@@ -1410,7 +1420,7 @@ func (c *Client) CommunityPostUpCreate(i *CommunityPostUpCreateInput, ro *Reques
 	api_path := "/api/v2/community/posts/%s/up.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityPostUpdateInput struct {
@@ -1425,7 +1435,7 @@ func (c *Client) CommunityPostUpdate(i *CommunityPostUpdateInput, ro *RequestOpt
 	api_path := "/api/v2/community/posts/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityPostVotesInput struct {
@@ -1440,12 +1450,12 @@ func (c *Client) CommunityPostVotes(i *CommunityPostVotesInput, ro *RequestOptio
 	api_path := "/api/v2/community/posts/%s/votes.json"
 	path := fmt.Sprintf(api_path, i.PostID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) CommunityPostsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/community/posts.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityTopicAccessPolicyInput struct {
@@ -1460,7 +1470,7 @@ func (c *Client) CommunityTopicAccessPolicy(i *CommunityTopicAccessPolicyInput, 
 	api_path := "/api/v2/community/topics/%s/access_policy.json"
 	path := fmt.Sprintf(api_path, i.TopicID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityTopicAccessPolicyUpdateInput struct {
@@ -1475,12 +1485,12 @@ func (c *Client) CommunityTopicAccessPolicyUpdate(i *CommunityTopicAccessPolicyU
 	api_path := "/api/v2/community/topics/%s/access_policy.json"
 	path := fmt.Sprintf(api_path, i.TopicID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) CommunityTopicCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/community/topics.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityTopicDeleteInput struct {
@@ -1495,7 +1505,7 @@ func (c *Client) CommunityTopicDelete(i *CommunityTopicDeleteInput, ro *RequestO
 	api_path := "/api/v2/community/topics/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityTopicPostsInput struct {
@@ -1510,7 +1520,7 @@ func (c *Client) CommunityTopicPosts(i *CommunityTopicPostsInput, ro *RequestOpt
 	api_path := "/api/v2/community/topics/%s/posts.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityTopicShowInput struct {
@@ -1525,7 +1535,7 @@ func (c *Client) CommunityTopicShow(i *CommunityTopicShowInput, ro *RequestOptio
 	api_path := "/api/v2/community/topics/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityTopicSubscriptionCreateInput struct {
@@ -1540,7 +1550,7 @@ func (c *Client) CommunityTopicSubscriptionCreate(i *CommunityTopicSubscriptionC
 	api_path := "/api/v2/community/topics/%s/subscriptions.json"
 	path := fmt.Sprintf(api_path, i.TopicID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityTopicSubscriptionDeleteInput struct {
@@ -1560,7 +1570,7 @@ func (c *Client) CommunityTopicSubscriptionDelete(i *CommunityTopicSubscriptionD
 	api_path := "/api/v2/community/topics/%s/subscriptions/%s.json"
 	path := fmt.Sprintf(api_path, i.TopicID, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityTopicSubscriptionShowInput struct {
@@ -1580,7 +1590,7 @@ func (c *Client) CommunityTopicSubscriptionShow(i *CommunityTopicSubscriptionSho
 	api_path := "/api/v2/community/topics/%s/subscriptions/%s.json"
 	path := fmt.Sprintf(api_path, i.TopicID, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityTopicSubscriptionsInput struct {
@@ -1595,7 +1605,7 @@ func (c *Client) CommunityTopicSubscriptions(i *CommunityTopicSubscriptionsInput
 	api_path := "/api/v2/community/topics/%s/subscriptions.json"
 	path := fmt.Sprintf(api_path, i.TopicID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityTopicSubscriptionsUpdateInput struct {
@@ -1610,7 +1620,7 @@ func (c *Client) CommunityTopicSubscriptionsUpdate(i *CommunityTopicSubscription
 	api_path := "/api/v2/community/topics/%s/subscriptions.json"
 	path := fmt.Sprintf(api_path, i.TopicID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityTopicUpdateInput struct {
@@ -1625,12 +1635,12 @@ func (c *Client) CommunityTopicUpdate(i *CommunityTopicUpdateInput, ro *RequestO
 	api_path := "/api/v2/community/topics/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) CommunityTopicsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/community/topics.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityUserCommentsInput struct {
@@ -1645,7 +1655,7 @@ func (c *Client) CommunityUserComments(i *CommunityUserCommentsInput, ro *Reques
 	api_path := "/api/v2/community/users/%s/comments.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type CommunityUserPostsInput struct {
@@ -1660,12 +1670,12 @@ func (c *Client) CommunityUserPosts(i *CommunityUserPostsInput, ro *RequestOptio
 	api_path := "/api/v2/community/users/%s/posts.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) CustomRolesList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/custom_roles.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type DeletedTicketRestoreUpdateInput struct {
@@ -1680,32 +1690,32 @@ func (c *Client) DeletedTicketRestoreUpdate(i *DeletedTicketRestoreUpdateInput, 
 	api_path := "/api/v2/deleted_tickets/%s/restore.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) DeletedTickets1Delete(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/deleted_tickets/1"
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) DeletedTicketsDestroyMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/deleted_tickets/destroy_many"
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) DeletedTicketsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/deleted_tickets.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) DeletedTicketsRestoreManyUpdate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/deleted_tickets/restore_many"
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) DepartmentCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/departments"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type DepartmentDeleteInput struct {
@@ -1720,7 +1730,7 @@ func (c *Client) DepartmentDelete(i *DepartmentDeleteInput, ro *RequestOptions) 
 	api_path := "/api/v2/departments/%s"
 	path := fmt.Sprintf(api_path, i.DepartmentID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type DepartmentShowInput struct {
@@ -1735,7 +1745,7 @@ func (c *Client) DepartmentShow(i *DepartmentShowInput, ro *RequestOptions) ([]b
 	api_path := "/api/v2/departments/%s"
 	path := fmt.Sprintf(api_path, i.DepartmentID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type DepartmentUpdateInput struct {
@@ -1750,12 +1760,12 @@ func (c *Client) DepartmentUpdate(i *DepartmentUpdateInput, ro *RequestOptions) 
 	api_path := "/api/v2/departments/%s"
 	path := fmt.Sprintf(api_path, i.DepartmentIDOrName)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) DepartmentsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/departments"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type DepartmentsNameDeleteInput struct {
@@ -1770,7 +1780,7 @@ func (c *Client) DepartmentsNameDelete(i *DepartmentsNameDeleteInput, ro *Reques
 	api_path := "/api/v2/departments/name/%s"
 	path := fmt.Sprintf(api_path, i.Name)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type DepartmentsNameShowInput struct {
@@ -1785,12 +1795,12 @@ func (c *Client) DepartmentsNameShow(i *DepartmentsNameShowInput, ro *RequestOpt
 	api_path := "/api/v2/departments/name/%s"
 	path := fmt.Sprintf(api_path, i.Name)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) DynamicContentItemCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/dynamic_content/items.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type DynamicContentItemDeleteInput struct {
@@ -1805,7 +1815,7 @@ func (c *Client) DynamicContentItemDelete(i *DynamicContentItemDeleteInput, ro *
 	api_path := "/api/v2/dynamic_content/items/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type DynamicContentItemShowInput struct {
@@ -1820,7 +1830,7 @@ func (c *Client) DynamicContentItemShow(i *DynamicContentItemShowInput, ro *Requ
 	api_path := "/api/v2/dynamic_content/items/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type DynamicContentItemUpdateInput struct {
@@ -1835,7 +1845,7 @@ func (c *Client) DynamicContentItemUpdate(i *DynamicContentItemUpdateInput, ro *
 	api_path := "/api/v2/dynamic_content/items/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type DynamicContentItemVariantCreateInput struct {
@@ -1850,7 +1860,7 @@ func (c *Client) DynamicContentItemVariantCreate(i *DynamicContentItemVariantCre
 	api_path := "/api/v2/dynamic_content/items/%s/variants.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type DynamicContentItemVariantDeleteInput struct {
@@ -1870,7 +1880,7 @@ func (c *Client) DynamicContentItemVariantDelete(i *DynamicContentItemVariantDel
 	api_path := "/api/v2/dynamic_content/items/%s/variants/%s.json"
 	path := fmt.Sprintf(api_path, i.ItemID, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type DynamicContentItemVariantShowInput struct {
@@ -1890,7 +1900,7 @@ func (c *Client) DynamicContentItemVariantShow(i *DynamicContentItemVariantShowI
 	api_path := "/api/v2/dynamic_content/items/%s/variants/%s.json"
 	path := fmt.Sprintf(api_path, i.ItemID, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type DynamicContentItemVariantUpdateInput struct {
@@ -1910,7 +1920,7 @@ func (c *Client) DynamicContentItemVariantUpdate(i *DynamicContentItemVariantUpd
 	api_path := "/api/v2/dynamic_content/items/%s/variants/%s.json"
 	path := fmt.Sprintf(api_path, i.ItemID, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type DynamicContentItemVariantsInput struct {
@@ -1925,7 +1935,7 @@ func (c *Client) DynamicContentItemVariants(i *DynamicContentItemVariantsInput, 
 	api_path := "/api/v2/dynamic_content/items/%s/variants.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type DynamicContentItemVariantsCreateManyInput struct {
@@ -1940,7 +1950,7 @@ func (c *Client) DynamicContentItemVariantsCreateMany(i *DynamicContentItemVaria
 	api_path := "/api/v2/dynamic_content/items/%s/variants/create_many.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type DynamicContentItemVariantsUpdateManyInput struct {
@@ -1955,12 +1965,12 @@ func (c *Client) DynamicContentItemVariantsUpdateMany(i *DynamicContentItemVaria
 	api_path := "/api/v2/dynamic_content/items/%s/variants/update_many.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) DynamicContentItemsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/dynamic_content/items.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type EndUserIdentityCreateInput struct {
@@ -1975,7 +1985,7 @@ func (c *Client) EndUserIdentityCreate(i *EndUserIdentityCreateInput, ro *Reques
 	api_path := "/api/v2/end_users/%s/identities.json"
 	path := fmt.Sprintf(api_path, i.UserID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type EndUserIdentityMakePrimaryInput struct {
@@ -1995,7 +2005,7 @@ func (c *Client) EndUserIdentityMakePrimary(i *EndUserIdentityMakePrimaryInput, 
 	api_path := "/api/v2/end_users/%s/identities/%s/make_primary"
 	path := fmt.Sprintf(api_path, i.UserID, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type EndUserShowInput struct {
@@ -2010,7 +2020,7 @@ func (c *Client) EndUserShow(i *EndUserShowInput, ro *RequestOptions) ([]byte, e
 	api_path := "/api/v2/end_users/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type EndUserUpdateInput struct {
@@ -2025,12 +2035,12 @@ func (c *Client) EndUserUpdate(i *EndUserUpdateInput, ro *RequestOptions) ([]byt
 	api_path := "/api/v2/end_users/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) GoalCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/goals"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type GoalDeleteInput struct {
@@ -2045,7 +2055,7 @@ func (c *Client) GoalDelete(i *GoalDeleteInput, ro *RequestOptions) ([]byte, err
 	api_path := "/api/v2/goals/%s"
 	path := fmt.Sprintf(api_path, i.GoalID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type GoalShowInput struct {
@@ -2060,7 +2070,7 @@ func (c *Client) GoalShow(i *GoalShowInput, ro *RequestOptions) ([]byte, error) 
 	api_path := "/api/v2/goals/%s"
 	path := fmt.Sprintf(api_path, i.GoalID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type GoalUpdateInput struct {
@@ -2075,17 +2085,17 @@ func (c *Client) GoalUpdate(i *GoalUpdateInput, ro *RequestOptions) ([]byte, err
 	api_path := "/api/v2/goals/%s"
 	path := fmt.Sprintf(api_path, i.GoalID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) GoalsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/goals"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) GroupCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/groups.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type GroupDeleteInput struct {
@@ -2100,12 +2110,12 @@ func (c *Client) GroupDelete(i *GroupDeleteInput, ro *RequestOptions) ([]byte, e
 	api_path := "/api/v2/groups/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) GroupMembershipCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/group_memberships.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type GroupMembershipDeleteInput struct {
@@ -2120,7 +2130,7 @@ func (c *Client) GroupMembershipDelete(i *GroupMembershipDeleteInput, ro *Reques
 	api_path := "/api/v2/group_memberships/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type GroupMembershipShowInput struct {
@@ -2135,7 +2145,7 @@ func (c *Client) GroupMembershipShow(i *GroupMembershipShowInput, ro *RequestOpt
 	api_path := "/api/v2/group_memberships/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type GroupMembershipsInput struct {
@@ -2150,7 +2160,7 @@ func (c *Client) GroupMemberships(i *GroupMembershipsInput, ro *RequestOptions) 
 	api_path := "/api/v2/groups/%s/memberships.json"
 	path := fmt.Sprintf(api_path, i.GroupID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type GroupMembershipsAssignableInput struct {
@@ -2165,27 +2175,27 @@ func (c *Client) GroupMembershipsAssignable(i *GroupMembershipsAssignableInput, 
 	api_path := "/api/v2/groups/%s/memberships/assignable.json"
 	path := fmt.Sprintf(api_path, i.GroupID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) GroupMembershipsAssignableList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/group_memberships/assignable.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) GroupMembershipsCreateMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/group_memberships/create_many.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) GroupMembershipsDestroyMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/group_memberships/destroy_many.json"
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) GroupMembershipsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/group_memberships.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type GroupShowInput struct {
@@ -2200,7 +2210,7 @@ func (c *Client) GroupShow(i *GroupShowInput, ro *RequestOptions) ([]byte, error
 	api_path := "/api/v2/groups/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type GroupUpdateInput struct {
@@ -2215,7 +2225,7 @@ func (c *Client) GroupUpdate(i *GroupUpdateInput, ro *RequestOptions) ([]byte, e
 	api_path := "/api/v2/groups/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type GroupUsersInput struct {
@@ -2230,17 +2240,17 @@ func (c *Client) GroupUsers(i *GroupUsersInput, ro *RequestOptions) ([]byte, err
 	api_path := "/api/v2/groups/%s/users.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) GroupsAssignableList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/groups/assignable.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) GroupsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/groups.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleAttachmentCreateInput struct {
@@ -2255,7 +2265,7 @@ func (c *Client) HelpCenterArticleAttachmentCreate(i *HelpCenterArticleAttachmen
 	api_path := "/api/v2/help_center/articles/%s/attachments.json"
 	path := fmt.Sprintf(api_path, i.ArticleID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleAttachmentsInput struct {
@@ -2275,7 +2285,7 @@ func (c *Client) HelpCenterArticleAttachments(i *HelpCenterArticleAttachmentsInp
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleAttachmentsBlockInput struct {
@@ -2295,7 +2305,7 @@ func (c *Client) HelpCenterArticleAttachmentsBlock(i *HelpCenterArticleAttachmen
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleAttachmentsInlineInput struct {
@@ -2315,7 +2325,7 @@ func (c *Client) HelpCenterArticleAttachmentsInline(i *HelpCenterArticleAttachme
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleBulkAttachmentCreateInput struct {
@@ -2330,7 +2340,7 @@ func (c *Client) HelpCenterArticleBulkAttachmentCreate(i *HelpCenterArticleBulkA
 	api_path := "/api/v2/help_center/articles/%s/bulk_attachments.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleCommentCreateInput struct {
@@ -2345,7 +2355,7 @@ func (c *Client) HelpCenterArticleCommentCreate(i *HelpCenterArticleCommentCreat
 	api_path := "/api/v2/help_center/articles/%s/comments.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleCommentDeleteInput struct {
@@ -2365,7 +2375,7 @@ func (c *Client) HelpCenterArticleCommentDelete(i *HelpCenterArticleCommentDelet
 	api_path := "/api/v2/help_center/articles/%s/comments/%s.json"
 	path := fmt.Sprintf(api_path, i.ArticleID, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleCommentDownCreateInput struct {
@@ -2385,7 +2395,7 @@ func (c *Client) HelpCenterArticleCommentDownCreate(i *HelpCenterArticleCommentD
 	api_path := "/api/v2/help_center/articles/%s/comments/%s/down.json"
 	path := fmt.Sprintf(api_path, i.ArticleID, i.ID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleCommentShowInput struct {
@@ -2410,7 +2420,7 @@ func (c *Client) HelpCenterArticleCommentShow(i *HelpCenterArticleCommentShowInp
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleCommentUpCreateInput struct {
@@ -2430,7 +2440,7 @@ func (c *Client) HelpCenterArticleCommentUpCreate(i *HelpCenterArticleCommentUpC
 	api_path := "/api/v2/help_center/articles/%s/comments/%s/up.json"
 	path := fmt.Sprintf(api_path, i.ArticleID, i.ID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleCommentUpdateInput struct {
@@ -2450,7 +2460,7 @@ func (c *Client) HelpCenterArticleCommentUpdate(i *HelpCenterArticleCommentUpdat
 	api_path := "/api/v2/help_center/articles/%s/comments/%s.json"
 	path := fmt.Sprintf(api_path, i.ArticleID, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleCommentVotesInput struct {
@@ -2475,7 +2485,7 @@ func (c *Client) HelpCenterArticleCommentVotes(i *HelpCenterArticleCommentVotesI
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleCommentsInput struct {
@@ -2495,7 +2505,7 @@ func (c *Client) HelpCenterArticleComments(i *HelpCenterArticleCommentsInput, ro
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleDeleteInput struct {
@@ -2510,7 +2520,7 @@ func (c *Client) HelpCenterArticleDelete(i *HelpCenterArticleDeleteInput, ro *Re
 	api_path := "/api/v2/help_center/articles/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleDownCreateInput struct {
@@ -2525,7 +2535,7 @@ func (c *Client) HelpCenterArticleDownCreate(i *HelpCenterArticleDownCreateInput
 	api_path := "/api/v2/help_center/articles/%s/down.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleLabelCreateInput struct {
@@ -2540,7 +2550,7 @@ func (c *Client) HelpCenterArticleLabelCreate(i *HelpCenterArticleLabelCreateInp
 	api_path := "/api/v2/help_center/articles/%s/labels.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleLabelDeleteInput struct {
@@ -2560,7 +2570,7 @@ func (c *Client) HelpCenterArticleLabelDelete(i *HelpCenterArticleLabelDeleteInp
 	api_path := "/api/v2/help_center/articles/%s/labels/%s.json"
 	path := fmt.Sprintf(api_path, i.ArticleID, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleLabelsInput struct {
@@ -2575,7 +2585,7 @@ func (c *Client) HelpCenterArticleLabels(i *HelpCenterArticleLabelsInput, ro *Re
 	api_path := "/api/v2/help_center/articles/%s/labels.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleShowInput struct {
@@ -2595,7 +2605,7 @@ func (c *Client) HelpCenterArticleShow(i *HelpCenterArticleShowInput, ro *Reques
 	api_path := "/api/v2/help_center/%s/articles/%s.json"
 	path := fmt.Sprintf(api_path, i.Locale, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleSourceLocaleUpdateInput struct {
@@ -2610,7 +2620,7 @@ func (c *Client) HelpCenterArticleSourceLocaleUpdate(i *HelpCenterArticleSourceL
 	api_path := "/api/v2/help_center/articles/%s/source_locale.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleSubscriptionCreateInput struct {
@@ -2625,7 +2635,7 @@ func (c *Client) HelpCenterArticleSubscriptionCreate(i *HelpCenterArticleSubscri
 	api_path := "/api/v2/help_center/articles/%s/subscriptions.json"
 	path := fmt.Sprintf(api_path, i.ArticleID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleSubscriptionDeleteInput struct {
@@ -2645,7 +2655,7 @@ func (c *Client) HelpCenterArticleSubscriptionDelete(i *HelpCenterArticleSubscri
 	api_path := "/api/v2/help_center/articles/%s/subscriptions/%s.json"
 	path := fmt.Sprintf(api_path, i.ArticleID, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleSubscriptionShowInput struct {
@@ -2670,7 +2680,7 @@ func (c *Client) HelpCenterArticleSubscriptionShow(i *HelpCenterArticleSubscript
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleSubscriptionsInput struct {
@@ -2690,7 +2700,7 @@ func (c *Client) HelpCenterArticleSubscriptions(i *HelpCenterArticleSubscription
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleTranslationCreateInput struct {
@@ -2705,7 +2715,7 @@ func (c *Client) HelpCenterArticleTranslationCreate(i *HelpCenterArticleTranslat
 	api_path := "/api/v2/help_center/articles/%s/translations.json"
 	path := fmt.Sprintf(api_path, i.ArticleID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleTranslationShowInput struct {
@@ -2725,7 +2735,7 @@ func (c *Client) HelpCenterArticleTranslationShow(i *HelpCenterArticleTranslatio
 	api_path := "/api/v2/help_center/articles/%s/translations/%s.json"
 	path := fmt.Sprintf(api_path, i.ArticleID, i.Locale)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleTranslationUpdateInput struct {
@@ -2745,7 +2755,7 @@ func (c *Client) HelpCenterArticleTranslationUpdate(i *HelpCenterArticleTranslat
 	api_path := "/api/v2/help_center/articles/%s/translations/%s.json"
 	path := fmt.Sprintf(api_path, i.ArticleID, i.Locale)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleTranslationsInput struct {
@@ -2760,7 +2770,7 @@ func (c *Client) HelpCenterArticleTranslations(i *HelpCenterArticleTranslationsI
 	api_path := "/api/v2/help_center/articles/%s/translations.json"
 	path := fmt.Sprintf(api_path, i.ArticleID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleTranslationsMissingInput struct {
@@ -2775,7 +2785,7 @@ func (c *Client) HelpCenterArticleTranslationsMissing(i *HelpCenterArticleTransl
 	api_path := "/api/v2/help_center/articles/%s/translations/missing.json"
 	path := fmt.Sprintf(api_path, i.ArticleID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleUpCreateInput struct {
@@ -2790,7 +2800,7 @@ func (c *Client) HelpCenterArticleUpCreate(i *HelpCenterArticleUpCreateInput, ro
 	api_path := "/api/v2/help_center/articles/%s/up.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleUpdateInput struct {
@@ -2810,7 +2820,7 @@ func (c *Client) HelpCenterArticleUpdate(i *HelpCenterArticleUpdateInput, ro *Re
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticleVotesInput struct {
@@ -2830,12 +2840,12 @@ func (c *Client) HelpCenterArticleVotes(i *HelpCenterArticleVotesInput, ro *Requ
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) HelpCenterArticlesAttachmentCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/help_center/articles/attachments.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticlesAttachmentDeleteInput struct {
@@ -2850,7 +2860,7 @@ func (c *Client) HelpCenterArticlesAttachmentDelete(i *HelpCenterArticlesAttachm
 	api_path := "/api/v2/help_center/articles/attachments/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticlesAttachmentShowInput struct {
@@ -2870,7 +2880,7 @@ func (c *Client) HelpCenterArticlesAttachmentShow(i *HelpCenterArticlesAttachmen
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticlesLabelShowInput struct {
@@ -2885,7 +2895,7 @@ func (c *Client) HelpCenterArticlesLabelShow(i *HelpCenterArticlesLabelShowInput
 	api_path := "/api/v2/help_center/articles/labels/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticlesLabelsListInput struct {
@@ -2899,7 +2909,7 @@ func (c *Client) HelpCenterArticlesLabelsList(i *HelpCenterArticlesLabelsListInp
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterArticlesListInput struct {
@@ -2913,12 +2923,12 @@ func (c *Client) HelpCenterArticlesList(i *HelpCenterArticlesListInput, ro *Requ
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) HelpCenterArticlesSearch(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/help_center/articles/search.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterCategoriesListInput struct {
@@ -2932,7 +2942,7 @@ func (c *Client) HelpCenterCategoriesList(i *HelpCenterCategoriesListInput, ro *
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterCategoryArticlesInput struct {
@@ -2952,7 +2962,7 @@ func (c *Client) HelpCenterCategoryArticles(i *HelpCenterCategoryArticlesInput, 
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterCategoryCreateInput struct {
@@ -2966,7 +2976,7 @@ func (c *Client) HelpCenterCategoryCreate(i *HelpCenterCategoryCreateInput, ro *
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterCategoryDeleteInput struct {
@@ -2981,7 +2991,7 @@ func (c *Client) HelpCenterCategoryDelete(i *HelpCenterCategoryDeleteInput, ro *
 	api_path := "/api/v2/help_center/categories/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterCategorySectionCreateInput struct {
@@ -3001,7 +3011,7 @@ func (c *Client) HelpCenterCategorySectionCreate(i *HelpCenterCategorySectionCre
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterCategorySectionsInput struct {
@@ -3021,7 +3031,7 @@ func (c *Client) HelpCenterCategorySections(i *HelpCenterCategorySectionsInput, 
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterCategoryShowInput struct {
@@ -3041,7 +3051,7 @@ func (c *Client) HelpCenterCategoryShow(i *HelpCenterCategoryShowInput, ro *Requ
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterCategorySourceLocaleUpdateInput struct {
@@ -3056,7 +3066,7 @@ func (c *Client) HelpCenterCategorySourceLocaleUpdate(i *HelpCenterCategorySourc
 	api_path := "/api/v2/help_center/categories/%s/source_locale.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterCategoryTranslationCreateInput struct {
@@ -3071,7 +3081,7 @@ func (c *Client) HelpCenterCategoryTranslationCreate(i *HelpCenterCategoryTransl
 	api_path := "/api/v2/help_center/categories/%s/translations.json"
 	path := fmt.Sprintf(api_path, i.CategoryID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterCategoryTranslationUpdateInput struct {
@@ -3091,7 +3101,7 @@ func (c *Client) HelpCenterCategoryTranslationUpdate(i *HelpCenterCategoryTransl
 	api_path := "/api/v2/help_center/categories/%s/translations/%s.json"
 	path := fmt.Sprintf(api_path, i.CategoryID, i.Locale)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterCategoryTranslationsInput struct {
@@ -3106,7 +3116,7 @@ func (c *Client) HelpCenterCategoryTranslations(i *HelpCenterCategoryTranslation
 	api_path := "/api/v2/help_center/categories/%s/translations.json"
 	path := fmt.Sprintf(api_path, i.CategoryID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterCategoryTranslationsMissingInput struct {
@@ -3121,7 +3131,7 @@ func (c *Client) HelpCenterCategoryTranslationsMissing(i *HelpCenterCategoryTran
 	api_path := "/api/v2/help_center/categories/%s/translations/missing.json"
 	path := fmt.Sprintf(api_path, i.CategoryID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterCategoryUpdateInput struct {
@@ -3141,17 +3151,17 @@ func (c *Client) HelpCenterCategoryUpdate(i *HelpCenterCategoryUpdateInput, ro *
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) HelpCenterIncrementalArticlesList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/help_center/incremental/articles.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) HelpCenterLocalesList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/help_center/locales.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterSectionAccessPolicyInput struct {
@@ -3166,7 +3176,7 @@ func (c *Client) HelpCenterSectionAccessPolicy(i *HelpCenterSectionAccessPolicyI
 	api_path := "/api/v2/help_center/sections/%s/access_policy.json"
 	path := fmt.Sprintf(api_path, i.SectionID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterSectionAccessPolicyUpdateInput struct {
@@ -3181,7 +3191,7 @@ func (c *Client) HelpCenterSectionAccessPolicyUpdate(i *HelpCenterSectionAccessP
 	api_path := "/api/v2/help_center/sections/%s/access_policy.json"
 	path := fmt.Sprintf(api_path, i.SectionID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterSectionArticleCreateInput struct {
@@ -3201,7 +3211,7 @@ func (c *Client) HelpCenterSectionArticleCreate(i *HelpCenterSectionArticleCreat
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterSectionArticlesInput struct {
@@ -3221,7 +3231,7 @@ func (c *Client) HelpCenterSectionArticles(i *HelpCenterSectionArticlesInput, ro
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterSectionDeleteInput struct {
@@ -3236,7 +3246,7 @@ func (c *Client) HelpCenterSectionDelete(i *HelpCenterSectionDeleteInput, ro *Re
 	api_path := "/api/v2/help_center/sections/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterSectionShowInput struct {
@@ -3256,7 +3266,7 @@ func (c *Client) HelpCenterSectionShow(i *HelpCenterSectionShowInput, ro *Reques
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterSectionSourceLocaleUpdateInput struct {
@@ -3271,7 +3281,7 @@ func (c *Client) HelpCenterSectionSourceLocaleUpdate(i *HelpCenterSectionSourceL
 	api_path := "/api/v2/help_center/sections/%s/source_locale.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterSectionSubscriptionCreateInput struct {
@@ -3286,7 +3296,7 @@ func (c *Client) HelpCenterSectionSubscriptionCreate(i *HelpCenterSectionSubscri
 	api_path := "/api/v2/help_center/sections/%s/subscriptions.json"
 	path := fmt.Sprintf(api_path, i.SectionID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterSectionSubscriptionDeleteInput struct {
@@ -3306,7 +3316,7 @@ func (c *Client) HelpCenterSectionSubscriptionDelete(i *HelpCenterSectionSubscri
 	api_path := "/api/v2/help_center/sections/%s/subscriptions/%s.json"
 	path := fmt.Sprintf(api_path, i.SectionID, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterSectionSubscriptionShowInput struct {
@@ -3331,7 +3341,7 @@ func (c *Client) HelpCenterSectionSubscriptionShow(i *HelpCenterSectionSubscript
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterSectionSubscriptionsInput struct {
@@ -3351,7 +3361,7 @@ func (c *Client) HelpCenterSectionSubscriptions(i *HelpCenterSectionSubscription
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterSectionTranslationCreateInput struct {
@@ -3366,7 +3376,7 @@ func (c *Client) HelpCenterSectionTranslationCreate(i *HelpCenterSectionTranslat
 	api_path := "/api/v2/help_center/sections/%s/translations.json"
 	path := fmt.Sprintf(api_path, i.SectionID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterSectionTranslationUpdateInput struct {
@@ -3386,7 +3396,7 @@ func (c *Client) HelpCenterSectionTranslationUpdate(i *HelpCenterSectionTranslat
 	api_path := "/api/v2/help_center/sections/%s/translations/%s.json"
 	path := fmt.Sprintf(api_path, i.SectionID, i.Locale)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterSectionTranslationsInput struct {
@@ -3401,7 +3411,7 @@ func (c *Client) HelpCenterSectionTranslations(i *HelpCenterSectionTranslationsI
 	api_path := "/api/v2/help_center/sections/%s/translations.json"
 	path := fmt.Sprintf(api_path, i.SectionID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterSectionTranslationsMissingInput struct {
@@ -3416,7 +3426,7 @@ func (c *Client) HelpCenterSectionTranslationsMissing(i *HelpCenterSectionTransl
 	api_path := "/api/v2/help_center/sections/%s/translations/missing.json"
 	path := fmt.Sprintf(api_path, i.SectionID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterSectionUpdateInput struct {
@@ -3436,7 +3446,7 @@ func (c *Client) HelpCenterSectionUpdate(i *HelpCenterSectionUpdateInput, ro *Re
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterSectionsListInput struct {
@@ -3450,7 +3460,7 @@ func (c *Client) HelpCenterSectionsList(i *HelpCenterSectionsListInput, ro *Requ
 		path = fmt.Sprintf(api_opt_path, i.Locale)
 	}
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterTranslationDeleteInput struct {
@@ -3465,7 +3475,7 @@ func (c *Client) HelpCenterTranslationDelete(i *HelpCenterTranslationDeleteInput
 	api_path := "/api/v2/help_center/translations/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterUserArticlesInput struct {
@@ -3480,7 +3490,7 @@ func (c *Client) HelpCenterUserArticles(i *HelpCenterUserArticlesInput, ro *Requ
 	api_path := "/api/v2/help_center/users/%s/articles.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterUserCommentsInput struct {
@@ -3495,12 +3505,12 @@ func (c *Client) HelpCenterUserComments(i *HelpCenterUserCommentsInput, ro *Requ
 	api_path := "/api/v2/help_center/users/%s/comments.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) HelpCenterUserSegmentCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/help_center/user_segments.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterUserSegmentDeleteInput struct {
@@ -3515,7 +3525,7 @@ func (c *Client) HelpCenterUserSegmentDelete(i *HelpCenterUserSegmentDeleteInput
 	api_path := "/api/v2/help_center/user_segments/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterUserSegmentSectionsInput struct {
@@ -3530,7 +3540,7 @@ func (c *Client) HelpCenterUserSegmentSections(i *HelpCenterUserSegmentSectionsI
 	api_path := "/api/v2/help_center/user_segments/%s/sections.json"
 	path := fmt.Sprintf(api_path, i.UserSegmentID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterUserSegmentShowInput struct {
@@ -3545,7 +3555,7 @@ func (c *Client) HelpCenterUserSegmentShow(i *HelpCenterUserSegmentShowInput, ro
 	api_path := "/api/v2/help_center/user_segments/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterUserSegmentTopicsInput struct {
@@ -3560,7 +3570,7 @@ func (c *Client) HelpCenterUserSegmentTopics(i *HelpCenterUserSegmentTopicsInput
 	api_path := "/api/v2/help_center/user_segments/%s/topics.json"
 	path := fmt.Sprintf(api_path, i.UserSegmentID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterUserSegmentUpdateInput struct {
@@ -3575,17 +3585,17 @@ func (c *Client) HelpCenterUserSegmentUpdate(i *HelpCenterUserSegmentUpdateInput
 	api_path := "/api/v2/help_center/user_segments/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) HelpCenterUserSegmentsApplicableList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/help_center/user_segments/applicable.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) HelpCenterUserSegmentsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/help_center/user_segments.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterUserSubscriptionsInput struct {
@@ -3600,7 +3610,7 @@ func (c *Client) HelpCenterUserSubscriptions(i *HelpCenterUserSubscriptionsInput
 	api_path := "/api/v2/help_center/users/%s/subscriptions.json"
 	path := fmt.Sprintf(api_path, i.UserID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterUserVotesInput struct {
@@ -3615,7 +3625,7 @@ func (c *Client) HelpCenterUserVotes(i *HelpCenterUserVotesInput, ro *RequestOpt
 	api_path := "/api/v2/help_center/users/%s/votes.json"
 	path := fmt.Sprintf(api_path, i.UserID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterVoteDeleteInput struct {
@@ -3630,7 +3640,7 @@ func (c *Client) HelpCenterVoteDelete(i *HelpCenterVoteDeleteInput, ro *RequestO
 	api_path := "/api/v2/help_center/votes/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type HelpCenterVoteShowInput struct {
@@ -3645,22 +3655,22 @@ func (c *Client) HelpCenterVoteShow(i *HelpCenterVoteShowInput, ro *RequestOptio
 	api_path := "/api/v2/help_center/votes/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ImportsTicket(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/imports/tickets.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ImportsTicketsCreateMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/imports/tickets/create_many.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) IncrementalOrganizationsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/incremental/organizations.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type IncrementalSampleInput struct {
@@ -3675,27 +3685,27 @@ func (c *Client) IncrementalSample(i *IncrementalSampleInput, ro *RequestOptions
 	api_path := "/api/v2/incremental/%s/sample.json"
 	path := fmt.Sprintf(api_path, i.Item)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) IncrementalTicketEventsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/incremental/ticket_events.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) IncrementalTicketMetricEventsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/incremental/ticket_metric_events.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) IncrementalTicketsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/incremental/tickets.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) IncrementalUsersList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/incremental/users.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type JobStatusShowInput struct {
@@ -3710,17 +3720,17 @@ func (c *Client) JobStatusShow(i *JobStatusShowInput, ro *RequestOptions) ([]byt
 	api_path := "/api/v2/job_statuses/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) JobStatusesList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/job_statuses.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) JobStatusesShowMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/job_statuses/show_many.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type LocaleShowInput struct {
@@ -3735,32 +3745,32 @@ func (c *Client) LocaleShow(i *LocaleShowInput, ro *RequestOptions) ([]byte, err
 	api_path := "/api/v2/locales/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) LocalesAgentList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/locales/agent.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) LocalesCurrentList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/locales/current.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) LocalesDetectBestLocale(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/locales/detect_best_locale.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) LocalesList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/locales.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) LocalesPublicList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/locales/public.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type MacroApplyInput struct {
@@ -3775,7 +3785,7 @@ func (c *Client) MacroApply(i *MacroApplyInput, ro *RequestOptions) ([]byte, err
 	api_path := "/api/v2/macros/%s/apply.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type MacroAttachmentCreateInput struct {
@@ -3790,7 +3800,7 @@ func (c *Client) MacroAttachmentCreate(i *MacroAttachmentCreateInput, ro *Reques
 	api_path := "/api/v2/macros/%s/attachments.json"
 	path := fmt.Sprintf(api_path, i.MacroID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type MacroAttachmentsInput struct {
@@ -3805,12 +3815,12 @@ func (c *Client) MacroAttachments(i *MacroAttachmentsInput, ro *RequestOptions) 
 	api_path := "/api/v2/macros/%s/attachments.json"
 	path := fmt.Sprintf(api_path, i.MacroID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) MacroCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/macros.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type MacroDeleteInput struct {
@@ -3825,7 +3835,7 @@ func (c *Client) MacroDelete(i *MacroDeleteInput, ro *RequestOptions) ([]byte, e
 	api_path := "/api/v2/macros/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type MacroShowInput struct {
@@ -3840,7 +3850,7 @@ func (c *Client) MacroShow(i *MacroShowInput, ro *RequestOptions) ([]byte, error
 	api_path := "/api/v2/macros/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type MacroUpdateInput struct {
@@ -3855,22 +3865,22 @@ func (c *Client) MacroUpdate(i *MacroUpdateInput, ro *RequestOptions) ([]byte, e
 	api_path := "/api/v2/macros/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) MacrosActionsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/macros/actions.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) MacrosActiveList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/macros/active.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) MacrosAttachmentCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/macros/attachments.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type MacrosAttachmentShowInput struct {
@@ -3885,47 +3895,47 @@ func (c *Client) MacrosAttachmentShow(i *MacrosAttachmentShowInput, ro *RequestO
 	api_path := "/api/v2/macros/attachments/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) MacrosCategoriesList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/macros/categories.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) MacrosDestroyMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/macros/destroy_many.json"
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) MacrosList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/macros.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) MacrosNewList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/macros/new.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) MacrosSearch(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/macros/search.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) MacrosUpdateMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/macros/update_many.json"
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) NpsIncrementalRecipientsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/nps/incremental/recipients.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) NpsIncrementalResponsesList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/nps/incremental/responses.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type NpsSurveyCloseCreateInput struct {
@@ -3940,7 +3950,7 @@ func (c *Client) NpsSurveyCloseCreate(i *NpsSurveyCloseCreateInput, ro *RequestO
 	api_path := "/api/v2/nps/surveys/%s/close"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type NpsSurveyInvitationCreateInput struct {
@@ -3955,7 +3965,7 @@ func (c *Client) NpsSurveyInvitationCreate(i *NpsSurveyInvitationCreateInput, ro
 	api_path := "/api/v2/nps/surveys/%s/invitations.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type NpsSurveyInvitationShowInput struct {
@@ -3975,7 +3985,7 @@ func (c *Client) NpsSurveyInvitationShow(i *NpsSurveyInvitationShowInput, ro *Re
 	api_path := "/api/v2/nps/surveys/%s/invitations/%s.json"
 	path := fmt.Sprintf(api_path, i.SurveyID, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type NpsSurveyInvitationsInput struct {
@@ -3990,7 +4000,7 @@ func (c *Client) NpsSurveyInvitations(i *NpsSurveyInvitationsInput, ro *RequestO
 	api_path := "/api/v2/nps/surveys/%s/invitations.json"
 	path := fmt.Sprintf(api_path, i.SurveyID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type NpsSurveyPreviewInput struct {
@@ -4005,7 +4015,7 @@ func (c *Client) NpsSurveyPreview(i *NpsSurveyPreviewInput, ro *RequestOptions) 
 	api_path := "/api/v2/nps/surveys/%s/preview"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type NpsSurveyRecipientCreateInput struct {
@@ -4020,7 +4030,7 @@ func (c *Client) NpsSurveyRecipientCreate(i *NpsSurveyRecipientCreateInput, ro *
 	api_path := "/api/v2/nps/surveys/%s/recipients.json"
 	path := fmt.Sprintf(api_path, i.SurveyID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type NpsSurveyRecipientShowInput struct {
@@ -4040,7 +4050,7 @@ func (c *Client) NpsSurveyRecipientShow(i *NpsSurveyRecipientShowInput, ro *Requ
 	api_path := "/api/v2/nps/surveys/%s/recipients/%s.json"
 	path := fmt.Sprintf(api_path, i.SurveyID, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type NpsSurveyRecipientUpdateInput struct {
@@ -4060,7 +4070,7 @@ func (c *Client) NpsSurveyRecipientUpdate(i *NpsSurveyRecipientUpdateInput, ro *
 	api_path := "/api/v2/nps/surveys/%s/recipients/%s.json"
 	path := fmt.Sprintf(api_path, i.SurveyID, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type NpsSurveyRecipientsInput struct {
@@ -4075,7 +4085,7 @@ func (c *Client) NpsSurveyRecipients(i *NpsSurveyRecipientsInput, ro *RequestOpt
 	api_path := "/api/v2/nps/surveys/%s/recipients.json"
 	path := fmt.Sprintf(api_path, i.SurveyID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type NpsSurveyRecipientsSearchInput struct {
@@ -4090,7 +4100,7 @@ func (c *Client) NpsSurveyRecipientsSearch(i *NpsSurveyRecipientsSearchInput, ro
 	api_path := "/api/v2/nps/surveys/%s/recipients/search.json"
 	path := fmt.Sprintf(api_path, i.SurveyID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type NpsSurveyResponseCreateInput struct {
@@ -4105,7 +4115,7 @@ func (c *Client) NpsSurveyResponseCreate(i *NpsSurveyResponseCreateInput, ro *Re
 	api_path := "/api/v2/nps/surveys/%s/responses.json"
 	path := fmt.Sprintf(api_path, i.SurveyID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type NpsSurveyResponseShowInput struct {
@@ -4125,7 +4135,7 @@ func (c *Client) NpsSurveyResponseShow(i *NpsSurveyResponseShowInput, ro *Reques
 	api_path := "/api/v2/nps/surveys/%s/responses/%s.json"
 	path := fmt.Sprintf(api_path, i.SurveyID, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type NpsSurveyResponseUpdateInput struct {
@@ -4145,7 +4155,7 @@ func (c *Client) NpsSurveyResponseUpdate(i *NpsSurveyResponseUpdateInput, ro *Re
 	api_path := "/api/v2/nps/surveys/%s/responses/%s.json"
 	path := fmt.Sprintf(api_path, i.SurveyID, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type NpsSurveyResponsesInput struct {
@@ -4160,7 +4170,7 @@ func (c *Client) NpsSurveyResponses(i *NpsSurveyResponsesInput, ro *RequestOptio
 	api_path := "/api/v2/nps/surveys/%s/responses.json"
 	path := fmt.Sprintf(api_path, i.SurveyID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type NpsSurveyShowInput struct {
@@ -4175,22 +4185,22 @@ func (c *Client) NpsSurveyShow(i *NpsSurveyShowInput, ro *RequestOptions) ([]byt
 	api_path := "/api/v2/nps/surveys/%s"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) NpsSurveys1Update(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/nps/surveys/1"
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) NpsSurveysList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/nps/surveys"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OauthClientCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/oauth/clients"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OauthClientDeleteInput struct {
@@ -4205,7 +4215,7 @@ func (c *Client) OauthClientDelete(i *OauthClientDeleteInput, ro *RequestOptions
 	api_path := "/api/v2/oauth/clients/%s"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OauthClientGenerateSecretUpdateInput struct {
@@ -4220,7 +4230,7 @@ func (c *Client) OauthClientGenerateSecretUpdate(i *OauthClientGenerateSecretUpd
 	api_path := "/api/v2/oauth/clients/%s/generate_secret.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OauthClientShowInput struct {
@@ -4235,7 +4245,7 @@ func (c *Client) OauthClientShow(i *OauthClientShowInput, ro *RequestOptions) ([
 	api_path := "/api/v2/oauth/clients/%s"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OauthClientUpdateInput struct {
@@ -4250,22 +4260,22 @@ func (c *Client) OauthClientUpdate(i *OauthClientUpdateInput, ro *RequestOptions
 	api_path := "/api/v2/oauth/clients/%s"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OauthClientsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/oauth/clients"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OauthGlobalClientsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/oauth/global_clients.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OauthTokenCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/oauth/tokens.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OauthTokenDeleteInput struct {
@@ -4280,7 +4290,7 @@ func (c *Client) OauthTokenDelete(i *OauthTokenDeleteInput, ro *RequestOptions) 
 	api_path := "/api/v2/oauth/tokens/%s"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OauthTokenShowInput struct {
@@ -4295,27 +4305,27 @@ func (c *Client) OauthTokenShow(i *OauthTokenShowInput, ro *RequestOptions) ([]b
 	api_path := "/api/v2/oauth/tokens/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OauthTokensCurrentDelete(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/oauth/tokens/current.json"
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OauthTokensCurrentList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/oauth/tokens/current.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OauthTokensList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/oauth/tokens"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OrganizationCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/organizations.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OrganizationDeleteInput struct {
@@ -4330,12 +4340,12 @@ func (c *Client) OrganizationDelete(i *OrganizationDeleteInput, ro *RequestOptio
 	api_path := "/api/v2/organizations/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OrganizationFieldCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/organization_fields.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OrganizationFieldDeleteInput struct {
@@ -4350,7 +4360,7 @@ func (c *Client) OrganizationFieldDelete(i *OrganizationFieldDeleteInput, ro *Re
 	api_path := "/api/v2/organization_fields/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OrganizationFieldShowInput struct {
@@ -4365,7 +4375,7 @@ func (c *Client) OrganizationFieldShow(i *OrganizationFieldShowInput, ro *Reques
 	api_path := "/api/v2/organization_fields/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OrganizationFieldUpdateInput struct {
@@ -4380,22 +4390,22 @@ func (c *Client) OrganizationFieldUpdate(i *OrganizationFieldUpdateInput, ro *Re
 	api_path := "/api/v2/organization_fields/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OrganizationFieldsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/organization_fields.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OrganizationFieldsReorder(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/organization_fields/reorder.json"
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OrganizationMembershipCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/organization_memberships.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OrganizationMembershipDeleteInput struct {
@@ -4410,7 +4420,7 @@ func (c *Client) OrganizationMembershipDelete(i *OrganizationMembershipDeleteInp
 	api_path := "/api/v2/organization_memberships/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OrganizationMembershipShowInput struct {
@@ -4425,22 +4435,22 @@ func (c *Client) OrganizationMembershipShow(i *OrganizationMembershipShowInput, 
 	api_path := "/api/v2/organization_memberships/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OrganizationMembershipsCreateMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/organization_memberships/create_many.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OrganizationMembershipsDestroyMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/organization_memberships/destroy_many.json"
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OrganizationMembershipsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/organization_memberships.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OrganizationOrganizationMembershipsInput struct {
@@ -4455,7 +4465,7 @@ func (c *Client) OrganizationOrganizationMemberships(i *OrganizationOrganization
 	api_path := "/api/v2/organizations/%s/organization_memberships.json"
 	path := fmt.Sprintf(api_path, i.OrganizationID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OrganizationRelatedInput struct {
@@ -4470,7 +4480,7 @@ func (c *Client) OrganizationRelated(i *OrganizationRelatedInput, ro *RequestOpt
 	api_path := "/api/v2/organizations/%s/related.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OrganizationRequestsInput struct {
@@ -4485,7 +4495,7 @@ func (c *Client) OrganizationRequests(i *OrganizationRequestsInput, ro *RequestO
 	api_path := "/api/v2/organizations/%s/requests.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OrganizationShowInput struct {
@@ -4500,12 +4510,12 @@ func (c *Client) OrganizationShow(i *OrganizationShowInput, ro *RequestOptions) 
 	api_path := "/api/v2/organizations/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OrganizationSubscriptionCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/organization_subscriptions.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OrganizationSubscriptionDeleteInput struct {
@@ -4520,7 +4530,7 @@ func (c *Client) OrganizationSubscriptionDelete(i *OrganizationSubscriptionDelet
 	api_path := "/api/v2/organization_subscriptions/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OrganizationSubscriptionShowInput struct {
@@ -4535,7 +4545,7 @@ func (c *Client) OrganizationSubscriptionShow(i *OrganizationSubscriptionShowInp
 	api_path := "/api/v2/organization_subscriptions/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OrganizationSubscriptionsInput struct {
@@ -4550,12 +4560,12 @@ func (c *Client) OrganizationSubscriptions(i *OrganizationSubscriptionsInput, ro
 	api_path := "/api/v2/organizations/%s/subscriptions.json"
 	path := fmt.Sprintf(api_path, i.OrganizationID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OrganizationSubscriptionsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/organization_subscriptions.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OrganizationTagCreateInput struct {
@@ -4570,7 +4580,7 @@ func (c *Client) OrganizationTagCreate(i *OrganizationTagCreateInput, ro *Reques
 	api_path := "/api/v2/organizations/%s/tags.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OrganizationTagsInput struct {
@@ -4585,7 +4595,7 @@ func (c *Client) OrganizationTags(i *OrganizationTagsInput, ro *RequestOptions) 
 	api_path := "/api/v2/organizations/%s/tags.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OrganizationTagsDeleteInput struct {
@@ -4600,7 +4610,7 @@ func (c *Client) OrganizationTagsDelete(i *OrganizationTagsDeleteInput, ro *Requ
 	api_path := "/api/v2/organizations/%s/tags.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OrganizationTagsUpdateInput struct {
@@ -4615,7 +4625,7 @@ func (c *Client) OrganizationTagsUpdate(i *OrganizationTagsUpdateInput, ro *Requ
 	api_path := "/api/v2/organizations/%s/tags.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OrganizationTicketsInput struct {
@@ -4630,7 +4640,7 @@ func (c *Client) OrganizationTickets(i *OrganizationTicketsInput, ro *RequestOpt
 	api_path := "/api/v2/organizations/%s/tickets.json"
 	path := fmt.Sprintf(api_path, i.OrganizationID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OrganizationUpdateInput struct {
@@ -4645,7 +4655,7 @@ func (c *Client) OrganizationUpdate(i *OrganizationUpdateInput, ro *RequestOptio
 	api_path := "/api/v2/organizations/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type OrganizationUsersInput struct {
@@ -4660,67 +4670,67 @@ func (c *Client) OrganizationUsers(i *OrganizationUsersInput, ro *RequestOptions
 	api_path := "/api/v2/organizations/%s/users.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OrganizationsAutocomplete(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/organizations/autocomplete.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OrganizationsCreateMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/organizations/create_many.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OrganizationsCreateOrUpdate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/organizations/create_or_update.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OrganizationsDestroyMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/organizations/destroy_many.json"
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OrganizationsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/organizations.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OrganizationsSearch(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/organizations/search.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OrganizationsShowMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/organizations/show_many.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) OrganizationsUpdateMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/organizations/update_many.json"
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ProblemsAutocomplete(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/problems/autocomplete.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ProblemsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/problems.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) PushNotificationDevicesDestroyMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/push_notification_devices/destroy_many.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) RecipientAddressCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/recipient_addresses.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type RecipientAddressDeleteInput struct {
@@ -4735,7 +4745,7 @@ func (c *Client) RecipientAddressDelete(i *RecipientAddressDeleteInput, ro *Requ
 	api_path := "/api/v2/recipient_addresses/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type RecipientAddressShowInput struct {
@@ -4750,7 +4760,7 @@ func (c *Client) RecipientAddressShow(i *RecipientAddressShowInput, ro *RequestO
 	api_path := "/api/v2/recipient_addresses/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type RecipientAddressUpdateInput struct {
@@ -4765,7 +4775,7 @@ func (c *Client) RecipientAddressUpdate(i *RecipientAddressUpdateInput, ro *Requ
 	api_path := "/api/v2/recipient_addresses/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type RecipientAddressVerifyInput struct {
@@ -4780,12 +4790,12 @@ func (c *Client) RecipientAddressVerify(i *RecipientAddressVerifyInput, ro *Requ
 	api_path := "/api/v2/recipient_addresses/%s/verify.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) RecipientAddressesList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/recipient_addresses.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type RequestCommentShowInput struct {
@@ -4805,7 +4815,7 @@ func (c *Client) RequestCommentShow(i *RequestCommentShowInput, ro *RequestOptio
 	api_path := "/api/v2/requests/%s/comments/%s.json"
 	path := fmt.Sprintf(api_path, i.RequestID, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type RequestCommentsInput struct {
@@ -4820,12 +4830,12 @@ func (c *Client) RequestComments(i *RequestCommentsInput, ro *RequestOptions) ([
 	api_path := "/api/v2/requests/%s/comments.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) RequestCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/requests.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type RequestShowInput struct {
@@ -4840,7 +4850,7 @@ func (c *Client) RequestShow(i *RequestShowInput, ro *RequestOptions) ([]byte, e
 	api_path := "/api/v2/requests/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type RequestUpdateInput struct {
@@ -4855,37 +4865,37 @@ func (c *Client) RequestUpdate(i *RequestUpdateInput, ro *RequestOptions) ([]byt
 	api_path := "/api/v2/requests/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) RequestsCcdList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/requests/ccd.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) RequestsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/requests.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) RequestsOpenList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/requests/open.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) RequestsSearch(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/requests/search.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) RequestsSolvedList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/requests/solved.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ResourceCollectionCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/resource_collections.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ResourceCollectionDeleteInput struct {
@@ -4900,7 +4910,7 @@ func (c *Client) ResourceCollectionDelete(i *ResourceCollectionDeleteInput, ro *
 	api_path := "/api/v2/resource_collections/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ResourceCollectionShowInput struct {
@@ -4915,17 +4925,17 @@ func (c *Client) ResourceCollectionShow(i *ResourceCollectionShowInput, ro *Requ
 	api_path := "/api/v2/resource_collections/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ResourceCollectionsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/resource_collections.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ResourceCollectionsUpdate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/resource_collections.json"
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type SatisfactionRatingShowInput struct {
@@ -4940,12 +4950,12 @@ func (c *Client) SatisfactionRatingShow(i *SatisfactionRatingShowInput, ro *Requ
 	api_path := "/api/v2/satisfaction_ratings/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) SatisfactionRatingsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/satisfaction_ratings.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type SatisfactionReasonShowInput struct {
@@ -4960,27 +4970,27 @@ func (c *Client) SatisfactionReasonShow(i *SatisfactionReasonShowInput, ro *Requ
 	api_path := "/api/v2/satisfaction_reasons/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) SatisfactionReasonsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/satisfaction_reasons.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) Search(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/search.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) SessionsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/sessions.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) SharingAgreementCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/sharing_agreements.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type SharingAgreementDeleteInput struct {
@@ -4995,7 +5005,7 @@ func (c *Client) SharingAgreementDelete(i *SharingAgreementDeleteInput, ro *Requ
 	api_path := "/api/v2/sharing_agreements/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type SharingAgreementShowInput struct {
@@ -5010,7 +5020,7 @@ func (c *Client) SharingAgreementShow(i *SharingAgreementShowInput, ro *RequestO
 	api_path := "/api/v2/sharing_agreements/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type SharingAgreementUpdateInput struct {
@@ -5025,17 +5035,17 @@ func (c *Client) SharingAgreementUpdate(i *SharingAgreementUpdateInput, ro *Requ
 	api_path := "/api/v2/sharing_agreements/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) SharingAgreementsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/sharing_agreements.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ShortcutCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/shortcuts"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ShortcutDeleteInput struct {
@@ -5050,7 +5060,7 @@ func (c *Client) ShortcutDelete(i *ShortcutDeleteInput, ro *RequestOptions) ([]b
 	api_path := "/api/v2/shortcuts/%s"
 	path := fmt.Sprintf(api_path, i.ShortcutName)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ShortcutShowInput struct {
@@ -5065,7 +5075,7 @@ func (c *Client) ShortcutShow(i *ShortcutShowInput, ro *RequestOptions) ([]byte,
 	api_path := "/api/v2/shortcuts/%s"
 	path := fmt.Sprintf(api_path, i.ShortcutName)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ShortcutUpdateInput struct {
@@ -5080,42 +5090,42 @@ func (c *Client) ShortcutUpdate(i *ShortcutUpdateInput, ro *RequestOptions) ([]b
 	api_path := "/api/v2/shortcuts/%s"
 	path := fmt.Sprintf(api_path, i.ShortcutName)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ShortcutsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/shortcuts"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) SkipCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/skips.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) SkipsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/skips.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) SlasPoliciesDefinitionsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/slas/policies/definitions.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) SlasPoliciesList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/slas/policies"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) SlasPoliciesReorder(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/slas/policies/reorder.json"
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) SlasPolicyCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/slas/policies"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type SlasPolicyDeleteInput struct {
@@ -5130,7 +5140,7 @@ func (c *Client) SlasPolicyDelete(i *SlasPolicyDeleteInput, ro *RequestOptions) 
 	api_path := "/api/v2/slas/policies/%s"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type SlasPolicyShowInput struct {
@@ -5145,7 +5155,7 @@ func (c *Client) SlasPolicyShow(i *SlasPolicyShowInput, ro *RequestOptions) ([]b
 	api_path := "/api/v2/slas/policies/%s"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type SlasPolicyUpdateInput struct {
@@ -5160,7 +5170,7 @@ func (c *Client) SlasPolicyUpdate(i *SlasPolicyUpdateInput, ro *RequestOptions) 
 	api_path := "/api/v2/slas/policies/%s"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type StreamAgentShowInput struct {
@@ -5175,17 +5185,17 @@ func (c *Client) StreamAgentShow(i *StreamAgentShowInput, ro *RequestOptions) ([
 	api_path := "/stream/agents/%s"
 	path := fmt.Sprintf(api_path, i.MetricKey)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) StreamAgentsAgentsOnlineList(ro *RequestOptions) ([]byte, error) {
 	path := "/stream/agents/agents_online"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) StreamAgentsList(ro *RequestOptions) ([]byte, error) {
 	path := "/stream/agents"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type StreamChatShowInput struct {
@@ -5200,17 +5210,17 @@ func (c *Client) StreamChatShow(i *StreamChatShowInput, ro *RequestOptions) ([]b
 	api_path := "/stream/chats/%s"
 	path := fmt.Sprintf(api_path, i.MetricKey)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) StreamChatsList(ro *RequestOptions) ([]byte, error) {
 	path := "/stream/chats"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) StreamChatsMissedChatsList(ro *RequestOptions) ([]byte, error) {
 	path := "/stream/chats/missed_chats"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type SuspendedTicketDeleteInput struct {
@@ -5225,7 +5235,7 @@ func (c *Client) SuspendedTicketDelete(i *SuspendedTicketDeleteInput, ro *Reques
 	api_path := "/api/v2/suspended_tickets/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type SuspendedTicketRecoverInput struct {
@@ -5240,7 +5250,7 @@ func (c *Client) SuspendedTicketRecover(i *SuspendedTicketRecoverInput, ro *Requ
 	api_path := "/api/v2/suspended_tickets/%s/recover.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type SuspendedTicketShowInput struct {
@@ -5255,32 +5265,32 @@ func (c *Client) SuspendedTicketShow(i *SuspendedTicketShowInput, ro *RequestOpt
 	api_path := "/api/v2/suspended_tickets/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) SuspendedTicketsDestroyMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/suspended_tickets/destroy_many.json"
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) SuspendedTicketsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/suspended_tickets.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) SuspendedTicketsRecoverMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/suspended_tickets/recover_many.json"
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TagsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/tags.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TargetCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/targets.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TargetDeleteInput struct {
@@ -5295,7 +5305,7 @@ func (c *Client) TargetDelete(i *TargetDeleteInput, ro *RequestOptions) ([]byte,
 	api_path := "/api/v2/targets/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TargetShowInput struct {
@@ -5310,7 +5320,7 @@ func (c *Client) TargetShow(i *TargetShowInput, ro *RequestOptions) ([]byte, err
 	api_path := "/api/v2/targets/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TargetUpdateInput struct {
@@ -5325,12 +5335,12 @@ func (c *Client) TargetUpdate(i *TargetUpdateInput, ro *RequestOptions) ([]byte,
 	api_path := "/api/v2/targets/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TargetsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/targets.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketAuditMakePrivateInput struct {
@@ -5350,7 +5360,7 @@ func (c *Client) TicketAuditMakePrivate(i *TicketAuditMakePrivateInput, ro *Requ
 	api_path := "/api/v2/tickets/%s/audits/%s/make_private.json"
 	path := fmt.Sprintf(api_path, i.TicketID, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketAuditShowInput struct {
@@ -5370,7 +5380,7 @@ func (c *Client) TicketAuditShow(i *TicketAuditShowInput, ro *RequestOptions) ([
 	api_path := "/api/v2/tickets/%s/audits/%s.json"
 	path := fmt.Sprintf(api_path, i.TicketID, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketAuditsInput struct {
@@ -5385,7 +5395,7 @@ func (c *Client) TicketAudits(i *TicketAuditsInput, ro *RequestOptions) ([]byte,
 	api_path := "/api/v2/tickets/%s/audits.json"
 	path := fmt.Sprintf(api_path, i.TicketID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketCollaboratorsInput struct {
@@ -5400,7 +5410,7 @@ func (c *Client) TicketCollaborators(i *TicketCollaboratorsInput, ro *RequestOpt
 	api_path := "/api/v2/tickets/%s/collaborators.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketCommentAttachmentRedactInput struct {
@@ -5425,7 +5435,7 @@ func (c *Client) TicketCommentAttachmentRedact(i *TicketCommentAttachmentRedactI
 	api_path := "/api/v2/tickets/%s/comments/%s/attachments/%s/redact.json"
 	path := fmt.Sprintf(api_path, i.TicketID, i.CommentID, i.AttachmentID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketCommentMakePrivateInput struct {
@@ -5445,7 +5455,7 @@ func (c *Client) TicketCommentMakePrivate(i *TicketCommentMakePrivateInput, ro *
 	api_path := "/api/v2/tickets/%s/comments/%s/make_private.json"
 	path := fmt.Sprintf(api_path, i.TicketID, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketCommentRedactInput struct {
@@ -5465,7 +5475,7 @@ func (c *Client) TicketCommentRedact(i *TicketCommentRedactInput, ro *RequestOpt
 	api_path := "/api/v2/tickets/%s/comments/%s/redact.json"
 	path := fmt.Sprintf(api_path, i.TicketID, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketCommentsInput struct {
@@ -5480,12 +5490,12 @@ func (c *Client) TicketComments(i *TicketCommentsInput, ro *RequestOptions) ([]b
 	api_path := "/api/v2/tickets/%s/comments.json"
 	path := fmt.Sprintf(api_path, i.TicketID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TicketCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/tickets.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketDeleteInput struct {
@@ -5500,12 +5510,12 @@ func (c *Client) TicketDelete(i *TicketDeleteInput, ro *RequestOptions) ([]byte,
 	api_path := "/api/v2/tickets/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TicketFieldCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/ticket_fields.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketFieldDeleteInput struct {
@@ -5520,7 +5530,7 @@ func (c *Client) TicketFieldDelete(i *TicketFieldDeleteInput, ro *RequestOptions
 	api_path := "/api/v2/ticket_fields/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketFieldOptionCreateInput struct {
@@ -5540,7 +5550,7 @@ func (c *Client) TicketFieldOptionCreate(i *TicketFieldOptionCreateInput, ro *Re
 	api_path := "/api/v2/ticket_fields/%s/options/%s.json"
 	path := fmt.Sprintf(api_path, i.FieldID, i.ID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketFieldOptionDeleteInput struct {
@@ -5560,7 +5570,7 @@ func (c *Client) TicketFieldOptionDelete(i *TicketFieldOptionDeleteInput, ro *Re
 	api_path := "/api/v2/ticket_fields/%s/options/%s.json"
 	path := fmt.Sprintf(api_path, i.FieldID, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketFieldOptionShowInput struct {
@@ -5580,7 +5590,7 @@ func (c *Client) TicketFieldOptionShow(i *TicketFieldOptionShowInput, ro *Reques
 	api_path := "/api/v2/ticket_fields/%s/options/%s.json"
 	path := fmt.Sprintf(api_path, i.FieldID, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketFieldOptionsInput struct {
@@ -5595,7 +5605,7 @@ func (c *Client) TicketFieldOptions(i *TicketFieldOptionsInput, ro *RequestOptio
 	api_path := "/api/v2/ticket_fields/%s/options.json"
 	path := fmt.Sprintf(api_path, i.FieldID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketFieldShowInput struct {
@@ -5610,7 +5620,7 @@ func (c *Client) TicketFieldShow(i *TicketFieldShowInput, ro *RequestOptions) ([
 	api_path := "/api/v2/ticket_fields/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketFieldUpdateInput struct {
@@ -5625,12 +5635,12 @@ func (c *Client) TicketFieldUpdate(i *TicketFieldUpdateInput, ro *RequestOptions
 	api_path := "/api/v2/ticket_fields/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TicketFieldsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/ticket_fields.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketFormCloneInput struct {
@@ -5645,12 +5655,12 @@ func (c *Client) TicketFormClone(i *TicketFormCloneInput, ro *RequestOptions) ([
 	api_path := "/api/v2/ticket_forms/%s/clone.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TicketFormCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/ticket_forms.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketFormDeleteInput struct {
@@ -5665,7 +5675,7 @@ func (c *Client) TicketFormDelete(i *TicketFormDeleteInput, ro *RequestOptions) 
 	api_path := "/api/v2/ticket_forms/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketFormShowInput struct {
@@ -5680,7 +5690,7 @@ func (c *Client) TicketFormShow(i *TicketFormShowInput, ro *RequestOptions) ([]b
 	api_path := "/api/v2/ticket_forms/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketFormUpdateInput struct {
@@ -5695,22 +5705,22 @@ func (c *Client) TicketFormUpdate(i *TicketFormUpdateInput, ro *RequestOptions) 
 	api_path := "/api/v2/ticket_forms/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TicketFormsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/ticket_forms.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TicketFormsReorder(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/ticket_forms/reorder.json"
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TicketFormsShowMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/ticket_forms/show_many.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketIncidentsInput struct {
@@ -5725,7 +5735,7 @@ func (c *Client) TicketIncidents(i *TicketIncidentsInput, ro *RequestOptions) ([
 	api_path := "/api/v2/tickets/%s/incidents.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketMacroApplyInput struct {
@@ -5745,7 +5755,7 @@ func (c *Client) TicketMacroApply(i *TicketMacroApplyInput, ro *RequestOptions) 
 	api_path := "/api/v2/tickets/%s/macros/%s/apply.json"
 	path := fmt.Sprintf(api_path, i.TicketID, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketMarkAsSpamInput struct {
@@ -5760,7 +5770,7 @@ func (c *Client) TicketMarkAsSpam(i *TicketMarkAsSpamInput, ro *RequestOptions) 
 	api_path := "/api/v2/tickets/%s/mark_as_spam.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketMergeInput struct {
@@ -5775,7 +5785,7 @@ func (c *Client) TicketMerge(i *TicketMergeInput, ro *RequestOptions) ([]byte, e
 	api_path := "/api/v2/tickets/%s/merge.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketMetricShowInput struct {
@@ -5790,7 +5800,7 @@ func (c *Client) TicketMetricShow(i *TicketMetricShowInput, ro *RequestOptions) 
 	api_path := "/api/v2/ticket_metrics/%s.json"
 	path := fmt.Sprintf(api_path, i.TicketMetricID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketMetricsInput struct {
@@ -5805,12 +5815,12 @@ func (c *Client) TicketMetrics(i *TicketMetricsInput, ro *RequestOptions) ([]byt
 	api_path := "/api/v2/tickets/%s/metrics.json"
 	path := fmt.Sprintf(api_path, i.TicketID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TicketMetricsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/ticket_metrics.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketRelatedInput struct {
@@ -5825,7 +5835,7 @@ func (c *Client) TicketRelated(i *TicketRelatedInput, ro *RequestOptions) ([]byt
 	api_path := "/api/v2/tickets/%s/related.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketSatisfactionRatingCreateInput struct {
@@ -5840,7 +5850,7 @@ func (c *Client) TicketSatisfactionRatingCreate(i *TicketSatisfactionRatingCreat
 	api_path := "/api/v2/tickets/%s/satisfaction_rating.json"
 	path := fmt.Sprintf(api_path, i.TicketID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketShowInput struct {
@@ -5855,7 +5865,7 @@ func (c *Client) TicketShow(i *TicketShowInput, ro *RequestOptions) ([]byte, err
 	api_path := "/api/v2/tickets/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketSkipsInput struct {
@@ -5870,7 +5880,7 @@ func (c *Client) TicketSkips(i *TicketSkipsInput, ro *RequestOptions) ([]byte, e
 	api_path := "/api/v2/tickets/%s/skips.json"
 	path := fmt.Sprintf(api_path, i.TicketID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketTagCreateInput struct {
@@ -5885,7 +5895,7 @@ func (c *Client) TicketTagCreate(i *TicketTagCreateInput, ro *RequestOptions) ([
 	api_path := "/api/v2/tickets/%s/tags.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketTagsInput struct {
@@ -5900,7 +5910,7 @@ func (c *Client) TicketTags(i *TicketTagsInput, ro *RequestOptions) ([]byte, err
 	api_path := "/api/v2/tickets/%s/tags.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketTagsDeleteInput struct {
@@ -5915,7 +5925,7 @@ func (c *Client) TicketTagsDelete(i *TicketTagsDeleteInput, ro *RequestOptions) 
 	api_path := "/api/v2/tickets/%s/tags.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketTagsUpdateInput struct {
@@ -5930,7 +5940,7 @@ func (c *Client) TicketTagsUpdate(i *TicketTagsUpdateInput, ro *RequestOptions) 
 	api_path := "/api/v2/tickets/%s/tags.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TicketUpdateInput struct {
@@ -5945,42 +5955,42 @@ func (c *Client) TicketUpdate(i *TicketUpdateInput, ro *RequestOptions) ([]byte,
 	api_path := "/api/v2/tickets/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TicketsCreateMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/tickets/create_many.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TicketsDestroyMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/tickets/destroy_many.json"
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TicketsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/tickets.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TicketsMarkManyAsSpam(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/tickets/mark_many_as_spam.json"
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TicketsRecentList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/tickets/recent.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TicketsShowMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/tickets/show_many.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TicketsUpdateMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/tickets/update_many.json"
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TopicTagCreateInput struct {
@@ -5995,7 +6005,7 @@ func (c *Client) TopicTagCreate(i *TopicTagCreateInput, ro *RequestOptions) ([]b
 	api_path := "/api/v2/topics/%s/tags.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TopicTagsInput struct {
@@ -6010,7 +6020,7 @@ func (c *Client) TopicTags(i *TopicTagsInput, ro *RequestOptions) ([]byte, error
 	api_path := "/api/v2/topics/%s/tags.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TopicTagsDeleteInput struct {
@@ -6025,7 +6035,7 @@ func (c *Client) TopicTagsDelete(i *TopicTagsDeleteInput, ro *RequestOptions) ([
 	api_path := "/api/v2/topics/%s/tags.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TopicTagsUpdateInput struct {
@@ -6040,12 +6050,12 @@ func (c *Client) TopicTagsUpdate(i *TopicTagsUpdateInput, ro *RequestOptions) ([
 	api_path := "/api/v2/topics/%s/tags.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TriggerCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/triggers"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TriggerDeleteByIDInput struct {
@@ -6060,7 +6070,7 @@ func (c *Client) TriggerDeleteByID(i *TriggerDeleteByIDInput, ro *RequestOptions
 	api_path := "/api/v2/triggers/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TriggerDeleteByTriggerNameInput struct {
@@ -6075,7 +6085,7 @@ func (c *Client) TriggerDeleteByTriggerName(i *TriggerDeleteByTriggerNameInput, 
 	api_path := "/api/v2/triggers/%s"
 	path := fmt.Sprintf(api_path, i.TriggerName)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TriggerShowByIDInput struct {
@@ -6090,7 +6100,7 @@ func (c *Client) TriggerShowByID(i *TriggerShowByIDInput, ro *RequestOptions) ([
 	api_path := "/api/v2/triggers/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TriggerShowByTriggerNameInput struct {
@@ -6105,7 +6115,7 @@ func (c *Client) TriggerShowByTriggerName(i *TriggerShowByTriggerNameInput, ro *
 	api_path := "/api/v2/triggers/%s"
 	path := fmt.Sprintf(api_path, i.TriggerName)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TriggerUpdateByIDInput struct {
@@ -6120,7 +6130,7 @@ func (c *Client) TriggerUpdateByID(i *TriggerUpdateByIDInput, ro *RequestOptions
 	api_path := "/api/v2/triggers/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type TriggerUpdateByTriggerNameInput struct {
@@ -6135,42 +6145,42 @@ func (c *Client) TriggerUpdateByTriggerName(i *TriggerUpdateByTriggerNameInput, 
 	api_path := "/api/v2/triggers/%s"
 	path := fmt.Sprintf(api_path, i.TriggerName)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TriggersActiveList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/triggers/active.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TriggersDestroyMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/triggers/destroy_many.json"
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TriggersList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/triggers"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TriggersReorder(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/triggers/reorder.json"
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TriggersSearch(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/triggers/search.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) TriggersUpdateMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/triggers/update_many.json"
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) UploadCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/uploads.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UploadDeleteInput struct {
@@ -6185,12 +6195,12 @@ func (c *Client) UploadDelete(i *UploadDeleteInput, ro *RequestOptions) ([]byte,
 	api_path := "/api/v2/uploads/%s.json"
 	path := fmt.Sprintf(api_path, i.Token)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) UserCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/users.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserDeleteInput struct {
@@ -6205,12 +6215,12 @@ func (c *Client) UserDelete(i *UserDeleteInput, ro *RequestOptions) ([]byte, err
 	api_path := "/api/v2/users/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) UserFieldCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/user_fields.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserFieldDeleteInput struct {
@@ -6225,7 +6235,7 @@ func (c *Client) UserFieldDelete(i *UserFieldDeleteInput, ro *RequestOptions) ([
 	api_path := "/api/v2/user_fields/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserFieldOptionCreateInput struct {
@@ -6240,7 +6250,7 @@ func (c *Client) UserFieldOptionCreate(i *UserFieldOptionCreateInput, ro *Reques
 	api_path := "/api/v2/user_fields/%s/options.json"
 	path := fmt.Sprintf(api_path, i.FieldID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserFieldOptionDeleteInput struct {
@@ -6260,7 +6270,7 @@ func (c *Client) UserFieldOptionDelete(i *UserFieldOptionDeleteInput, ro *Reques
 	api_path := "/api/v2/user_fields/%s/options/%s.json"
 	path := fmt.Sprintf(api_path, i.FieldID, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserFieldOptionShowInput struct {
@@ -6280,7 +6290,7 @@ func (c *Client) UserFieldOptionShow(i *UserFieldOptionShowInput, ro *RequestOpt
 	api_path := "/api/v2/user_fields/%s/options/%s.json"
 	path := fmt.Sprintf(api_path, i.FieldID, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserFieldOptionsInput struct {
@@ -6295,7 +6305,7 @@ func (c *Client) UserFieldOptions(i *UserFieldOptionsInput, ro *RequestOptions) 
 	api_path := "/api/v2/user_fields/%s/options.json"
 	path := fmt.Sprintf(api_path, i.FieldID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserFieldShowInput struct {
@@ -6310,7 +6320,7 @@ func (c *Client) UserFieldShow(i *UserFieldShowInput, ro *RequestOptions) ([]byt
 	api_path := "/api/v2/user_fields/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserFieldUpdateInput struct {
@@ -6325,17 +6335,17 @@ func (c *Client) UserFieldUpdate(i *UserFieldUpdateInput, ro *RequestOptions) ([
 	api_path := "/api/v2/user_fields/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) UserFieldsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/user_fields.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) UserFieldsReorder(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/user_fields/reorder.json"
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserGroupMembershipCreateInput struct {
@@ -6350,7 +6360,7 @@ func (c *Client) UserGroupMembershipCreate(i *UserGroupMembershipCreateInput, ro
 	api_path := "/api/v2/users/%s/group_memberships.json"
 	path := fmt.Sprintf(api_path, i.UserID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserGroupMembershipDeleteInput struct {
@@ -6370,7 +6380,7 @@ func (c *Client) UserGroupMembershipDelete(i *UserGroupMembershipDeleteInput, ro
 	api_path := "/api/v2/users/%s/group_memberships/%s.json"
 	path := fmt.Sprintf(api_path, i.UserID, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserGroupMembershipMakeDefaultInput struct {
@@ -6390,7 +6400,7 @@ func (c *Client) UserGroupMembershipMakeDefault(i *UserGroupMembershipMakeDefaul
 	api_path := "/api/v2/users/%s/group_memberships/%s/make_default.json"
 	path := fmt.Sprintf(api_path, i.UserID, i.MembershipID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserGroupMembershipShowInput struct {
@@ -6410,7 +6420,7 @@ func (c *Client) UserGroupMembershipShow(i *UserGroupMembershipShowInput, ro *Re
 	api_path := "/api/v2/users/%s/group_memberships/%s.json"
 	path := fmt.Sprintf(api_path, i.UserID, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserGroupMembershipsInput struct {
@@ -6425,7 +6435,7 @@ func (c *Client) UserGroupMemberships(i *UserGroupMembershipsInput, ro *RequestO
 	api_path := "/api/v2/users/%s/group_memberships.json"
 	path := fmt.Sprintf(api_path, i.UserID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserGroupsInput struct {
@@ -6440,7 +6450,7 @@ func (c *Client) UserGroups(i *UserGroupsInput, ro *RequestOptions) ([]byte, err
 	api_path := "/api/v2/users/%s/groups.json"
 	path := fmt.Sprintf(api_path, i.UserID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserIdentitiesInput struct {
@@ -6455,7 +6465,7 @@ func (c *Client) UserIdentities(i *UserIdentitiesInput, ro *RequestOptions) ([]b
 	api_path := "/api/v2/users/%s/identities.json"
 	path := fmt.Sprintf(api_path, i.UserID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserIdentityCreateInput struct {
@@ -6470,7 +6480,7 @@ func (c *Client) UserIdentityCreate(i *UserIdentityCreateInput, ro *RequestOptio
 	api_path := "/api/v2/users/%s/identities.json"
 	path := fmt.Sprintf(api_path, i.UserID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserIdentityDeleteInput struct {
@@ -6490,7 +6500,7 @@ func (c *Client) UserIdentityDelete(i *UserIdentityDeleteInput, ro *RequestOptio
 	api_path := "/api/v2/users/%s/identities/%s.json"
 	path := fmt.Sprintf(api_path, i.UserID, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserIdentityMakePrimaryInput struct {
@@ -6510,7 +6520,7 @@ func (c *Client) UserIdentityMakePrimary(i *UserIdentityMakePrimaryInput, ro *Re
 	api_path := "/api/v2/users/%s/identities/%s/make_primary"
 	path := fmt.Sprintf(api_path, i.UserID, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserIdentityRequestVerificationUpdateInput struct {
@@ -6530,7 +6540,7 @@ func (c *Client) UserIdentityRequestVerificationUpdate(i *UserIdentityRequestVer
 	api_path := "/api/v2/users/%s/identities/%s/request_verification.json"
 	path := fmt.Sprintf(api_path, i.UserID, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserIdentityShowInput struct {
@@ -6550,7 +6560,7 @@ func (c *Client) UserIdentityShow(i *UserIdentityShowInput, ro *RequestOptions) 
 	api_path := "/api/v2/users/%s/identities/%s.json"
 	path := fmt.Sprintf(api_path, i.UserID, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserIdentityUpdateInput struct {
@@ -6570,7 +6580,7 @@ func (c *Client) UserIdentityUpdate(i *UserIdentityUpdateInput, ro *RequestOptio
 	api_path := "/api/v2/users/%s/identities/%s.json"
 	path := fmt.Sprintf(api_path, i.UserID, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserIdentityVerifyInput struct {
@@ -6590,7 +6600,7 @@ func (c *Client) UserIdentityVerify(i *UserIdentityVerifyInput, ro *RequestOptio
 	api_path := "/api/v2/users/%s/identities/%s/verify"
 	path := fmt.Sprintf(api_path, i.UserID, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserMergeInput struct {
@@ -6605,7 +6615,7 @@ func (c *Client) UserMerge(i *UserMergeInput, ro *RequestOptions) ([]byte, error
 	api_path := "/api/v2/users/%s/merge.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserOrganizationMembershipCreateInput struct {
@@ -6620,7 +6630,7 @@ func (c *Client) UserOrganizationMembershipCreate(i *UserOrganizationMembershipC
 	api_path := "/api/v2/users/%s/organization_memberships.json"
 	path := fmt.Sprintf(api_path, i.UserID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserOrganizationMembershipDeleteInput struct {
@@ -6640,7 +6650,7 @@ func (c *Client) UserOrganizationMembershipDelete(i *UserOrganizationMembershipD
 	api_path := "/api/v2/users/%s/organization_memberships/%s.json"
 	path := fmt.Sprintf(api_path, i.UserID, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserOrganizationMembershipMakeDefaultInput struct {
@@ -6660,7 +6670,7 @@ func (c *Client) UserOrganizationMembershipMakeDefault(i *UserOrganizationMember
 	api_path := "/api/v2/users/%s/organization_memberships/%s/make_default.json"
 	path := fmt.Sprintf(api_path, i.ID, i.MembershipID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserOrganizationMembershipShowInput struct {
@@ -6680,7 +6690,7 @@ func (c *Client) UserOrganizationMembershipShow(i *UserOrganizationMembershipSho
 	api_path := "/api/v2/users/%s/organization_memberships/%s.json"
 	path := fmt.Sprintf(api_path, i.UserID, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserOrganizationMembershipsInput struct {
@@ -6695,7 +6705,7 @@ func (c *Client) UserOrganizationMemberships(i *UserOrganizationMembershipsInput
 	api_path := "/api/v2/users/%s/organization_memberships.json"
 	path := fmt.Sprintf(api_path, i.UserID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserOrganizationSubscriptionsInput struct {
@@ -6710,7 +6720,7 @@ func (c *Client) UserOrganizationSubscriptions(i *UserOrganizationSubscriptionsI
 	api_path := "/api/v2/users/%s/organization_subscriptions.json"
 	path := fmt.Sprintf(api_path, i.UserID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserOrganizationsInput struct {
@@ -6725,7 +6735,7 @@ func (c *Client) UserOrganizations(i *UserOrganizationsInput, ro *RequestOptions
 	api_path := "/api/v2/users/%s/organizations.json"
 	path := fmt.Sprintf(api_path, i.UserID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserPasswordCreateInput struct {
@@ -6740,7 +6750,7 @@ func (c *Client) UserPasswordCreate(i *UserPasswordCreateInput, ro *RequestOptio
 	api_path := "/api/v2/users/%s/password.json"
 	path := fmt.Sprintf(api_path, i.UserID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserPasswordRequirementsInput struct {
@@ -6755,7 +6765,7 @@ func (c *Client) UserPasswordRequirements(i *UserPasswordRequirementsInput, ro *
 	api_path := "/api/v2/users/%s/password/requirements.json"
 	path := fmt.Sprintf(api_path, i.UserID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserPasswordUpdateInput struct {
@@ -6770,7 +6780,7 @@ func (c *Client) UserPasswordUpdate(i *UserPasswordUpdateInput, ro *RequestOptio
 	api_path := "/api/v2/users/%s/password.json"
 	path := fmt.Sprintf(api_path, i.UserID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserRelatedInput struct {
@@ -6785,7 +6795,7 @@ func (c *Client) UserRelated(i *UserRelatedInput, ro *RequestOptions) ([]byte, e
 	api_path := "/api/v2/users/%s/related.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserRequestsInput struct {
@@ -6800,7 +6810,7 @@ func (c *Client) UserRequests(i *UserRequestsInput, ro *RequestOptions) ([]byte,
 	api_path := "/api/v2/users/%s/requests.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserSessionDeleteInput struct {
@@ -6820,7 +6830,7 @@ func (c *Client) UserSessionDelete(i *UserSessionDeleteInput, ro *RequestOptions
 	api_path := "/api/v2/users/%s/sessions/%s.json"
 	path := fmt.Sprintf(api_path, i.UserID, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserSessionShowInput struct {
@@ -6840,7 +6850,7 @@ func (c *Client) UserSessionShow(i *UserSessionShowInput, ro *RequestOptions) ([
 	api_path := "/api/v2/users/%s/sessions/%s.json"
 	path := fmt.Sprintf(api_path, i.UserID, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserSessionsInput struct {
@@ -6855,7 +6865,7 @@ func (c *Client) UserSessions(i *UserSessionsInput, ro *RequestOptions) ([]byte,
 	api_path := "/api/v2/users/%s/sessions.json"
 	path := fmt.Sprintf(api_path, i.UserID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserSessionsDeleteInput struct {
@@ -6870,7 +6880,7 @@ func (c *Client) UserSessionsDelete(i *UserSessionsDeleteInput, ro *RequestOptio
 	api_path := "/api/v2/users/%s/sessions.json"
 	path := fmt.Sprintf(api_path, i.UserID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserShowInput struct {
@@ -6885,7 +6895,7 @@ func (c *Client) UserShow(i *UserShowInput, ro *RequestOptions) ([]byte, error) 
 	api_path := "/api/v2/users/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserSkipsInput struct {
@@ -6900,7 +6910,7 @@ func (c *Client) UserSkips(i *UserSkipsInput, ro *RequestOptions) ([]byte, error
 	api_path := "/api/v2/users/%s/skips.json"
 	path := fmt.Sprintf(api_path, i.UserID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserTagCreateInput struct {
@@ -6915,7 +6925,7 @@ func (c *Client) UserTagCreate(i *UserTagCreateInput, ro *RequestOptions) ([]byt
 	api_path := "/api/v2/users/%s/tags.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserTagsInput struct {
@@ -6930,7 +6940,7 @@ func (c *Client) UserTags(i *UserTagsInput, ro *RequestOptions) ([]byte, error) 
 	api_path := "/api/v2/users/%s/tags.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserTagsDeleteInput struct {
@@ -6945,7 +6955,7 @@ func (c *Client) UserTagsDelete(i *UserTagsDeleteInput, ro *RequestOptions) ([]b
 	api_path := "/api/v2/users/%s/tags.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserTagsUpdateInput struct {
@@ -6960,7 +6970,7 @@ func (c *Client) UserTagsUpdate(i *UserTagsUpdateInput, ro *RequestOptions) ([]b
 	api_path := "/api/v2/users/%s/tags.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserTicketsAssignedInput struct {
@@ -6975,7 +6985,7 @@ func (c *Client) UserTicketsAssigned(i *UserTicketsAssignedInput, ro *RequestOpt
 	api_path := "/api/v2/users/%s/tickets/assigned.json"
 	path := fmt.Sprintf(api_path, i.UserID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserTicketsCcdInput struct {
@@ -6990,7 +7000,7 @@ func (c *Client) UserTicketsCcd(i *UserTicketsCcdInput, ro *RequestOptions) ([]b
 	api_path := "/api/v2/users/%s/tickets/ccd.json"
 	path := fmt.Sprintf(api_path, i.UserID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserTicketsRequestedInput struct {
@@ -7005,7 +7015,7 @@ func (c *Client) UserTicketsRequested(i *UserTicketsRequestedInput, ro *RequestO
 	api_path := "/api/v2/users/%s/tickets/requested.json"
 	path := fmt.Sprintf(api_path, i.UserID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type UserUpdateInput struct {
@@ -7020,82 +7030,82 @@ func (c *Client) UserUpdate(i *UserUpdateInput, ro *RequestOptions) ([]byte, err
 	api_path := "/api/v2/users/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) UsersAutocomplete(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/users/autocomplete.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) UsersCreateMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/users/create_many.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) UsersCreateOrUpdate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/users/create_or_update.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) UsersCreateOrUpdateMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/users/create_or_update_many.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) UsersDestroyMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/users/destroy_many.json"
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) UsersList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/users.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) UsersMe(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/users/me.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) UsersMeLogout(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/users/me/logout.json"
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) UsersMeMerge(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/users/me/merge.json"
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) UsersMeOauthClients(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/users/me/oauth/clients.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) UsersMeSession(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/users/me/session.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) UsersRequestCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/users/request_create.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) UsersSearch(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/users/search.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) UsersShowMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/users/show_many.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) UsersUpdateMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/users/update_many.json"
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ViewCountInput struct {
@@ -7110,12 +7120,12 @@ func (c *Client) ViewCount(i *ViewCountInput, ro *RequestOptions) ([]byte, error
 	api_path := "/api/v2/views/%s/count.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ViewCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/views.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ViewDeleteInput struct {
@@ -7130,7 +7140,7 @@ func (c *Client) ViewDelete(i *ViewDeleteInput, ro *RequestOptions) ([]byte, err
 	api_path := "/api/v2/views/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ViewExecuteInput struct {
@@ -7145,7 +7155,7 @@ func (c *Client) ViewExecute(i *ViewExecuteInput, ro *RequestOptions) ([]byte, e
 	api_path := "/api/v2/views/%s/execute.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ViewExportInput struct {
@@ -7160,7 +7170,7 @@ func (c *Client) ViewExport(i *ViewExportInput, ro *RequestOptions) ([]byte, err
 	api_path := "/api/v2/views/%s/export.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ViewShowInput struct {
@@ -7175,7 +7185,7 @@ func (c *Client) ViewShow(i *ViewShowInput, ro *RequestOptions) ([]byte, error) 
 	api_path := "/api/v2/views/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ViewTicketsInput struct {
@@ -7190,7 +7200,7 @@ func (c *Client) ViewTickets(i *ViewTicketsInput, ro *RequestOptions) ([]byte, e
 	api_path := "/api/v2/views/%s/tickets.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type ViewUpdateInput struct {
@@ -7205,62 +7215,62 @@ func (c *Client) ViewUpdate(i *ViewUpdateInput, ro *RequestOptions) ([]byte, err
 	api_path := "/api/v2/views/%s.json"
 	path := fmt.Sprintf(api_path, i.ID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ViewsActiveList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/views/active.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ViewsCompact(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/views/compact.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ViewsCountManyList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/views/count_many.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ViewsDestroyMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/views/destroy_many.json"
 	resp, err := c.Request("DELETE", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ViewsList(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/views.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ViewsPreview(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/views/preview.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ViewsPreviewCount(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/views/preview/count.json"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ViewsSearch(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/views/search.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ViewsShowMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/views/show_many.json"
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) ViewsUpdateMany(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/views/update_many.json"
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 func (c *Client) VisitorCreate(ro *RequestOptions) ([]byte, error) {
 	path := "/api/v2/visitors"
 	resp, err := c.Request("POST", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type VisitorShowInput struct {
@@ -7275,7 +7285,7 @@ func (c *Client) VisitorShow(i *VisitorShowInput, ro *RequestOptions) ([]byte, e
 	api_path := "/api/v2/visitors/%s"
 	path := fmt.Sprintf(api_path, i.VisitorID)
 	resp, err := c.Request("GET", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }
 
 type VisitorUpdateInput struct {
@@ -7290,5 +7300,5 @@ func (c *Client) VisitorUpdate(i *VisitorUpdateInput, ro *RequestOptions) ([]byt
 	api_path := "/api/v2/visitors/%s"
 	path := fmt.Sprintf(api_path, i.VisitorID)
 	resp, err := c.Request("PUT", path, ro)
-	return handle(resp, err)
+	return handle(resp, ro, err)
 }

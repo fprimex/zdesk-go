@@ -6,22 +6,22 @@ import (
 	"strconv"
 )
 
-func GetIDFromURL(rawurl string) (string, error) {
+func GetIDFromURL(rawurl string) string {
 	url, err := url.Parse(rawurl)
 	if err != nil {
-		return "", err
+		return ""
 	}
 
 	path := url.EscapedPath()
 	pathparts := strings.Split(path, "/")
 	lastpart := pathparts[len(pathparts)-1]
 	nameparts := strings.Split(lastpart, ".")
-	name := nameparts[len(nameparts)-1]
+	name := nameparts[0]
 
 	if _, err := strconv.Atoi(name); err == nil {
-		return name, nil
+		return name
 	} else {
-		return "", err
+		return ""
 	}
 }
 

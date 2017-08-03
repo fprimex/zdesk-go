@@ -57,7 +57,7 @@ type Client struct {
 // DefaultClient instantiates a new Zendesk API client. This function requires
 // the environment variables to be set.
 func DefaultClient() (*Client, error) {
-	return NewClient(os.Getenv(fmt.Sprintf("%s/token", APIUsernameEnvVar)),
+	return NewClient(fmt.Sprintf("%s/token", os.Getenv(APIUsernameEnvVar)),
                          os.Getenv(APIKeyEnvVar),
                          os.Getenv(APIDomainURLEnvVar))
 }
