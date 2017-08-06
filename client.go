@@ -58,12 +58,12 @@ type Client struct {
 // the environment variables to be set.
 func DefaultClient() (*Client, error) {
 	return NewClient(fmt.Sprintf("%s/token", os.Getenv(APIUsernameEnvVar)),
-                         os.Getenv(APIKeyEnvVar),
-                         os.Getenv(APIDomainURLEnvVar))
+		os.Getenv(APIKeyEnvVar),
+		os.Getenv(APIDomainURLEnvVar))
 }
 
 // NewClient creates a new API client with the given key and the domain
-// endpoint. 
+// endpoint.
 func NewClient(user string, key string, endpoint string) (*Client, error) {
 	client := &Client{apiUsername: user, apiKey: key, Address: endpoint}
 	return client.init()
@@ -175,4 +175,3 @@ func checkResp(resp *http.Response, err error) (*http.Response, error) {
 		return resp, NewHTTPError(resp)
 	}
 }
-

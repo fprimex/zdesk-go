@@ -4,8 +4,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"strings"
 	"strconv"
+	"strings"
 )
 
 func GetBody(resp *http.Response) ([]byte, error) {
@@ -37,4 +37,3 @@ func GetIDFromURL(rawurl string) string {
 		return ""
 	}
 }
-

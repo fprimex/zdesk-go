@@ -138,31 +138,31 @@ func main() {
 	//
 
 	/*
-	// Category
+		// Category
 
-	resp, err = client.HelpCenterCategoryUpdate(&zdesk.HelpCenterCategoryUpdateInput{ID:categoryid}, nil)
-	if err != nil {
-		log.Fatal(fmt.Sprintf("HelpCenterCategoryUpdate: %s", err))
-	}
+		resp, err = client.HelpCenterCategoryUpdate(&zdesk.HelpCenterCategoryUpdateInput{ID:categoryid}, nil)
+		if err != nil {
+			log.Fatal(fmt.Sprintf("HelpCenterCategoryUpdate: %s", err))
+		}
 
-	// Section
-	resp, err = client.HelpCenterSectionUpdate(&zdesk.HelpCenterSectionUpdateInput{ID:sectionid}, nil)
-	if err != nil {
-		log.Fatal(fmt.Sprintf("HelpCenterCategorySectionUpdate: %s", err))
-	}
+		// Section
+		resp, err = client.HelpCenterSectionUpdate(&zdesk.HelpCenterSectionUpdateInput{ID:sectionid}, nil)
+		if err != nil {
+			log.Fatal(fmt.Sprintf("HelpCenterCategorySectionUpdate: %s", err))
+		}
 
-	// Section Access Policy
-	newpolicy := []byte(`{ "access_policy": { "viewable_by": "signed_in_users", "manageable_by": "managers"} }`)
-	resp, err = client.HelpCenterSectionAccessPolicyUpdate(&zdesk.HelpCenterSectionAccessPolicyUpdateInput{SectionID: sectionid})
-	if err != nil {
-		log.Fatal(fmt.Sprintf("HelpCenterSectionAccessPolicyUpdate: %s", err))
-	}
+		// Section Access Policy
+		newpolicy := []byte(`{ "access_policy": { "viewable_by": "signed_in_users", "manageable_by": "managers"} }`)
+		resp, err = client.HelpCenterSectionAccessPolicyUpdate(&zdesk.HelpCenterSectionAccessPolicyUpdateInput{SectionID: sectionid})
+		if err != nil {
+			log.Fatal(fmt.Sprintf("HelpCenterSectionAccessPolicyUpdate: %s", err))
+		}
 
-	// Article
-	resp, err = client.HelpCenterArticleUpdate(&zdesk.HelpCenterArticleUpdateInput{ID:articleid}, nil)
-	if err != nil {
-		log.Fatal(fmt.Sprintf("HelpCenterArticleUpdate: %s", err))
-	}
+		// Article
+		resp, err = client.HelpCenterArticleUpdate(&zdesk.HelpCenterArticleUpdateInput{ID:articleid}, nil)
+		if err != nil {
+			log.Fatal(fmt.Sprintf("HelpCenterArticleUpdate: %s", err))
+		}
 	*/
 
 	//
@@ -170,19 +170,19 @@ func main() {
 	//
 
 	// Article
-	resp, err = client.HelpCenterArticleDelete(&zdesk.HelpCenterArticleDeleteInput{ID:articleid}, nil)
+	resp, err = client.HelpCenterArticleDelete(&zdesk.HelpCenterArticleDeleteInput{ID: articleid}, nil)
 	if err != nil {
 		log.Fatal(fmt.Sprintf("HelpCenterArticleDelete: %s", err))
 	}
 
 	// Section
-	resp, err = client.HelpCenterSectionDelete(&zdesk.HelpCenterSectionDeleteInput{ID:sectionid}, nil)
+	resp, err = client.HelpCenterSectionDelete(&zdesk.HelpCenterSectionDeleteInput{ID: sectionid}, nil)
 	if err != nil {
 		log.Fatal(fmt.Sprintf("HelpCenterCategorySectionDelete: %s", err))
 	}
 
 	// Category
-	resp, err = client.HelpCenterCategoryDelete(&zdesk.HelpCenterCategoryDeleteInput{ID:categoryid}, nil)
+	resp, err = client.HelpCenterCategoryDelete(&zdesk.HelpCenterCategoryDeleteInput{ID: categoryid}, nil)
 	if err != nil {
 		log.Fatal(fmt.Sprintf("HelpCenterCategoryDelete: %s", err))
 	}
