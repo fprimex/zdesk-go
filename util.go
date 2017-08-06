@@ -1,10 +1,23 @@
 package zdesk
 
 import (
+	"io/ioutil"
+	"net/http"
 	"net/url"
 	"strings"
 	"strconv"
 )
+
+func GetBody(resp *http.Response) ([]byte, error) {
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return body, nil
+}
 
 func GetIDFromURL(rawurl string) string {
 	url, err := url.Parse(rawurl)

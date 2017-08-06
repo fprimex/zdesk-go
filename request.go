@@ -19,10 +19,6 @@ type RequestOptions struct {
 	// Request. BodyLength is the final size of the Body.
 	Body       io.Reader
 	BodyLength int64
-
-	// ReturnOption specifies if something other than the body of the response
-	// should be returned, such as headers or the whole response.
-	ResponseOption string
 }
 
 // RawRequest accepts a verb, URL, and RequestOptions struct and returns the
