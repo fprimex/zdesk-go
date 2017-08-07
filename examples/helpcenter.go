@@ -137,33 +137,51 @@ func main() {
 	// Update
 	//
 
-	/*
-		// Category
+	// Category
 
-		resp, err = client.HelpCenterCategoryUpdate(&zdesk.HelpCenterCategoryUpdateInput{ID:categoryid}, nil)
-		if err != nil {
-			log.Fatal(fmt.Sprintf("HelpCenterCategoryUpdate: %s", err))
-		}
+	categoryupdate := []byte(`{"category": {"position": 2}}`)
+	resp, err = client.HelpCenterCategoryUpdate(&zdesk.HelpCenterCategoryUpdateInput{ID:categoryid},
+		&zdesk.RequestOptions{
+			Headers:    map[string]string{"Content-Type": "application/json"},
+			Body:       bytes.NewReader(categoryupdate),
+			BodyLength: int64(len(categoryupdate))})
+	if err != nil {
+		log.Fatal(fmt.Sprintf("HelpCenterCategoryUpdate: %s", err))
+	}
 
-		// Section
-		resp, err = client.HelpCenterSectionUpdate(&zdesk.HelpCenterSectionUpdateInput{ID:sectionid}, nil)
-		if err != nil {
-			log.Fatal(fmt.Sprintf("HelpCenterCategorySectionUpdate: %s", err))
-		}
+	// Section
+	sectionupdate := []byte(`{"section": {"position": 2}}`)
+	resp, err = client.HelpCenterSectionUpdate(&zdesk.HelpCenterSectionUpdateInput{ID:sectionid},
+		&zdesk.RequestOptions{
+			Headers:    map[string]string{"Content-Type": "application/json"},
+			Body:       bytes.NewReader(sectionupdate),
+			BodyLength: int64(len(sectionupdate))})
+	if err != nil {
+		log.Fatal(fmt.Sprintf("HelpCenterCategorySectionUpdate: %s", err))
+	}
 
-		// Section Access Policy
-		newpolicy := []byte(`{ "access_policy": { "viewable_by": "signed_in_users", "manageable_by": "managers"} }`)
-		resp, err = client.HelpCenterSectionAccessPolicyUpdate(&zdesk.HelpCenterSectionAccessPolicyUpdateInput{SectionID: sectionid})
-		if err != nil {
-			log.Fatal(fmt.Sprintf("HelpCenterSectionAccessPolicyUpdate: %s", err))
-		}
+	// Section Access Policy
+	policyupdate := []byte(`{ "access_policy": { "viewable_by": "signed_in_users", "manageable_by": "managers"} }`)
+	resp, err = client.HelpCenterSectionAccessPolicyUpdate(
+		&zdesk.HelpCenterSectionAccessPolicyUpdateInput{SectionID: sectionid},
+		&zdesk.RequestOptions{
+			Headers:    map[string]string{"Content-Type": "application/json"},
+			Body:       bytes.NewReader(policyupdate),
+			BodyLength: int64(len(policyupdate))})
+	if err != nil {
+		log.Fatal(fmt.Sprintf("HelpCenterSectionAccessPolicyUpdate: %s", err))
+	}
 
-		// Article
-		resp, err = client.HelpCenterArticleUpdate(&zdesk.HelpCenterArticleUpdateInput{ID:articleid}, nil)
-		if err != nil {
-			log.Fatal(fmt.Sprintf("HelpCenterArticleUpdate: %s", err))
-		}
-	*/
+	// Article
+	articleupdate := []byte(`{"article": {"position": 2}}`)
+	resp, err = client.HelpCenterArticleUpdate(&zdesk.HelpCenterArticleUpdateInput{ID:articleid},
+		&zdesk.RequestOptions{
+			Headers:    map[string]string{"Content-Type": "application/json"},
+			Body:       bytes.NewReader(articleupdate),
+			BodyLength: int64(len(articleupdate))})
+	if err != nil {
+		log.Fatal(fmt.Sprintf("HelpCenterArticleUpdate: %s", err))
+	}
 
 	//
 	// Delete

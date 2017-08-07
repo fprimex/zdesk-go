@@ -64,7 +64,7 @@ func main() {
 	if err != nil {
 		log.Fatal(fmt.Sprintf("TicketUpdate: %s", err))
 	}
-	fmt.Printf("Update ticket 153 return code: %d\n\n", resp.StatusCode)
+	fmt.Printf("Update ticket %s return code: %d\n\n", ticketid, resp.StatusCode)
 
 	// list
 	resp, err = client.TicketsList(nil)
