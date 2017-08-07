@@ -15,15 +15,15 @@ import (
 
 // APIUsernameEnvVar is the environment variable where the Zendesk username /
 // email should be read from.
-const APIUsernameEnvVar = "ZDESK_USERNAME"
+const APIEmailEnvVar = "ZDESK_EMAIL"
 
 // APIKeyEnvVar is the name of the environment variable where the Zendesk API
 // key should be read from.
-const APIKeyEnvVar = "ZDESK_TOKEN"
+const APITokenEnvVar = "ZDESK_TOKEN"
 
 // APIDomainURLEnvVar is the name of the environment variable where the Zendesk
 // domain, such as https://example.zendesk.com should be read from.
-const APIDomainURLEnvVar = "ZDESK_DOMAIN"
+const APIDomainEnvVar = "ZDESK_DOMAIN"
 
 // ProjectURL is the url for this library.
 var ProjectURL = "github.com/fprimex/zdesk-go"
@@ -37,40 +37,40 @@ var UserAgent = fmt.Sprintf("zdesk-go/%s (+%s; %s)",
 
 // Client is the main entrypoint to the API library.
 type Client struct {
-	// Address is the address of Zendesk's API endpoint.
-	Address string
+	// domain is the address of Zendesk's API endpoint.
+	domain string
+
+	// email is the Zendesk login / email.
+	email string
+
+	// apiKey is the Zendesk API token to authenticate requests.
+	token string
+
+	// url is the parsed URL from Address
+	url *url.URL
 
 	// HTTPClient is the HTTP client to use. If one is not provided, a default
 	// client will be used.
 	HTTPClient *http.Client
-
-	// apiUsername is the Zendesk login / email.
-	apiUsername string
-
-	// apiKey is the Zendesk API token to authenticate requests.
-	apiKey string
-
-	// url is the parsed URL from Address
-	url *url.URL
 }
 
 // DefaultClient instantiates a new Zendesk API client. This function requires
 // the environment variables to be set.
 func DefaultClient() (*Client, error) {
-	return NewClient(fmt.Sprintf("%s/token", os.Getenv(APIUsernameEnvVar)),
-		os.Getenv(APIKeyEnvVar),
-		os.Getenv(APIDomainURLEnvVar))
+	return NewClient(fmt.Sprintf("%s/token", os.Getenv(APIEmailEnvVar)),
+		os.Getenv(APITokenEnvVar),
+		os.Getenv(APIDomainEnvVar))
 }
 
 // NewClient creates a new API client with the given key and the domain
 // endpoint.
-func NewClient(user string, key string, endpoint string) (*Client, error) {
-	client := &Client{apiUsername: user, apiKey: key, Address: endpoint}
+func NewClient(email string, token string, domain string) (*Client, error) {
+	client := &Client{email: email, token: token, domain: domain}
 	return client.init()
 }
 
 func (c *Client) init() (*Client, error) {
-	u, err := url.Parse(c.Address)
+	u, err := url.Parse(c.domain)
 	if err != nil {
 		return nil, err
 	}

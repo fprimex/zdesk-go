@@ -46,7 +46,7 @@ func (c *Client) RawRequest(verb, p string, ro *RequestOptions) (*http.Request, 
 		return nil, err
 	}
 
-	request.SetBasicAuth(c.apiUsername, c.apiKey)
+	request.SetBasicAuth(c.email, c.token)
 
 	// Set the User-Agent.
 	request.Header.Set("User-Agent", UserAgent)

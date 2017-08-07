@@ -12,7 +12,7 @@ import (
 func main() {
 	// must add "os" to imports for this to work
 	//client, err := zdesk.NewClient(fmt.Sprintf("%s/token",
-	//	os.Getenv("ZDESK_USERNAME")),
+	//	os.Getenv("ZDESK_EMAIL")),
 	//	os.Getenv("ZDESK_TOKEN"),
 	//	os.Getenv("ZDESK_DOMAIN"))
 
