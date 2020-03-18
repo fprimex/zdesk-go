@@ -627,7 +627,7 @@ func (c *Client) BusinessHoursScheduleHolidayCreate(i *BusinessHoursScheduleHoli
 
 type BusinessHoursScheduleHolidayDeleteInput struct {
 	ScheduleID string
-	ID         string
+	ID string
 }
 
 func (c *Client) BusinessHoursScheduleHolidayDelete(i *BusinessHoursScheduleHolidayDeleteInput, ro *RequestOptions) (*http.Response, error) {
@@ -646,7 +646,7 @@ func (c *Client) BusinessHoursScheduleHolidayDelete(i *BusinessHoursScheduleHoli
 
 type BusinessHoursScheduleHolidayShowInput struct {
 	ScheduleID string
-	ID         string
+	ID string
 }
 
 func (c *Client) BusinessHoursScheduleHolidayShow(i *BusinessHoursScheduleHolidayShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -665,7 +665,7 @@ func (c *Client) BusinessHoursScheduleHolidayShow(i *BusinessHoursScheduleHolida
 
 type BusinessHoursScheduleHolidayUpdateInput struct {
 	ScheduleID string
-	ID         string
+	ID string
 }
 
 func (c *Client) BusinessHoursScheduleHolidayUpdate(i *BusinessHoursScheduleHolidayUpdateInput, ro *RequestOptions) (*http.Response, error) {
@@ -782,7 +782,7 @@ func (c *Client) ChannelsTwitterTicketStatuses(i *ChannelsTwitterTicketStatusesI
 }
 
 type ChannelsVoiceAgentTicketDisplayCreateInput struct {
-	AgentID  string
+	AgentID string
 	TicketID string
 }
 
@@ -802,7 +802,7 @@ func (c *Client) ChannelsVoiceAgentTicketDisplayCreate(i *ChannelsVoiceAgentTick
 
 type ChannelsVoiceAgentUserDisplayCreateInput struct {
 	AgentID string
-	UserID  string
+	UserID string
 }
 
 func (c *Client) ChannelsVoiceAgentUserDisplayCreate(i *ChannelsVoiceAgentUserDisplayCreateInput, ro *RequestOptions) (*http.Response, error) {
@@ -1073,7 +1073,7 @@ func (c *Client) CommunityPostCommentCreate(i *CommunityPostCommentCreateInput, 
 
 type CommunityPostCommentDeleteInput struct {
 	PostID string
-	ID     string
+	ID string
 }
 
 func (c *Client) CommunityPostCommentDelete(i *CommunityPostCommentDeleteInput, ro *RequestOptions) (*http.Response, error) {
@@ -1092,7 +1092,7 @@ func (c *Client) CommunityPostCommentDelete(i *CommunityPostCommentDeleteInput, 
 
 type CommunityPostCommentDownCreateInput struct {
 	PostID string
-	ID     string
+	ID string
 }
 
 func (c *Client) CommunityPostCommentDownCreate(i *CommunityPostCommentDownCreateInput, ro *RequestOptions) (*http.Response, error) {
@@ -1111,7 +1111,7 @@ func (c *Client) CommunityPostCommentDownCreate(i *CommunityPostCommentDownCreat
 
 type CommunityPostCommentShowInput struct {
 	PostID string
-	ID     string
+	ID string
 }
 
 func (c *Client) CommunityPostCommentShow(i *CommunityPostCommentShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -1130,7 +1130,7 @@ func (c *Client) CommunityPostCommentShow(i *CommunityPostCommentShowInput, ro *
 
 type CommunityPostCommentUpCreateInput struct {
 	PostID string
-	ID     string
+	ID string
 }
 
 func (c *Client) CommunityPostCommentUpCreate(i *CommunityPostCommentUpCreateInput, ro *RequestOptions) (*http.Response, error) {
@@ -1149,7 +1149,7 @@ func (c *Client) CommunityPostCommentUpCreate(i *CommunityPostCommentUpCreateInp
 
 type CommunityPostCommentUpdateInput struct {
 	PostID string
-	ID     string
+	ID string
 }
 
 func (c *Client) CommunityPostCommentUpdate(i *CommunityPostCommentUpdateInput, ro *RequestOptions) (*http.Response, error) {
@@ -1167,7 +1167,7 @@ func (c *Client) CommunityPostCommentUpdate(i *CommunityPostCommentUpdateInput, 
 }
 
 type CommunityPostCommentVotesInput struct {
-	PostID    string
+	PostID string
 	CommentID string
 }
 
@@ -1262,7 +1262,7 @@ func (c *Client) CommunityPostSubscriptionCreate(i *CommunityPostSubscriptionCre
 
 type CommunityPostSubscriptionDeleteInput struct {
 	PostID string
-	ID     string
+	ID string
 }
 
 func (c *Client) CommunityPostSubscriptionDelete(i *CommunityPostSubscriptionDeleteInput, ro *RequestOptions) (*http.Response, error) {
@@ -1281,7 +1281,7 @@ func (c *Client) CommunityPostSubscriptionDelete(i *CommunityPostSubscriptionDel
 
 type CommunityPostSubscriptionShowInput struct {
 	PostID string
-	ID     string
+	ID string
 }
 
 func (c *Client) CommunityPostSubscriptionShow(i *CommunityPostSubscriptionShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -1450,7 +1450,7 @@ func (c *Client) CommunityTopicSubscriptionCreate(i *CommunityTopicSubscriptionC
 
 type CommunityTopicSubscriptionDeleteInput struct {
 	TopicID string
-	ID      string
+	ID string
 }
 
 func (c *Client) CommunityTopicSubscriptionDelete(i *CommunityTopicSubscriptionDeleteInput, ro *RequestOptions) (*http.Response, error) {
@@ -1469,7 +1469,7 @@ func (c *Client) CommunityTopicSubscriptionDelete(i *CommunityTopicSubscriptionD
 
 type CommunityTopicSubscriptionShowInput struct {
 	TopicID string
-	ID      string
+	ID string
 }
 
 func (c *Client) CommunityTopicSubscriptionShow(i *CommunityTopicSubscriptionShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -1634,16 +1634,16 @@ func (c *Client) DepartmentShow(i *DepartmentShowInput, ro *RequestOptions) (*ht
 }
 
 type DepartmentUpdateInput struct {
-	DepartmentIDOrName string
+	DepartmentID string
 }
 
 func (c *Client) DepartmentUpdate(i *DepartmentUpdateInput, ro *RequestOptions) (*http.Response, error) {
-	if i.DepartmentIDOrName == "" {
-		return nil, errors.New("Missing required field 'DepartmentIDOrName'")
+	if i.DepartmentID == "" {
+		return nil, errors.New("Missing required field 'DepartmentID'")
 	}
 
 	api_path := "/api/v2/departments/%s"
-	path := fmt.Sprintf(api_path, i.DepartmentIDOrName)
+	path := fmt.Sprintf(api_path, i.DepartmentID)
 	return c.Request("PUT", path, ro)
 }
 
@@ -1678,6 +1678,20 @@ func (c *Client) DepartmentsNameShow(i *DepartmentsNameShowInput, ro *RequestOpt
 	api_path := "/api/v2/departments/name/%s"
 	path := fmt.Sprintf(api_path, i.Name)
 	return c.Request("GET", path, ro)
+}
+
+type DepartmentsNameUpdateInput struct {
+	Name string
+}
+
+func (c *Client) DepartmentsNameUpdate(i *DepartmentsNameUpdateInput, ro *RequestOptions) (*http.Response, error) {
+	if i.Name == "" {
+		return nil, errors.New("Missing required field 'Name'")
+	}
+
+	api_path := "/api/v2/departments/name/%s"
+	path := fmt.Sprintf(api_path, i.Name)
+	return c.Request("PUT", path, ro)
 }
 
 func (c *Client) DynamicContentItemCreate(ro *RequestOptions) (*http.Response, error) {
@@ -1743,7 +1757,7 @@ func (c *Client) DynamicContentItemVariantCreate(i *DynamicContentItemVariantCre
 
 type DynamicContentItemVariantDeleteInput struct {
 	ItemID string
-	ID     string
+	ID string
 }
 
 func (c *Client) DynamicContentItemVariantDelete(i *DynamicContentItemVariantDeleteInput, ro *RequestOptions) (*http.Response, error) {
@@ -1762,7 +1776,7 @@ func (c *Client) DynamicContentItemVariantDelete(i *DynamicContentItemVariantDel
 
 type DynamicContentItemVariantShowInput struct {
 	ItemID string
-	ID     string
+	ID string
 }
 
 func (c *Client) DynamicContentItemVariantShow(i *DynamicContentItemVariantShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -1781,7 +1795,7 @@ func (c *Client) DynamicContentItemVariantShow(i *DynamicContentItemVariantShowI
 
 type DynamicContentItemVariantUpdateInput struct {
 	ItemID string
-	ID     string
+	ID string
 }
 
 func (c *Client) DynamicContentItemVariantUpdate(i *DynamicContentItemVariantUpdateInput, ro *RequestOptions) (*http.Response, error) {
@@ -1861,7 +1875,7 @@ func (c *Client) EndUserIdentityCreate(i *EndUserIdentityCreateInput, ro *Reques
 
 type EndUserIdentityMakePrimaryInput struct {
 	UserID string
-	ID     string
+	ID string
 }
 
 func (c *Client) EndUserIdentityMakePrimary(i *EndUserIdentityMakePrimaryInput, ro *RequestOptions) (*http.Response, error) {
@@ -2126,7 +2140,7 @@ func (c *Client) HelpCenterArticleAttachmentCreate(i *HelpCenterArticleAttachmen
 
 type HelpCenterArticleAttachmentsInput struct {
 	ArticleID string
-	Locale    string
+Locale string
 }
 
 func (c *Client) HelpCenterArticleAttachments(i *HelpCenterArticleAttachmentsInput, ro *RequestOptions) (*http.Response, error) {
@@ -2146,7 +2160,7 @@ func (c *Client) HelpCenterArticleAttachments(i *HelpCenterArticleAttachmentsInp
 
 type HelpCenterArticleAttachmentsBlockInput struct {
 	ArticleID string
-	Locale    string
+Locale string
 }
 
 func (c *Client) HelpCenterArticleAttachmentsBlock(i *HelpCenterArticleAttachmentsBlockInput, ro *RequestOptions) (*http.Response, error) {
@@ -2166,7 +2180,7 @@ func (c *Client) HelpCenterArticleAttachmentsBlock(i *HelpCenterArticleAttachmen
 
 type HelpCenterArticleAttachmentsInlineInput struct {
 	ArticleID string
-	Locale    string
+Locale string
 }
 
 func (c *Client) HelpCenterArticleAttachmentsInline(i *HelpCenterArticleAttachmentsInlineInput, ro *RequestOptions) (*http.Response, error) {
@@ -2214,7 +2228,7 @@ func (c *Client) HelpCenterArticleCommentCreate(i *HelpCenterArticleCommentCreat
 
 type HelpCenterArticleCommentDeleteInput struct {
 	ArticleID string
-	ID        string
+	ID string
 }
 
 func (c *Client) HelpCenterArticleCommentDelete(i *HelpCenterArticleCommentDeleteInput, ro *RequestOptions) (*http.Response, error) {
@@ -2233,7 +2247,7 @@ func (c *Client) HelpCenterArticleCommentDelete(i *HelpCenterArticleCommentDelet
 
 type HelpCenterArticleCommentDownCreateInput struct {
 	ArticleID string
-	ID        string
+	ID string
 }
 
 func (c *Client) HelpCenterArticleCommentDownCreate(i *HelpCenterArticleCommentDownCreateInput, ro *RequestOptions) (*http.Response, error) {
@@ -2252,8 +2266,8 @@ func (c *Client) HelpCenterArticleCommentDownCreate(i *HelpCenterArticleCommentD
 
 type HelpCenterArticleCommentShowInput struct {
 	ArticleID string
-	ID        string
-	Locale    string
+	ID string
+Locale string
 }
 
 func (c *Client) HelpCenterArticleCommentShow(i *HelpCenterArticleCommentShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -2277,7 +2291,7 @@ func (c *Client) HelpCenterArticleCommentShow(i *HelpCenterArticleCommentShowInp
 
 type HelpCenterArticleCommentUpCreateInput struct {
 	ArticleID string
-	ID        string
+	ID string
 }
 
 func (c *Client) HelpCenterArticleCommentUpCreate(i *HelpCenterArticleCommentUpCreateInput, ro *RequestOptions) (*http.Response, error) {
@@ -2296,7 +2310,7 @@ func (c *Client) HelpCenterArticleCommentUpCreate(i *HelpCenterArticleCommentUpC
 
 type HelpCenterArticleCommentUpdateInput struct {
 	ArticleID string
-	ID        string
+	ID string
 }
 
 func (c *Client) HelpCenterArticleCommentUpdate(i *HelpCenterArticleCommentUpdateInput, ro *RequestOptions) (*http.Response, error) {
@@ -2316,7 +2330,7 @@ func (c *Client) HelpCenterArticleCommentUpdate(i *HelpCenterArticleCommentUpdat
 type HelpCenterArticleCommentVotesInput struct {
 	ArticleID string
 	CommentID string
-	Locale    string
+Locale string
 }
 
 func (c *Client) HelpCenterArticleCommentVotes(i *HelpCenterArticleCommentVotesInput, ro *RequestOptions) (*http.Response, error) {
@@ -2339,8 +2353,8 @@ func (c *Client) HelpCenterArticleCommentVotes(i *HelpCenterArticleCommentVotesI
 }
 
 type HelpCenterArticleCommentsInput struct {
-	ID     string
-	Locale string
+	ID string
+Locale string
 }
 
 func (c *Client) HelpCenterArticleComments(i *HelpCenterArticleCommentsInput, ro *RequestOptions) (*http.Response, error) {
@@ -2402,7 +2416,7 @@ func (c *Client) HelpCenterArticleLabelCreate(i *HelpCenterArticleLabelCreateInp
 
 type HelpCenterArticleLabelDeleteInput struct {
 	ArticleID string
-	ID        string
+	ID string
 }
 
 func (c *Client) HelpCenterArticleLabelDelete(i *HelpCenterArticleLabelDeleteInput, ro *RequestOptions) (*http.Response, error) {
@@ -2435,7 +2449,7 @@ func (c *Client) HelpCenterArticleLabels(i *HelpCenterArticleLabelsInput, ro *Re
 
 type HelpCenterArticleShowInput struct {
 	Locale string
-	ID     string
+	ID string
 }
 
 func (c *Client) HelpCenterArticleShow(i *HelpCenterArticleShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -2482,7 +2496,7 @@ func (c *Client) HelpCenterArticleSubscriptionCreate(i *HelpCenterArticleSubscri
 
 type HelpCenterArticleSubscriptionDeleteInput struct {
 	ArticleID string
-	ID        string
+	ID string
 }
 
 func (c *Client) HelpCenterArticleSubscriptionDelete(i *HelpCenterArticleSubscriptionDeleteInput, ro *RequestOptions) (*http.Response, error) {
@@ -2501,8 +2515,8 @@ func (c *Client) HelpCenterArticleSubscriptionDelete(i *HelpCenterArticleSubscri
 
 type HelpCenterArticleSubscriptionShowInput struct {
 	ArticleID string
-	ID        string
-	Locale    string
+	ID string
+Locale string
 }
 
 func (c *Client) HelpCenterArticleSubscriptionShow(i *HelpCenterArticleSubscriptionShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -2526,7 +2540,7 @@ func (c *Client) HelpCenterArticleSubscriptionShow(i *HelpCenterArticleSubscript
 
 type HelpCenterArticleSubscriptionsInput struct {
 	ArticleID string
-	Locale    string
+Locale string
 }
 
 func (c *Client) HelpCenterArticleSubscriptions(i *HelpCenterArticleSubscriptionsInput, ro *RequestOptions) (*http.Response, error) {
@@ -2560,7 +2574,7 @@ func (c *Client) HelpCenterArticleTranslationCreate(i *HelpCenterArticleTranslat
 
 type HelpCenterArticleTranslationShowInput struct {
 	ArticleID string
-	Locale    string
+	Locale string
 }
 
 func (c *Client) HelpCenterArticleTranslationShow(i *HelpCenterArticleTranslationShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -2579,7 +2593,7 @@ func (c *Client) HelpCenterArticleTranslationShow(i *HelpCenterArticleTranslatio
 
 type HelpCenterArticleTranslationUpdateInput struct {
 	ArticleID string
-	Locale    string
+	Locale string
 }
 
 func (c *Client) HelpCenterArticleTranslationUpdate(i *HelpCenterArticleTranslationUpdateInput, ro *RequestOptions) (*http.Response, error) {
@@ -2639,8 +2653,8 @@ func (c *Client) HelpCenterArticleUpCreate(i *HelpCenterArticleUpCreateInput, ro
 }
 
 type HelpCenterArticleUpdateInput struct {
-	ID     string
-	Locale string
+	ID string
+Locale string
 }
 
 func (c *Client) HelpCenterArticleUpdate(i *HelpCenterArticleUpdateInput, ro *RequestOptions) (*http.Response, error) {
@@ -2660,7 +2674,7 @@ func (c *Client) HelpCenterArticleUpdate(i *HelpCenterArticleUpdateInput, ro *Re
 
 type HelpCenterArticleVotesInput struct {
 	ArticleID string
-	Locale    string
+Locale string
 }
 
 func (c *Client) HelpCenterArticleVotes(i *HelpCenterArticleVotesInput, ro *RequestOptions) (*http.Response, error) {
@@ -2698,8 +2712,8 @@ func (c *Client) HelpCenterArticlesAttachmentDelete(i *HelpCenterArticlesAttachm
 }
 
 type HelpCenterArticlesAttachmentShowInput struct {
-	ID     string
-	Locale string
+	ID string
+Locale string
 }
 
 func (c *Client) HelpCenterArticlesAttachmentShow(i *HelpCenterArticlesAttachmentShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -2732,7 +2746,7 @@ func (c *Client) HelpCenterArticlesLabelShow(i *HelpCenterArticlesLabelShowInput
 }
 
 type HelpCenterArticlesLabelsListInput struct {
-	Locale string
+Locale string
 }
 
 func (c *Client) HelpCenterArticlesLabelsList(i *HelpCenterArticlesLabelsListInput, ro *RequestOptions) (*http.Response, error) {
@@ -2746,7 +2760,7 @@ func (c *Client) HelpCenterArticlesLabelsList(i *HelpCenterArticlesLabelsListInp
 }
 
 type HelpCenterArticlesListInput struct {
-	Locale string
+Locale string
 }
 
 func (c *Client) HelpCenterArticlesList(i *HelpCenterArticlesListInput, ro *RequestOptions) (*http.Response, error) {
@@ -2765,7 +2779,7 @@ func (c *Client) HelpCenterArticlesSearch(ro *RequestOptions) (*http.Response, e
 }
 
 type HelpCenterCategoriesListInput struct {
-	Locale string
+Locale string
 }
 
 func (c *Client) HelpCenterCategoriesList(i *HelpCenterCategoriesListInput, ro *RequestOptions) (*http.Response, error) {
@@ -2779,8 +2793,8 @@ func (c *Client) HelpCenterCategoriesList(i *HelpCenterCategoriesListInput, ro *
 }
 
 type HelpCenterCategoryArticlesInput struct {
-	ID     string
-	Locale string
+	ID string
+Locale string
 }
 
 func (c *Client) HelpCenterCategoryArticles(i *HelpCenterCategoryArticlesInput, ro *RequestOptions) (*http.Response, error) {
@@ -2799,7 +2813,7 @@ func (c *Client) HelpCenterCategoryArticles(i *HelpCenterCategoryArticlesInput, 
 }
 
 type HelpCenterCategoryCreateInput struct {
-	Locale string
+Locale string
 }
 
 func (c *Client) HelpCenterCategoryCreate(i *HelpCenterCategoryCreateInput, ro *RequestOptions) (*http.Response, error) {
@@ -2827,8 +2841,8 @@ func (c *Client) HelpCenterCategoryDelete(i *HelpCenterCategoryDeleteInput, ro *
 }
 
 type HelpCenterCategorySectionCreateInput struct {
-	ID     string
-	Locale string
+	ID string
+Locale string
 }
 
 func (c *Client) HelpCenterCategorySectionCreate(i *HelpCenterCategorySectionCreateInput, ro *RequestOptions) (*http.Response, error) {
@@ -2847,8 +2861,8 @@ func (c *Client) HelpCenterCategorySectionCreate(i *HelpCenterCategorySectionCre
 }
 
 type HelpCenterCategorySectionsInput struct {
-	ID     string
-	Locale string
+	ID string
+Locale string
 }
 
 func (c *Client) HelpCenterCategorySections(i *HelpCenterCategorySectionsInput, ro *RequestOptions) (*http.Response, error) {
@@ -2867,8 +2881,8 @@ func (c *Client) HelpCenterCategorySections(i *HelpCenterCategorySectionsInput, 
 }
 
 type HelpCenterCategoryShowInput struct {
-	ID     string
-	Locale string
+	ID string
+Locale string
 }
 
 func (c *Client) HelpCenterCategoryShow(i *HelpCenterCategoryShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -2916,7 +2930,7 @@ func (c *Client) HelpCenterCategoryTranslationCreate(i *HelpCenterCategoryTransl
 
 type HelpCenterCategoryTranslationUpdateInput struct {
 	CategoryID string
-	Locale     string
+	Locale string
 }
 
 func (c *Client) HelpCenterCategoryTranslationUpdate(i *HelpCenterCategoryTranslationUpdateInput, ro *RequestOptions) (*http.Response, error) {
@@ -2962,8 +2976,8 @@ func (c *Client) HelpCenterCategoryTranslationsMissing(i *HelpCenterCategoryTran
 }
 
 type HelpCenterCategoryUpdateInput struct {
-	ID     string
-	Locale string
+	ID string
+Locale string
 }
 
 func (c *Client) HelpCenterCategoryUpdate(i *HelpCenterCategoryUpdateInput, ro *RequestOptions) (*http.Response, error) {
@@ -3020,8 +3034,8 @@ func (c *Client) HelpCenterSectionAccessPolicyUpdate(i *HelpCenterSectionAccessP
 }
 
 type HelpCenterSectionArticleCreateInput struct {
-	ID     string
-	Locale string
+	ID string
+Locale string
 }
 
 func (c *Client) HelpCenterSectionArticleCreate(i *HelpCenterSectionArticleCreateInput, ro *RequestOptions) (*http.Response, error) {
@@ -3040,8 +3054,8 @@ func (c *Client) HelpCenterSectionArticleCreate(i *HelpCenterSectionArticleCreat
 }
 
 type HelpCenterSectionArticlesInput struct {
-	ID     string
-	Locale string
+	ID string
+Locale string
 }
 
 func (c *Client) HelpCenterSectionArticles(i *HelpCenterSectionArticlesInput, ro *RequestOptions) (*http.Response, error) {
@@ -3074,8 +3088,8 @@ func (c *Client) HelpCenterSectionDelete(i *HelpCenterSectionDeleteInput, ro *Re
 }
 
 type HelpCenterSectionShowInput struct {
-	ID     string
-	Locale string
+	ID string
+Locale string
 }
 
 func (c *Client) HelpCenterSectionShow(i *HelpCenterSectionShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -3123,7 +3137,7 @@ func (c *Client) HelpCenterSectionSubscriptionCreate(i *HelpCenterSectionSubscri
 
 type HelpCenterSectionSubscriptionDeleteInput struct {
 	SectionID string
-	ID        string
+	ID string
 }
 
 func (c *Client) HelpCenterSectionSubscriptionDelete(i *HelpCenterSectionSubscriptionDeleteInput, ro *RequestOptions) (*http.Response, error) {
@@ -3142,8 +3156,8 @@ func (c *Client) HelpCenterSectionSubscriptionDelete(i *HelpCenterSectionSubscri
 
 type HelpCenterSectionSubscriptionShowInput struct {
 	SectionID string
-	ID        string
-	Locale    string
+	ID string
+Locale string
 }
 
 func (c *Client) HelpCenterSectionSubscriptionShow(i *HelpCenterSectionSubscriptionShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -3167,7 +3181,7 @@ func (c *Client) HelpCenterSectionSubscriptionShow(i *HelpCenterSectionSubscript
 
 type HelpCenterSectionSubscriptionsInput struct {
 	SectionID string
-	Locale    string
+Locale string
 }
 
 func (c *Client) HelpCenterSectionSubscriptions(i *HelpCenterSectionSubscriptionsInput, ro *RequestOptions) (*http.Response, error) {
@@ -3201,7 +3215,7 @@ func (c *Client) HelpCenterSectionTranslationCreate(i *HelpCenterSectionTranslat
 
 type HelpCenterSectionTranslationUpdateInput struct {
 	SectionID string
-	Locale    string
+	Locale string
 }
 
 func (c *Client) HelpCenterSectionTranslationUpdate(i *HelpCenterSectionTranslationUpdateInput, ro *RequestOptions) (*http.Response, error) {
@@ -3247,8 +3261,8 @@ func (c *Client) HelpCenterSectionTranslationsMissing(i *HelpCenterSectionTransl
 }
 
 type HelpCenterSectionUpdateInput struct {
-	ID     string
-	Locale string
+	ID string
+Locale string
 }
 
 func (c *Client) HelpCenterSectionUpdate(i *HelpCenterSectionUpdateInput, ro *RequestOptions) (*http.Response, error) {
@@ -3267,7 +3281,7 @@ func (c *Client) HelpCenterSectionUpdate(i *HelpCenterSectionUpdateInput, ro *Re
 }
 
 type HelpCenterSectionsListInput struct {
-	Locale string
+Locale string
 }
 
 func (c *Client) HelpCenterSectionsList(i *HelpCenterSectionsListInput, ro *RequestOptions) (*http.Response, error) {
@@ -3763,7 +3777,7 @@ func (c *Client) NpsSurveyInvitationCreate(i *NpsSurveyInvitationCreateInput, ro
 
 type NpsSurveyInvitationShowInput struct {
 	SurveyID string
-	ID       string
+	ID string
 }
 
 func (c *Client) NpsSurveyInvitationShow(i *NpsSurveyInvitationShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -3824,7 +3838,7 @@ func (c *Client) NpsSurveyRecipientCreate(i *NpsSurveyRecipientCreateInput, ro *
 
 type NpsSurveyRecipientShowInput struct {
 	SurveyID string
-	ID       string
+	ID string
 }
 
 func (c *Client) NpsSurveyRecipientShow(i *NpsSurveyRecipientShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -3843,7 +3857,7 @@ func (c *Client) NpsSurveyRecipientShow(i *NpsSurveyRecipientShowInput, ro *Requ
 
 type NpsSurveyRecipientUpdateInput struct {
 	SurveyID string
-	ID       string
+	ID string
 }
 
 func (c *Client) NpsSurveyRecipientUpdate(i *NpsSurveyRecipientUpdateInput, ro *RequestOptions) (*http.Response, error) {
@@ -3904,7 +3918,7 @@ func (c *Client) NpsSurveyResponseCreate(i *NpsSurveyResponseCreateInput, ro *Re
 
 type NpsSurveyResponseShowInput struct {
 	SurveyID string
-	ID       string
+	ID string
 }
 
 func (c *Client) NpsSurveyResponseShow(i *NpsSurveyResponseShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -3923,7 +3937,7 @@ func (c *Client) NpsSurveyResponseShow(i *NpsSurveyResponseShowInput, ro *Reques
 
 type NpsSurveyResponseUpdateInput struct {
 	SurveyID string
-	ID       string
+	ID string
 }
 
 func (c *Client) NpsSurveyResponseUpdate(i *NpsSurveyResponseUpdateInput, ro *RequestOptions) (*http.Response, error) {
@@ -4550,7 +4564,7 @@ func (c *Client) RecipientAddressesList(ro *RequestOptions) (*http.Response, err
 
 type RequestCommentShowInput struct {
 	RequestID string
-	ID        string
+	ID string
 }
 
 func (c *Client) RequestCommentShow(i *RequestCommentShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -4834,6 +4848,100 @@ func (c *Client) ShortcutsList(ro *RequestOptions) (*http.Response, error) {
 	return c.Request("GET", path, ro)
 }
 
+func (c *Client) SkillCreate(ro *RequestOptions) (*http.Response, error) {
+	path := "/api/v2/skills"
+	return c.Request("POST", path, ro)
+}
+
+type SkillDeleteInput struct {
+	SkillID string
+}
+
+func (c *Client) SkillDelete(i *SkillDeleteInput, ro *RequestOptions) (*http.Response, error) {
+	if i.SkillID == "" {
+		return nil, errors.New("Missing required field 'SkillID'")
+	}
+
+	api_path := "/api/v2/skills/%s"
+	path := fmt.Sprintf(api_path, i.SkillID)
+	return c.Request("DELETE", path, ro)
+}
+
+type SkillShowInput struct {
+	SkillID string
+}
+
+func (c *Client) SkillShow(i *SkillShowInput, ro *RequestOptions) (*http.Response, error) {
+	if i.SkillID == "" {
+		return nil, errors.New("Missing required field 'SkillID'")
+	}
+
+	api_path := "/api/v2/skills/%s"
+	path := fmt.Sprintf(api_path, i.SkillID)
+	return c.Request("GET", path, ro)
+}
+
+type SkillUpdateInput struct {
+	SkillID string
+}
+
+func (c *Client) SkillUpdate(i *SkillUpdateInput, ro *RequestOptions) (*http.Response, error) {
+	if i.SkillID == "" {
+		return nil, errors.New("Missing required field 'SkillID'")
+	}
+
+	api_path := "/api/v2/skills/%s"
+	path := fmt.Sprintf(api_path, i.SkillID)
+	return c.Request("PUT", path, ro)
+}
+
+func (c *Client) SkillsList(ro *RequestOptions) (*http.Response, error) {
+	path := "/api/v2/skills"
+	return c.Request("GET", path, ro)
+}
+
+type SkillsNameDeleteInput struct {
+	Name string
+}
+
+func (c *Client) SkillsNameDelete(i *SkillsNameDeleteInput, ro *RequestOptions) (*http.Response, error) {
+	if i.Name == "" {
+		return nil, errors.New("Missing required field 'Name'")
+	}
+
+	api_path := "/api/v2/skills/name/%s"
+	path := fmt.Sprintf(api_path, i.Name)
+	return c.Request("DELETE", path, ro)
+}
+
+type SkillsNameShowInput struct {
+	Name string
+}
+
+func (c *Client) SkillsNameShow(i *SkillsNameShowInput, ro *RequestOptions) (*http.Response, error) {
+	if i.Name == "" {
+		return nil, errors.New("Missing required field 'Name'")
+	}
+
+	api_path := "/api/v2/skills/name/%s"
+	path := fmt.Sprintf(api_path, i.Name)
+	return c.Request("GET", path, ro)
+}
+
+type SkillsNameUpdateInput struct {
+	Name string
+}
+
+func (c *Client) SkillsNameUpdate(i *SkillsNameUpdateInput, ro *RequestOptions) (*http.Response, error) {
+	if i.Name == "" {
+		return nil, errors.New("Missing required field 'Name'")
+	}
+
+	api_path := "/api/v2/skills/name/%s"
+	path := fmt.Sprintf(api_path, i.Name)
+	return c.Request("PUT", path, ro)
+}
+
 func (c *Client) SkipCreate(ro *RequestOptions) (*http.Response, error) {
 	path := "/api/v2/skips.json"
 	return c.Request("POST", path, ro)
@@ -5035,6 +5143,25 @@ func (c *Client) TargetDelete(i *TargetDeleteInput, ro *RequestOptions) (*http.R
 	return c.Request("DELETE", path, ro)
 }
 
+type TargetFailureShowInput struct {
+	ID string
+}
+
+func (c *Client) TargetFailureShow(i *TargetFailureShowInput, ro *RequestOptions) (*http.Response, error) {
+	if i.ID == "" {
+		return nil, errors.New("Missing required field 'ID'")
+	}
+
+	api_path := "/api/v2/target_failures/%s"
+	path := fmt.Sprintf(api_path, i.ID)
+	return c.Request("GET", path, ro)
+}
+
+func (c *Client) TargetFailuresList(ro *RequestOptions) (*http.Response, error) {
+	path := "/api/v2/target_failures"
+	return c.Request("GET", path, ro)
+}
+
 type TargetShowInput struct {
 	ID string
 }
@@ -5070,7 +5197,7 @@ func (c *Client) TargetsList(ro *RequestOptions) (*http.Response, error) {
 
 type TicketAuditMakePrivateInput struct {
 	TicketID string
-	ID       string
+	ID string
 }
 
 func (c *Client) TicketAuditMakePrivate(i *TicketAuditMakePrivateInput, ro *RequestOptions) (*http.Response, error) {
@@ -5089,7 +5216,7 @@ func (c *Client) TicketAuditMakePrivate(i *TicketAuditMakePrivateInput, ro *Requ
 
 type TicketAuditShowInput struct {
 	TicketID string
-	ID       string
+	ID string
 }
 
 func (c *Client) TicketAuditShow(i *TicketAuditShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -5120,6 +5247,11 @@ func (c *Client) TicketAudits(i *TicketAuditsInput, ro *RequestOptions) (*http.R
 	return c.Request("GET", path, ro)
 }
 
+func (c *Client) TicketAuditsList(ro *RequestOptions) (*http.Response, error) {
+	path := "/api/v2/ticket_audits.json"
+	return c.Request("GET", path, ro)
+}
+
 type TicketCollaboratorsInput struct {
 	ID string
 }
@@ -5135,8 +5267,8 @@ func (c *Client) TicketCollaborators(i *TicketCollaboratorsInput, ro *RequestOpt
 }
 
 type TicketCommentAttachmentRedactInput struct {
-	TicketID     string
-	CommentID    string
+	TicketID string
+	CommentID string
 	AttachmentID string
 }
 
@@ -5160,7 +5292,7 @@ func (c *Client) TicketCommentAttachmentRedact(i *TicketCommentAttachmentRedactI
 
 type TicketCommentMakePrivateInput struct {
 	TicketID string
-	ID       string
+	ID string
 }
 
 func (c *Client) TicketCommentMakePrivate(i *TicketCommentMakePrivateInput, ro *RequestOptions) (*http.Response, error) {
@@ -5179,7 +5311,7 @@ func (c *Client) TicketCommentMakePrivate(i *TicketCommentMakePrivateInput, ro *
 
 type TicketCommentRedactInput struct {
 	TicketID string
-	ID       string
+	ID string
 }
 
 func (c *Client) TicketCommentRedact(i *TicketCommentRedactInput, ro *RequestOptions) (*http.Response, error) {
@@ -5250,7 +5382,7 @@ func (c *Client) TicketFieldDelete(i *TicketFieldDeleteInput, ro *RequestOptions
 
 type TicketFieldOptionCreateInput struct {
 	FieldID string
-	ID      string
+	ID string
 }
 
 func (c *Client) TicketFieldOptionCreate(i *TicketFieldOptionCreateInput, ro *RequestOptions) (*http.Response, error) {
@@ -5269,7 +5401,7 @@ func (c *Client) TicketFieldOptionCreate(i *TicketFieldOptionCreateInput, ro *Re
 
 type TicketFieldOptionDeleteInput struct {
 	FieldID string
-	ID      string
+	ID string
 }
 
 func (c *Client) TicketFieldOptionDelete(i *TicketFieldOptionDeleteInput, ro *RequestOptions) (*http.Response, error) {
@@ -5288,7 +5420,7 @@ func (c *Client) TicketFieldOptionDelete(i *TicketFieldOptionDeleteInput, ro *Re
 
 type TicketFieldOptionShowInput struct {
 	FieldID string
-	ID      string
+	ID string
 }
 
 func (c *Client) TicketFieldOptionShow(i *TicketFieldOptionShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -5444,7 +5576,7 @@ func (c *Client) TicketIncidents(i *TicketIncidentsInput, ro *RequestOptions) (*
 
 type TicketMacroApplyInput struct {
 	TicketID string
-	ID       string
+	ID string
 }
 
 func (c *Client) TicketMacroApply(i *TicketMacroApplyInput, ro *RequestOptions) (*http.Response, error) {
@@ -5931,7 +6063,7 @@ func (c *Client) UserFieldOptionCreate(i *UserFieldOptionCreateInput, ro *Reques
 
 type UserFieldOptionDeleteInput struct {
 	FieldID string
-	ID      string
+	ID string
 }
 
 func (c *Client) UserFieldOptionDelete(i *UserFieldOptionDeleteInput, ro *RequestOptions) (*http.Response, error) {
@@ -5950,7 +6082,7 @@ func (c *Client) UserFieldOptionDelete(i *UserFieldOptionDeleteInput, ro *Reques
 
 type UserFieldOptionShowInput struct {
 	FieldID string
-	ID      string
+	ID string
 }
 
 func (c *Client) UserFieldOptionShow(i *UserFieldOptionShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -6035,7 +6167,7 @@ func (c *Client) UserGroupMembershipCreate(i *UserGroupMembershipCreateInput, ro
 
 type UserGroupMembershipDeleteInput struct {
 	UserID string
-	ID     string
+	ID string
 }
 
 func (c *Client) UserGroupMembershipDelete(i *UserGroupMembershipDeleteInput, ro *RequestOptions) (*http.Response, error) {
@@ -6053,7 +6185,7 @@ func (c *Client) UserGroupMembershipDelete(i *UserGroupMembershipDeleteInput, ro
 }
 
 type UserGroupMembershipMakeDefaultInput struct {
-	UserID       string
+	UserID string
 	MembershipID string
 }
 
@@ -6073,7 +6205,7 @@ func (c *Client) UserGroupMembershipMakeDefault(i *UserGroupMembershipMakeDefaul
 
 type UserGroupMembershipShowInput struct {
 	UserID string
-	ID     string
+	ID string
 }
 
 func (c *Client) UserGroupMembershipShow(i *UserGroupMembershipShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -6148,7 +6280,7 @@ func (c *Client) UserIdentityCreate(i *UserIdentityCreateInput, ro *RequestOptio
 
 type UserIdentityDeleteInput struct {
 	UserID string
-	ID     string
+	ID string
 }
 
 func (c *Client) UserIdentityDelete(i *UserIdentityDeleteInput, ro *RequestOptions) (*http.Response, error) {
@@ -6167,7 +6299,7 @@ func (c *Client) UserIdentityDelete(i *UserIdentityDeleteInput, ro *RequestOptio
 
 type UserIdentityMakePrimaryInput struct {
 	UserID string
-	ID     string
+	ID string
 }
 
 func (c *Client) UserIdentityMakePrimary(i *UserIdentityMakePrimaryInput, ro *RequestOptions) (*http.Response, error) {
@@ -6186,7 +6318,7 @@ func (c *Client) UserIdentityMakePrimary(i *UserIdentityMakePrimaryInput, ro *Re
 
 type UserIdentityRequestVerificationUpdateInput struct {
 	UserID string
-	ID     string
+	ID string
 }
 
 func (c *Client) UserIdentityRequestVerificationUpdate(i *UserIdentityRequestVerificationUpdateInput, ro *RequestOptions) (*http.Response, error) {
@@ -6205,7 +6337,7 @@ func (c *Client) UserIdentityRequestVerificationUpdate(i *UserIdentityRequestVer
 
 type UserIdentityShowInput struct {
 	UserID string
-	ID     string
+	ID string
 }
 
 func (c *Client) UserIdentityShow(i *UserIdentityShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -6224,7 +6356,7 @@ func (c *Client) UserIdentityShow(i *UserIdentityShowInput, ro *RequestOptions) 
 
 type UserIdentityUpdateInput struct {
 	UserID string
-	ID     string
+	ID string
 }
 
 func (c *Client) UserIdentityUpdate(i *UserIdentityUpdateInput, ro *RequestOptions) (*http.Response, error) {
@@ -6243,7 +6375,7 @@ func (c *Client) UserIdentityUpdate(i *UserIdentityUpdateInput, ro *RequestOptio
 
 type UserIdentityVerifyInput struct {
 	UserID string
-	ID     string
+	ID string
 }
 
 func (c *Client) UserIdentityVerify(i *UserIdentityVerifyInput, ro *RequestOptions) (*http.Response, error) {
@@ -6290,7 +6422,7 @@ func (c *Client) UserOrganizationMembershipCreate(i *UserOrganizationMembershipC
 
 type UserOrganizationMembershipDeleteInput struct {
 	UserID string
-	ID     string
+	ID string
 }
 
 func (c *Client) UserOrganizationMembershipDelete(i *UserOrganizationMembershipDeleteInput, ro *RequestOptions) (*http.Response, error) {
@@ -6308,7 +6440,7 @@ func (c *Client) UserOrganizationMembershipDelete(i *UserOrganizationMembershipD
 }
 
 type UserOrganizationMembershipMakeDefaultInput struct {
-	ID           string
+	ID string
 	MembershipID string
 }
 
@@ -6328,7 +6460,7 @@ func (c *Client) UserOrganizationMembershipMakeDefault(i *UserOrganizationMember
 
 type UserOrganizationMembershipShowInput struct {
 	UserID string
-	ID     string
+	ID string
 }
 
 func (c *Client) UserOrganizationMembershipShow(i *UserOrganizationMembershipShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -6459,7 +6591,7 @@ func (c *Client) UserRequests(i *UserRequestsInput, ro *RequestOptions) (*http.R
 
 type UserSessionDeleteInput struct {
 	UserID string
-	ID     string
+	ID string
 }
 
 func (c *Client) UserSessionDelete(i *UserSessionDeleteInput, ro *RequestOptions) (*http.Response, error) {
@@ -6478,7 +6610,7 @@ func (c *Client) UserSessionDelete(i *UserSessionDeleteInput, ro *RequestOptions
 
 type UserSessionShowInput struct {
 	UserID string
-	ID     string
+	ID string
 }
 
 func (c *Client) UserSessionShow(i *UserSessionShowInput, ro *RequestOptions) (*http.Response, error) {
@@ -6923,3 +7055,5 @@ func (c *Client) VisitorUpdate(i *VisitorUpdateInput, ro *RequestOptions) (*http
 	path := fmt.Sprintf(api_path, i.VisitorID)
 	return c.Request("PUT", path, ro)
 }
+
+
